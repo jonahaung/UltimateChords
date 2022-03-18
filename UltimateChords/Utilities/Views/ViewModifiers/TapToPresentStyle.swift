@@ -7,38 +7,40 @@
 
 import SwiftUI
 
+internal enum ModelType {
+    case FullScreen, Sheet
+}
+
 struct TapToPresentStyle<Destination: View>: ViewModifier {
     
     let destination: Destination
-    let isFullScreen: Bool
+    let modelType: ModelType
     
-    @State private var sheetIsPresented = false
-    @State private var fullScreenIsPresented = false
-    @Environment(\.presentationMode) private var presentationMode
+    @State private var isSheet = false
+    @State private var isFullScreen = false
+    
     
     func body(content: Content) -> some View {
-        Button {
-            if isFullScreen {
-                fullScreenIsPresented = true
-            } else {
-                sheetIsPresented = true
+        content.onTapGesture {
+            switch modelType {
+            case .FullScreen:
+                isFullScreen = true
+            case .Sheet:
+                isSheet = true
             }
-        } label: {
-            content
         }
-        .fullScreenCover(isPresented: $fullScreenIsPresented) {
+        .fullScreenCover(isPresented: $isFullScreen) {
             destination
         }
-        .sheet(isPresented: $sheetIsPresented) {
+        .sheet(isPresented: $isSheet) {
             destination
         }
     }
-    
 }
 
 
 extension View {
-    func tapToPresent<Destination: View>(_ view: Destination, _ isFullScreen: Bool = false) -> some View {
-        ModifiedContent(content: self, modifier: TapToPresentStyle(destination: view, isFullScreen: isFullScreen))
+    func tapToPresent<Destination: View>(_ view: Destination, _ modelType: ModelType = .Sheet) -> some View {
+        ModifiedContent(content: self, modifier: TapToPresentStyle(destination: view, modelType: modelType))
     }
 }

@@ -308,9 +308,48 @@ In [C]person, and [G]she looks [D]perfect
 No I [C]don't deserve it, [D]you look perfect tonight
 [G] [D/F#] [Em] [D] [C] - [D] -
 """
-    static let allSongs = [Song(title: "Sweet Chile O' Mine", artist: ["Guns N Roses"], lyrics: sweetChildOMine),
-                           Song(title: "Autumln Leaves", artist: ["Eric Claption"], lyrics: authumLeaves),
-                           Song(title: "Bewitched Bothered & Beweildered", artist: ["Ella Fitzbard"], lyrics: bewitched),
-                           Song(title: "Perfect", artist: ["Ed Shareen"], lyrics: perfect)
+    static let pWalk = """
+[Intro]
+ 
+Am  Dm7 G11 Cmaj7  Fmaj7  Bm7b5  E7  Am
+ 
+ 
+[Verse 1]
+ 
+Am               Dm7                Dm7/G
+I remember Paris     in forty-nine,
+Dm7/G          Cmaj7
+Champs-Elysee, San Michelle and old Beaujolais wine.
+Fmaj7             Bm7b5
+And I recall that you were mine
+E7                  A      Bm/A  A5
+In those Parisienne days.
+ 
+ 
+[Guitar solo]
+ 
+Dm7 Dm7/G Cmaj7 F Bm7b5  E E7 Am
+ 
+                    Dm7
+Looking back at the photographs,
+Dm7/G                    Cmaj7
+Those summer days spent outside corner cafes.
+Fmaj7                   Bm7b5
+Ooh, I could write you paragraphs
+  B7                      E    F   E  N.C.
+About my old Parisienne days.
+ 
+ 
+[Guitar solo]
+ 
+Dm7 Dm7/G Cmaj7 F Bm7b5  E
+Am Dm Am F E
+[Repeat]
+"""
+    static let allSongs = [Lyrics(title: "Sweet Chile O' Mine", artist: ["Guns N Roses"], text: sweetChildOMine),
+                           Lyrics(title: "Autumln Leaves", artist: ["Eric Claption"], text: authumLeaves),
+                           Lyrics(title: "Bewitched Bothered & Beweildered", artist: ["Ella Fitzbard"], text: bewitched),
+                           Lyrics(title: "Perfect", artist: ["Ed Shareen"], text: perfect),
+                           Lyrics(title: "Parisienne Walkways", artist: ["Gary Moore"], text: pWalk)
     ]
 }

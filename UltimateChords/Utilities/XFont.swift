@@ -35,25 +35,23 @@ struct XFont {
             }
         }
     }
-    enum Condense: String {
-        case SemiCondensed, Condensed, ExtraCondensed
-    }
+
     enum Weight: String {
-        case Light, Regular, Medium, SemiBold, Bold
+        case Thin, ExtraLight, Light, Regular, Medium, SemiBold, Bold, ExtraBold, Black
     }
     // MARK: - Constants
     
     private struct Constants {
-        static let name = "NotoSansMono"
+        static let name = "NotoSansMonoExtraCondensed"
     }
     
     // MARK: - Methods
     
-    static func font(condense: Condense? = .ExtraCondensed, weight: Weight = .Regular, size: Size = .System) -> Font {
-        Font.custom(Constants.name + (condense?.rawValue ?? "") + "-" + weight.rawValue, size: size.rawValue)
+    static func font(_ weight: Weight = .Regular, _ size: Size = .System) -> Font {
+        Font.custom(Constants.name + "-" + weight.rawValue, size: size.rawValue)
     }
-    static func uiFont(condense: Condense? = .ExtraCondensed, weight: Weight = .Regular, size: Size = .System) -> UIFont {
-        return .init(name: Constants.name + (condense?.rawValue ?? "") + "-" + weight.rawValue, size: size.rawValue)!
+    static func uiFont(_ weight: Weight = .Medium, _ size: Size = .System) -> UIFont {
+        return .init(name: Constants.name + "-" + weight.rawValue, size: size.rawValue)!
     }
 }
 

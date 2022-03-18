@@ -69,7 +69,7 @@ open class DPTagTextView: UITextView {
         return $0
     }(NSMutableParagraphStyle())
     open var textViewAttributes: [NSAttributedString.Key: Any] = {
-        [.font: XFont.uiFont(condense: .ExtraCondensed, weight: .Medium, size: .custom(15))]
+        [.font: XFont.uiFont(.Medium, .custom(15))]
     }()
     
     open var mentionTagTextAttributes: [NSAttributedString.Key: Any] = {

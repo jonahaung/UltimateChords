@@ -12,11 +12,11 @@ struct LyricsEditorView: View {
     
     @Environment(\.presentationMode) private var presentationMode
     
-    @State private var song: Song
+    @State private var song: Lyrics
     @StateObject private var manager: LyricsTextViewCoordinator
     
-    init(_ song: Song) {
-        _manager = .init(wrappedValue: LyricsTextViewCoordinator(song.lyrics))
+    init(_ song: Lyrics) {
+        _manager = .init(wrappedValue: LyricsTextViewCoordinator(song.text))
         _song = .init(wrappedValue: song)
     }
     
@@ -74,7 +74,7 @@ struct LyricsEditorView: View {
                 Image(systemName: "chevron.left")
             }
             Text(song.title)
-                .font(XFont.font(weight: .Medium, size: .System))
+                .font(XFont.font(.Medium, .System))
             Spacer()
             Text(song.artist.first ?? "")
                 .font(XFont.font())

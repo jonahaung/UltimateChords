@@ -15,8 +15,6 @@ struct TapToPushStyle<Destination: View>: ViewModifier {
         return NavigationLink(destination: destination) {
             content
         }
-        .isDetailLink(false)
-        .buttonStyle(.borderless)
     }
 }
 

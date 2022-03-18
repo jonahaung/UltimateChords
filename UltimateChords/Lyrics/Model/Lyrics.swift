@@ -7,13 +7,13 @@
 
 import Foundation
 
-struct Song {
+struct Lyrics {
     let id = UUID().uuidString
     let title: String
     let artist: [String]
-    let lyrics: String
+    let text: String
 }
 
-extension Song: Identifiable {
+extension Lyrics: Identifiable {
     
 }

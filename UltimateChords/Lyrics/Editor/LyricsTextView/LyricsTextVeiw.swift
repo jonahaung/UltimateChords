@@ -9,19 +9,14 @@ import SwiftUI
 
 internal class LyricsInternalTextView: UITextView {
     
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented")}
     init() {
         super.init(frame: .zero, textContainer: nil)
         setup()
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     private func setup() {
-        
         dataDetectorTypes = []
-        
     }
     
     override var isEditable: Bool {
@@ -30,17 +25,15 @@ internal class LyricsInternalTextView: UITextView {
                 becomeFirstResponder()
                 selectedTextRange = self.textRange(from: self.endOfDocument, to: endOfDocument)
             }
-            
         }
     }
-    
-    var fontSize: CGFloat {
-        get {
-            return font?.pointSize ?? 0
+
+    func setTags(tags: [DPTag]) {
+        let attributedString = NSMutableAttributedString(attributedString: attributedText)
+        tags.forEach { (dpTag) in
+            attributedString.addAttributes(dpTag.customTextAttributes, range: dpTag.range)
         }
-        set {
-            font = self.font?.withSize(newValue)
-        }
+        attributedText = attributedString
     }
 }
 
@@ -51,12 +44,19 @@ struct LyricsTextView: UIViewRepresentable {
     func makeUIView(context: Context) -> LyricsInternalTextView {
         let uiView = LyricsInternalTextView()
         uiView.attributedText = context.coordinator.attributedText
+        uiView.delegate = context.coordinator
+
+        context.coordinator.setTagsBlock = { [weak uiView] tags in
+            uiView?.setTags(tags: tags)
+        }
+        context.coordinator.setAttributedTextBlock = { [weak uiView] attributedText in
+            uiView?.attributedText = attributedText
+        }
         return uiView
     }
     
     func updateUIView(_ uiView: LyricsInternalTextView, context: Context) {
         uiView.isEditable = context.coordinator.isEditable
-        uiView.attributedText = context.coordinator.attributedText
     }
     
     func makeCoordinator() -> LyricsTextViewCoordinator {
