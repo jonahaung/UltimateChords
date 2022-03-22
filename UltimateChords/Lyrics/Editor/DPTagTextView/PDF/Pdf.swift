@@ -13,8 +13,7 @@ struct Pdf {
         let pdfRenderer = PDFDINA4PrintRenderer()
         let printFormatter = UISimpleTextPrintFormatter(attributedText: attributedString)
         pdfRenderer.addPrintFormatter(printFormatter, startingAtPageAt: 0)
-        
-        let documentURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("Converted from Attributed String.pdf")
+        let documentURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("ultimateChord.pdf")
        
         do {
             try pdfRenderer.renderPDF(to: documentURL)

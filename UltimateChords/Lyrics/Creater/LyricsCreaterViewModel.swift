@@ -22,6 +22,11 @@ final class LyricsCreaterViewModel: NSObject, ObservableObject {
 }
 
 extension LyricsCreaterViewModel: WidthFittingTextViewDelegate {
+    
+    func textView(_ textView: WidthFittingTextView, didAdjustFontSize fontSize: CGFloat) {
+        print(fontSize)
+    }
+    
     func textViewDidChange(_ textView: WidthFittingTextView) {
         self.lyrics.text = textView.text
     }

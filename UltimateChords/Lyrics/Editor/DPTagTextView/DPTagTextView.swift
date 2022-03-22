@@ -16,7 +16,7 @@ public struct DPTag {
     public var range: NSRange
     public var data : [String: Any] = [:]
     public var isHashTag: Bool = false
-    public var customTextAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: UIColor.systemRed]
+    public var customTextAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: UIColor.systemPink, .font: XFont.uiFont(weight: .Bold, .System)]
 }
 
 // MARK: - DPTagTextViewDelegate
@@ -69,7 +69,7 @@ open class DPTagTextView: UITextView {
         return $0
     }(NSMutableParagraphStyle())
     open var textViewAttributes: [NSAttributedString.Key: Any] = {
-        [.font: XFont.uiFont(.Medium, .custom(15))]
+        [.font: XFont.uiFont(.custom(15))]
     }()
     
     open var mentionTagTextAttributes: [NSAttributedString.Key: Any] = {

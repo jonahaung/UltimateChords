@@ -9,6 +9,7 @@ import UIKit
 
 protocol WidthFittingTextViewDelegate: AnyObject {
     func textViewDidChange(_ textView: WidthFittingTextView)
+    func textView(_ textView: WidthFittingTextView, didAdjustFontSize fontSize: CGFloat)
 }
 class WidthFittingTextView: UITextView {
     
@@ -19,8 +20,6 @@ class WidthFittingTextView: UITextView {
         keyboardDismissMode = .interactive
         textContainer.lineFragmentPadding = 5
         showsVerticalScrollIndicator = false
-        font = XFont.uiFont(.Medium, .Button)
-        typingAttributes = [.font: font!, .paragraphStyle: NSParagraphStyle.nonLineBreak]
         delegate = self
     }
     
@@ -39,7 +38,9 @@ class WidthFittingTextView: UITextView {
     override func layoutSubviews() {
         super.layoutSubviews()
         if !isEditable {
-            adjustFontSize()
+            if widthFittingTextViewDelegate != nil {
+                adjustFontSize()
+            }
         }
     }
     
@@ -47,11 +48,12 @@ class WidthFittingTextView: UITextView {
         let containerSize = textContainer.size
         let largestSize = CGSize(width: .greatestFiniteMagnitude, height: containerSize.height)
         if isEditable {
-            fontSize = UIFont.labelFontSize
+            fontSize = 30
         }
-        while (containerSize.width - textContainer.lineFragmentPadding - 10) <= attributedText.size(for: largestSize).width {
+        while (containerSize.width - textContainer.lineFragmentPadding) < attributedText.size(for: largestSize).width {
             fontSize -= 0.5
         }
+        widthFittingTextViewDelegate?.textView(self, didAdjustFontSize: fontSize)
     }
     
     override func paste(_ sender: Any?) {
@@ -68,12 +70,28 @@ class WidthFittingTextView: UITextView {
         super.insertText(text)
         adjustFontSize()
     }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        if let first = touches.first {
+            let location = first.location(in: self)
+            selectedTextRange = self.getCharacterRangeAtPosition(location)
+        }
+    }
+    
+//    func textViewDidChangeSelection(_ textView: UITextView) {
+//        guard let selectedTextRange = self.selectedTextRange else { return }
+//        guard let paragraphRange = self.tokenizer.rangeEnclosingPosition(selectedTextRange.start, with: .character, inDirection: .init(rawValue: 0)) else { return }
+//                self.selectedTextRange = paragraphRange
+//    }
 }
 
 extension WidthFittingTextView: UITextViewDelegate {
-    
+
     func textViewDidChange(_ textView: UITextView) {
         adjustFontSize()
         widthFittingTextViewDelegate?.textViewDidChange(self)
     }
 }
+
+

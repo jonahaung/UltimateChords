@@ -13,9 +13,6 @@ struct UltimateChordsApp: App {
     var body: some Scene {
         WindowGroup {
             MainNavigationView()
-                .onAppear{
-                    Persistence.shared
-                }
         }
     }
 }

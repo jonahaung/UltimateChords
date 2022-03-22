@@ -27,7 +27,7 @@ class LyricsTextViewCoordinator: NSObject, ObservableObject {
         }
     }
     
-    private var textAttributes: [NSAttributedString.Key: Any] = [.font: XFont.uiFont(.Medium, .Small)]
+    private var textAttributes: [NSAttributedString.Key: Any] = [.font: XFont.mmUiFont(.Button)]
     
     init(_ text: String) {
         attributedText = NSAttributedString(string: text, attributes: textAttributes)

@@ -20,6 +20,7 @@ struct LyricsCreaterView: View {
             if viewModel.canInputLyrics {
                 LyricsCreaterTextView()
                     .environmentObject(viewModel)
+                
                 Divider()
                 BottomBar()
             } else {

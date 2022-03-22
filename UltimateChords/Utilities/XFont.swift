@@ -50,8 +50,18 @@ struct XFont {
     static func font(_ weight: Weight = .Regular, _ size: Size = .System) -> Font {
         Font.custom(Constants.name + "-" + weight.rawValue, size: size.rawValue)
     }
-    static func uiFont(_ weight: Weight = .Medium, _ size: Size = .System) -> UIFont {
-        return .init(name: Constants.name + "-" + weight.rawValue, size: size.rawValue)!
+    static func uiFont(weight: Weight = .Medium, _ size: Size = .System) -> UIFont {
+       UIFont(name: Constants.name + "-" + weight.rawValue, size: size.rawValue)!
+    }
+    
+    enum MyanmarFont: String {
+        case MyanmarSansPro, MyanmarAngoun, MyanmarSquare, MasterpieceSpringRev
+    }
+    static func mmFont(name: MyanmarFont = MyanmarFont.MyanmarAngoun, _ size: Size) -> Font {
+        Font.custom(name.rawValue, size: size.rawValue)
+    }
+    static func mmUiFont(name: MyanmarFont = MyanmarFont.MyanmarAngoun, _ size: Size) -> UIFont {
+        UIFont(name: name.rawValue, size: size.rawValue)!
     }
 }
 

@@ -14,13 +14,13 @@ struct HomeCell: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(lyrics.title)
-                .font(XFont.font(.Medium, .Label))
+                .font(Font(lyrics.titleFont()))
             HStack {
                 XIcon(.music_note)
                     .foregroundColor(.pink)
                 Text(lyrics.artist)
             }
-            .font(XFont.font(.Light, .Small))
+            .font(Font(lyrics.artistFont()))
         }
         .tapToPush(LyricsViewerView(lyrics))
     }

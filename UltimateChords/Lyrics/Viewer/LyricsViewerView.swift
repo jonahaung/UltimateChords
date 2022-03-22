@@ -17,17 +17,32 @@ struct LyricsViewerView: View {
     
     var body: some View {
         VStack {
+            
             LyricsViewerTextView()
                 .environmentObject(viewModel)
             BottomBar()
         }
-        .navigationBarItems(trailing: NavTrailing())
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarItems(leading: NavLeading(), trailing: NavTrailing())
+        .sheet(item: $viewModel.pdfData) { data in
+            PdfView(data)
+        }
+        .task {
+            viewModel.detect()
+        }
+    }
+    private func NavLeading() -> some View {
+        HStack {
+            
+        }
     }
     
     private func NavTrailing() -> some View {
         HStack {
             Menu {
-                Button("PDF") {}
+                Button("PDF") {
+                    viewModel.makePDF()
+                }
                 Button("HTML") {}
             } label: {
                 XIcon(.square_and_arrow_up)
@@ -38,9 +53,16 @@ struct LyricsViewerView: View {
     
     private func BottomBar() -> some View {
         HStack {
+            Button {
+                viewModel.detect()
+            } label: {
+                Text("Detect")
+            }
+
             Spacer()
             XIcon(.pencil)
-                .tapToPush(LyricsEditorView(viewModel.getLyrics()).navigationBarHidden(true))
-        }
+                .tapToPush(LyricsEditorView(viewModel.lyrics).navigationBarHidden(true))
+        }.padding()
     }
 }
+

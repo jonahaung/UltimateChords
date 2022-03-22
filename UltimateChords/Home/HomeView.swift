@@ -10,23 +10,21 @@ import SwiftUI
 struct HomeView: View {
     
     @StateObject private var viewModel = HomeViewModel()
+    @StateObject private var searchViewModel = SearchViewModel()
     
     var body: some View {
         List {
             ForEach(viewModel.lyrics) {
-                HomeCell(lyrics: $0)
+                HomeCell(lyrics: Lyrics(cLyrics: $0))
             }
         }
-        .navigationTitle("Lyrics Myanmar")
-        .searchable(text: $viewModel.searchText) {
-            ForEach(viewModel.lyrics) { lyrics in
-                Text(lyrics.title).searchCompletion(lyrics.title)
-            }
-        }
-        .navigationBarItems(trailing: navTrailing())
         .refreshable {
-            viewModel.refreshable()
+            viewModel.fetch()
         }
+        .overlay(SearchContent().environmentObject(searchViewModel))
+        .searchable(text: $searchViewModel.searchText, prompt: Text("Title or Artist"))
+        .navigationTitle("Home")
+        .navigationBarItems(trailing: navTrailing())
     }
     
     private func navTrailing() -> some View {
@@ -36,3 +34,4 @@ struct HomeView: View {
         }
     }
 }
+
