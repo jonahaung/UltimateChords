@@ -8,10 +8,7 @@
 import SwiftUI
 
 struct LyricsEditorView: View {
-    
-    
-    @Environment(\.presentationMode) private var presentationMode
-    
+
     @State private var song: Lyrics
     @StateObject private var manager: LyricsTextViewCoordinator
     
@@ -68,17 +65,13 @@ struct LyricsEditorView: View {
     
     private var topBar: some View {
         HStack {
-            Button {
-                presentationMode.wrappedValue.dismiss()
-            }label: {
-                Image(systemName: "chevron.left")
-            }
+            DismissButton(.Model)
             Text(song.title)
                 .font(XFont.font(.Medium, .System))
             Spacer()
-            Text(song.artist.first ?? "")
+            Text(song.artist)
                 .font(XFont.font())
-        }.padding(.horizontal)
+        }
             .onTapGesture {
                 hideKeyboard()
             }

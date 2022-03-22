@@ -17,36 +17,30 @@ struct LyricsViewerView: View {
     
     var body: some View {
         VStack {
-            TopBar()
             LyricsViewerTextView()
                 .environmentObject(viewModel)
             BottomBar()
         }
+        .navigationBarItems(trailing: NavTrailing())
     }
     
-    private func TopBar() -> some View {
+    private func NavTrailing() -> some View {
         HStack {
-            PushBackButton()
-            Spacer()
-            Text("Edit")
-                .tapToPush(LyricsEditorView(viewModel.lyrics).navigationBarHidden(true))
-        }.padding(.horizontal)
+            Menu {
+                Button("PDF") {}
+                Button("HTML") {}
+            } label: {
+                XIcon(.square_and_arrow_up)
+            }
+            
+        }
     }
     
     private func BottomBar() -> some View {
         HStack {
-            Stepper("") {
-                viewModel.fontSize += 0.5
-            } onDecrement: {
-                viewModel.fontSize -= 0.5
-            }.labelsHidden()
-
             Spacer()
-            Menu("Export") {
-                Button("PDF") {}
-                Button("HTML") {}
-            }
-        }.padding(.horizontal)
+            XIcon(.pencil)
+                .tapToPush(LyricsEditorView(viewModel.getLyrics()).navigationBarHidden(true))
+        }
     }
 }
-

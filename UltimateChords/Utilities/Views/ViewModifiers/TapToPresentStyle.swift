@@ -21,13 +21,15 @@ struct TapToPresentStyle<Destination: View>: ViewModifier {
     
     
     func body(content: Content) -> some View {
-        content.onTapGesture {
+        Button {
             switch modelType {
             case .FullScreen:
                 isFullScreen = true
             case .Sheet:
                 isSheet = true
             }
+        } label: {
+            content
         }
         .fullScreenCover(isPresented: $isFullScreen) {
             destination

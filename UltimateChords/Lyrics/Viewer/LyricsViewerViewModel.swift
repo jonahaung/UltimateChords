@@ -9,15 +9,12 @@ import Foundation
 
 class LyricsViewerViewModel: ObservableObject {
     
-    let lyrics: Lyrics
-    
-    @Published var fontSize = XFont.Size.Small.rawValue
-    
+    private let lyrics: Lyrics
+
     init(_ lyrics: Lyrics) {
         self.lyrics = lyrics
     }
     
-    func getText() -> String {
-        lyrics.text
-    }
+    func getLyrics() -> Lyrics { lyrics }
+    func getText() -> String { lyrics.text }
 }

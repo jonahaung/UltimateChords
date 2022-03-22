@@ -9,8 +9,6 @@ import Foundation
 enum DemoSongs {
     
     static let authumLeaves = """
-♫♫♪Autumn Leaves♪♫♫  Eric Clapton
-                             Written by Joseph Kosma
 Fm   A#  D#m
 D#m            B      C#              F#
   The falling leaves    drift by my window
@@ -55,8 +53,6 @@ F#         Fm               A#
  
            D#m           Fm    A#               D#m
   Begin to fall….. when autumn leaves begin to fall
- 
-♪♪♫ Enjoy and Please Rate ♪♪♫
 """
     static let bewitched = """
 [INTRO]
@@ -102,49 +98,6 @@ Bewitched, bothered, and bewildered am I
 """
     
     static let sweetChildOMine = """
-Intro]
- 
-e|--------------3-----2------|--------------3-----2------|
-B|-----3---------------------|-----3---------------------|
-G|:-------2--0-----2-----2--:|:-------2--0-----2-----2--:|
-D|--0------------------------|--0------------------------|
-A|---------------------------|---------------------------|
-E|---------------------------|---------------------------|
- 
-e|--------------3-----2------|--------------3-----2------|
-B|-----3---------------------|-----3---------------------|
-G|:-------2--0-----2-----2--:|:-------2--0-----2-----2--:|
-D|--2------------------------|--2------------------------|
-A|---------------------------|---------------------------|
-E|---------------------------|---------------------------|
- 
-e|--------------3-----2------|--------------3-----2------|
-B|-----3---------------------|-----3---------------------|
-G|:-0-----2--0-----2-----2--:|:-0-----2--0-----2-----2--:|
-D|---------------------------|---------------------------|
-A|---------------------------|---------------------------|
-E|---------------------------|---------------------------|
- 
-e|last one------3-----2------|--------------3-----2------|
-B|-----3---------------------|-----3---------------------|
-G|:-------2--0-----2-----2--:|:-------2--0-----2-----2--:| x3
-D|--0------------------------|--0------------------------|
-A|---------------------------|---------------------------|
-E|---------------------------|---------------------------|
- 
-At the third time you play this intro, you must not repeat this last one,  instead you
-do this:
- 
-e|--0-----------0-----2------|--3-----2-----0------------|
-B|--------3------------------|--------------------3------|
-G|:----2-----2-----2-----2--:|:----2-----2-----2--------:|
-D|---------------------------|---------------------------|
-A|---------------------------|---------------------------|
-E|---------------------------|---------------------------|
- 
- 
-[Verse]
- 
 D
 She's got smile that it seems to me
    Cadd9
@@ -205,11 +158,7 @@ Woah, oh, oh, oh, sweet love o' mine
 [Solo 2]
  
 Bass (D Cadd9 G D)
- 
-At this second solo if you are playing with someone and both of you don't know the
-solo, one can play the bass and the other play the intro that I put at the beginning.
- 
- 
+
 [Bridge]
  
  A          C                       D
@@ -250,16 +199,48 @@ Where do we go now?
 sweet chiiiiiiiiiiiiiilldddd of mine
  
  
-So this is my first tab, hope you enjoy.
-P.S.: This is a really great song to play with two acoustic guitars.
-P.P.S.: That chord Cadd9 is like a G but you put the fingers of the 6 string on the 5
-string at the same fret and the one at 5 string goes to 4 string at the same fret and the
-strumming is two down, two up, one down and one up.
-Good luck and put your rating of my tab and a comment please.
+[Intro]
+ 
+e|--------------3-----2------|--------------3-----2------|
+B|-----3---------------------|-----3---------------------|
+G|:-------2--0-----2-----2--:|:-------2--0-----2-----2--:|
+D|--0------------------------|--0------------------------|
+A|---------------------------|---------------------------|
+E|---------------------------|---------------------------|
+ 
+e|--------------3-----2------|--------------3-----2------|
+B|-----3---------------------|-----3---------------------|
+G|:-------2--0-----2-----2--:|:-------2--0-----2-----2--:|
+D|--2------------------------|--2------------------------|
+A|---------------------------|---------------------------|
+E|---------------------------|---------------------------|
+ 
+e|--------------3-----2------|--------------3-----2------|
+B|-----3---------------------|-----3---------------------|
+G|:-0-----2--0-----2-----2--:|:-0-----2--0-----2-----2--:|
+D|---------------------------|---------------------------|
+A|---------------------------|---------------------------|
+E|---------------------------|---------------------------|
+ 
+e|last one------3-----2------|--------------3-----2------|
+B|-----3---------------------|-----3---------------------|
+G|:-------2--0-----2-----2--:|:-------2--0-----2-----2--:| x3
+D|--0------------------------|--0------------------------|
+A|---------------------------|---------------------------|
+E|---------------------------|---------------------------|
+ 
+At the third time you play this intro, you must not
+repeat this last one,  instead you do this:
+ 
+e|--0-----------0-----2------|--3-----2-----0------------|
+B|--------3------------------|--------------------3------|
+G|:----2-----2-----2-----2--:|:----2-----2-----2--------:|
+D|---------------------------|---------------------------|
+A|---------------------------|---------------------------|
+E|---------------------------|---------------------------|
 """
     
     static let perfect = """
-
 (VERSE)
 I found a [G]love for [Em]me
 Darling just [C]dive right in, and follow my [D]lead
@@ -346,10 +327,90 @@ Dm7 Dm7/G Cmaj7 F Bm7b5  E
 Am Dm Am F E
 [Repeat]
 """
-    static let allSongs = [Lyrics(title: "Sweet Chile O' Mine", artist: ["Guns N Roses"], text: sweetChildOMine),
-                           Lyrics(title: "Autumln Leaves", artist: ["Eric Claption"], text: authumLeaves),
-                           Lyrics(title: "Bewitched Bothered & Beweildered", artist: ["Ella Fitzbard"], text: bewitched),
-                           Lyrics(title: "Perfect", artist: ["Ed Shareen"], text: perfect),
-                           Lyrics(title: "Parisienne Walkways", artist: ["Gary Moore"], text: pWalk)
+    
+   static let highway = """
+Intro (w/intro riff):
+/ D – Dsus2 D / D – Dsus2 D /
+/ G - - A / D - - - / - - - - /
+ 
+D (6)
+Nibblin’ on sponge cake
+Watchin’ the sun bake
+                                                A (8)
+All of those tourists covered with oil
+Strummin’ my six-string
+On my front porch swing
+                                                          D     D7
+Smell those shrimp they’re beginnin’ to boil
+
+Chorus:
+G             A                         D         D7
+Wastin’ away again in margaritaville
+G                      A                       D   D7
+Searching for my lost shaker of salt
+G                     A                          D (½)  A (½)         G
+Some people claim that there’s a wo  -  man to blame
+           A (2)
+But I know
+                      D (2)
+it’s nobody’s fault
+D (6)
+I don’t know the reason
+I stayed here all season
+                                                         A (8)
+Nothin’ to show but this brand new tattoo
+But it’s a real beauty
+A Mexican cutie
+                                          D   D7
+How it got here I haven’t a clue
+ 
+Chorus 2:
+G             A                         D         D7
+Wastin’ away again in margaritaville
+G                      A                       D   D7
+Searching for my lost shaker of salt
+G                     A                          D (½)  A (½)         G
+Some people claim that there’s a wo  -  man to blame
+           A (2)
+now I think
+                             D (2)
+Hell, it could be my fault
+ 
+D (6)
+I blew out my flip-flop
+Stepped on a pop-top
+                                                    A (8)
+Cut my heel had to cruise on back home
+But there’s booze in the blender
+And soon it will render
+                                                               D   D7
+That frozen concoction that helps me hang on
+
+Chorus 3:
+G             A                         D         D7
+Wastin’ away again in margaritaville
+G                      A                       D   D7
+Searching for my lost shaker of salt
+G                     A                          D (½)  A (½)         G
+Some people claim that there’s a wo  -  man to blame
+           A (2)
+but I know
+                             D (2)
+it’s my own damn fault
+ 
+G                     A                          D (½)  A (½)         G
+Some people claim that there’s a wo  -  man to blame
+           A (2)
+but I know
+                             D (2)
+it’s my own damn fault
+"""
+    static let allSongs = [Lyrics(title: "Sweet Chile O' Mine", artist: "Guns N Roses", text: sweetChildOMine),
+                           Lyrics(title: "Autumln Leaves", artist: "Eric Claption", text: authumLeaves),
+                           Lyrics(title: "Bewitched Bothered & Beweildered", artist: "Ella Fitzbard", text: bewitched),
+                           Lyrics(title: "Perfect", artist: "Ed Shareen", text: perfect),
+                           Lyrics(title: "Parisienne Walkways", artist: "Gary Moore", text: pWalk),
+                           Lyrics(title: "Key To The Highway", artist: "Ed Shareen", text: highway),
+                           
     ]
 }
