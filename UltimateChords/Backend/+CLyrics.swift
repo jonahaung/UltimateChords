@@ -19,7 +19,7 @@ extension CLyrics {
         }
     }
     
-    class func create(lyrics: Lyrics) {
+    class func create(lyrics: Lyrics) -> CLyrics {
         let context = Persistence.shared.context
         let x = CLyrics(context: context)
         x.id = UUID().uuidString
@@ -27,6 +27,17 @@ extension CLyrics {
         x.title = lyrics.title
         x.text = lyrics.text
         Persistence.shared.save()
-        
+        return x
+    }
+    
+    class func cLyrics(for id: String) -> CLyrics? {
+        let context = Persistence.shared.context
+        let request = NSFetchRequest<CLyrics>(entityName: CLyrics.entity().name!)
+        request.fetchLimit = 1
+        do {
+            return try context.fetch(request).first
+        } catch {
+            fatalError()
+        }
     }
 }

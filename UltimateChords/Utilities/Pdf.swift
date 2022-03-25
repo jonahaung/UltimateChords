@@ -39,6 +39,7 @@ struct Pdf {
         return nil
     }
 }
+
 class PDFDINA4PrintRenderer: UIPrintPageRenderer {
 
     let pageSize = CGSize(width: 595, height: 842)
@@ -70,6 +71,4 @@ extension Data: Identifiable {
     public var id: Data {
         self
     }
-    
-    
 }

@@ -18,8 +18,18 @@ struct HomeView: View {
                 HomeCell(lyrics: Lyrics(cLyrics: $0))
             }
         }
+        .task {
+            viewModel.fetch()
+        }
         .refreshable {
             viewModel.fetch()
+        }
+        .onChange(of: viewModel.documentString) { newValue in
+            guard let newValue = newValue else { return }
+            let song = ChordPro.parse(string: newValue)
+            let lyrics = Lyrics(title: song.title ?? "", artist: song.artist ?? "", text: newValue)
+            let cLycics = CLyrics.create(lyrics: lyrics)
+            viewModel.lyrics.insert(cLycics, at: 0)
         }
         .overlay(SearchContent().environmentObject(searchViewModel))
         .searchable(text: $searchViewModel.searchText, prompt: Text("Title or Artist"))
@@ -29,9 +39,16 @@ struct HomeView: View {
     
     private func navTrailing() -> some View {
         HStack {
+            XIcon(.doc_text_viewfinder)
+                .tapToPresent(DocumentPicker(fileContent: $viewModel.documentString))
             XIcon(.square_and_pencil)
                 .tapToPush(LyricsCreaterView())
         }
     }
 }
 
+extension String: Identifiable {
+    public var id: String { self }
+    
+    
+}

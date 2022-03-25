@@ -14,76 +14,97 @@ protocol WidthFittingTextViewDelegate: AnyObject {
 class WidthFittingTextView: UITextView {
     
     weak var widthFittingTextViewDelegate: WidthFittingTextViewDelegate?
+    var isDinamicFontSizeEnabled = true
     
     init() {
         super.init(frame: .zero, textContainer: nil)
         keyboardDismissMode = .interactive
-        textContainer.lineFragmentPadding = 5
+        textContainerInset = .zero
+        textContainer.lineFragmentPadding = 8
         showsVerticalScrollIndicator = false
+        dataDetectorTypes = []
         delegate = self
     }
     
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     
-    private var fontSize: CGFloat{
-        get {
-            return font?.pointSize ?? 0
-        }
-        set {
-            guard newValue != fontSize else { return }
-            font = font?.withSize(newValue)
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if hasText {
+            adjustFontSize()
         }
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        if !isEditable {
-            if widthFittingTextViewDelegate != nil {
-                adjustFontSize()
-            }
+    var fontSizePercent: CGFloat = 1 {
+        didSet {
+            guard oldValue != fontSizePercent else { return }
+            updateAttributes()
         }
+    }
+    
+    private func updateAttributes() {
+        textStorage.beginEditing()
+        textStorage.enumerateAttributes(in: self.text.range()) { attr, range, pointer in
+            var attr = attr
+            let oldFont = attr[.font] as? UIFont ?? XFont.body(for: self.text)
+            attr[.font] = oldFont.withSize(oldFont.pointSize * fontSizePercent)
+            
+            let newString = textStorage.attributedSubstring(from: range).string
+            
+            textStorage.replaceCharacters(in: range, with: NSAttributedString(string: newString, attributes: attr))
+        }
+        textStorage.endEditing()
     }
     
     private func adjustFontSize() {
+        guard isDinamicFontSizeEnabled, !attributedText.string.isEmpty else { return }
+        self.fontSizePercent = 1
         let containerSize = textContainer.size
         let largestSize = CGSize(width: .greatestFiniteMagnitude, height: containerSize.height)
-        if isEditable {
-            fontSize = 30
-        }
-        while (containerSize.width - textContainer.lineFragmentPadding) < attributedText.size(for: largestSize).width {
-            fontSize -= 0.5
-        }
-        widthFittingTextViewDelegate?.textView(self, didAdjustFontSize: fontSize)
-    }
-    
-    override func paste(_ sender: Any?) {
-        super.paste(sender)
-        adjustFontSize()
-    }
-
-    override func cut(_ sender: Any?) {
-        super.cut(sender)
-        adjustFontSize()
-    }
-
-    override func insertText(_ text: String) {
-        super.insertText(text)
-        adjustFontSize()
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesEnded(touches, with: event)
-        if let first = touches.first {
-            let location = first.location(in: self)
-            selectedTextRange = self.getCharacterRangeAtPosition(location)
+        while (containerSize.width) < attributedText.size(for: largestSize).width {
+            self.fontSizePercent -= 0.01
         }
     }
     
-//    func textViewDidChangeSelection(_ textView: UITextView) {
-//        guard let selectedTextRange = self.selectedTextRange else { return }
-//        guard let paragraphRange = self.tokenizer.rangeEnclosingPosition(selectedTextRange.start, with: .character, inDirection: .init(rawValue: 0)) else { return }
-//                self.selectedTextRange = paragraphRange
+    
+//    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        super.touchesEnded(touches, with: event)
+//
+//        if !isEditable {
+//            if let first = touches.first {
+//                let location = first.location(in: self)
+//                if let word = self.getWordAtPosition(location), !word.isWhitespace {
+//                    selectedTextRange = self.getWordRangeAtPosition(location)
+//                }
+//
+//            }
+//        }
 //    }
+//
+//
+//    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+//        guard selectedTextRange != nil else { return false }
+//
+//        if action == #selector(highlightedAction(_:)) ||
+//                 action == #selector(UIResponderStandardEditActions.delete(_:)) {
+//             return true
+//         }
+//         return false
+//    }
+
+    
+    override func delete(_ sender: Any?) {
+        textStorage.deleteCharacters(in: selectedRange)
+        selectedRange.length = 0
+        delegate?.textViewDidChange?(self)
+    }
+    
+    @objc func highlightedAction(_ sender: Any) {
+        let random = ["[G]", "[Am]", "[F]", "[C]", "[Dm]", "[Em]"]
+        self.textStorage.insert(NSAttributedString(string: random.randomElement()!, attributes: typingAttributes), at: selectedRange.location)
+        delegate?.textViewDidChange?(self)
+    }
+
 }
 
 extension WidthFittingTextView: UITextViewDelegate {

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LyricsViewerView: View {
-    
+
     @StateObject private var viewModel: LyricsViewerViewModel
     
     init(_ lyrics: Lyrics) {
@@ -16,24 +16,22 @@ struct LyricsViewerView: View {
     }
     
     var body: some View {
-        VStack {
-            
+        VStack(spacing: .zero) {
             LyricsViewerTextView()
-                .environmentObject(viewModel)
             BottomBar()
         }
+        .environmentObject(viewModel)
+        .navigationBarItems(trailing: NavTrailing())
         .navigationBarTitleDisplayMode(.inline)
-        .navigationBarItems(leading: NavLeading(), trailing: NavTrailing())
-        .sheet(item: $viewModel.pdfData) { data in
-            PdfView(data)
+        .fullScreenCover(item: $viewModel.pdfData) { data in
+            PickerNavigationView {
+                PdfView(data)
+            }
         }
-        .task {
-            viewModel.detect()
-        }
-    }
-    private func NavLeading() -> some View {
-        HStack {
-            
+        .fullScreenCover(item: $viewModel.song) { song in
+            PickerNavigationView {
+                ViewSong(song: song)
+            }
         }
     }
     
@@ -43,26 +41,24 @@ struct LyricsViewerView: View {
                 Button("PDF") {
                     viewModel.makePDF()
                 }
-                Button("HTML") {}
+                Button("HTML") {
+                    viewModel.makeHtml()
+                }
             } label: {
                 XIcon(.square_and_arrow_up)
             }
-            
         }
     }
     
     private func BottomBar() -> some View {
         HStack {
             Button {
-                viewModel.detect()
+                viewModel.toggleSelect()
             } label: {
-                Text("Detect")
+                XIcon(.music_quarternote_3)
             }
-
             Spacer()
-            XIcon(.pencil)
-                .tapToPush(LyricsEditorView(viewModel.lyrics).navigationBarHidden(true))
-        }.padding()
+        }.padding(.horizontal)
     }
 }
 

@@ -8,44 +8,173 @@
 import Foundation
 import UIKit
 
-struct Lyrics {
+class Lyrics: Identifiable {
     
     let id: String
     var title: String
     var artist: String
     var text: String
-    let isMyanmar: Bool
     
     init(id: String = UUID().uuidString, title: String, artist: String, text: String) {
         self.id = id
         self.title = title
         self.artist = artist
         self.text = text
-        self.isMyanmar = title.language == "my"
     }
     
-    init(cLyrics: CLyrics) {
+    convenience init(cLyrics: CLyrics) {
         self.init(id: cLyrics.id!, title: cLyrics.title ?? "", artist: cLyrics.artist ?? "", text: cLyrics.text ?? "")
     }
     
-    func titleFont() -> UIFont {
-        return isMyanmar ? XFont.mmUiFont(name: .MyanmarSquare, .Label) : XFont.uiFont(weight: .SemiBold, .Label)
+    enum DisplayMode {
+        case Default, Editing, TextOnly
     }
-    func textFont() -> UIFont {
-        return isMyanmar ? XFont.mmUiFont(.System) : XFont.uiFont(weight: .Medium, .Label)
+    var displayMode = DisplayMode.Default
+    
+}
+
+extension Lyrics {
+    
+    func pdfData() -> Data? {
+        if let url = Pdf.createPdf(from: self.displayText) {
+            return try? Data.init(contentsOf: url)
+        }
+        return nil
     }
-    func artistFont() -> UIFont {
-        return artist.language == "my" ? XFont.mmUiFont(name: .MyanmarSansPro, .Small) : XFont.uiFont(weight: .Medium, .Small)
+    
+    var displayText: NSAttributedString {
+        switch displayMode {
+        case .Default:
+            return redableText()
+        case .Editing:
+            return chordProText()
+        case .TextOnly:
+            return textOnly()
+        }
+    }
+    
+    private func createTitle() -> NSMutableAttributedString {
+        let title = NSAttributedString(self.title, style: .title).mutable
+        title.append(.init("\r" + self.artist.newLine, style: .subheadline))
+        return title
+    }
+    
+   
+    private func redableText() -> NSAttributedString {
+        let attrStr = createTitle()
+        func processLines(textLines: [String]) {
+            
+            for var textLine in textLines {
+                var chordLine = String()
+                
+                while let match = RegularExpression.chordPattern.firstMatch(in: textLine, options: [], range: textLine.range()) {
+                    if match.numberOfRanges == 0 {
+                        break
+                    }
+                    let nsString = textLine as NSString
+                    let subRange = match.range
+                    let subString = nsString.substring(with: subRange)
+                    
+                    textLine = (textLine as NSString).replacingCharacters(in: subRange, with: "\u{200c}")
+                   
+                    if chordLine.utf16.count >= subRange.location {
+                        chordLine += String(subString)
+                    } else {
+                        while chordLine.utf16.count < subRange.location {
+                            chordLine += " "
+                        }
+                        chordLine += String(subString)
+                    }
+                }
+                
+                chordLine = RegularExpression.chordPattern.stringByReplacingMatches(in: chordLine, withTemplate: "$1")
+                if !chordLine.isWhitespace {
+                    attrStr.append(.init(chordLine.newLine, foreGroundColor: UIColor.systemRed))
+                }
+                if !textLine.isWhitespace {
+                    attrStr.append(.init(textLine.newLine))
+                }
+            }
+        }
+        processLines(textLines: text.lines())
+        
+        return attrStr
+    }
+    
+    private func textOnly() -> NSAttributedString {
+        
+        let attrStr = createTitle()
+        let text = RegularExpression.chordPattern.stringByReplacingMatches(in: self.text, withTemplate: String())
+        attrStr.append(.init(text))
+        return attrStr
+    }
+    
+    func chordProText() -> NSAttributedString {
+        let mutable = NSAttributedString(text).mutable
+        
+        getChordTags().forEach {
+            mutable.addAttributes($0.customTextAttributes, range: $0.range)
+        }
+        
+        let attrStr = createTitle()
+        attrStr.append(mutable)
+        
+        return attrStr
+    }
+    
+    
+    private func getChordTags() -> [ChordTag] {
+
+        let nsString = self.text as NSString
+        
+        var tags = [ChordTag]()
+        RegularExpression.chordPattern.enumerateMatches(in: self.text, options: [], range: text.range()) { result, matches, pointer in
+            guard let result = result else {
+                return
+            }
+            let subRange = result.range
+            let subString = nsString.substring(with: subRange)
+            
+            let tag = ChordTag(name: subString, range: subRange)
+            tags.append(tag)
+        }
+        return tags
     }
 }
 
-extension Lyrics: ChordDetection {
+extension String {
     
-    func lyricsTags() -> LyricsTags {
-        detectChord(from: text)
+    func splitByLength(_ length: Int, seperator: String) -> [String] {
+        var result = [String]()
+        var collectedWords = [String]()
+        collectedWords.reserveCapacity(length)
+        var count = 0
+
+        for word in self.components(separatedBy: seperator) {
+            count += word.count + 1 //add 1 to include space
+            if (count > length) {
+                result.append(collectedWords.map { String($0) }.joined(separator: seperator) )
+                collectedWords.removeAll(keepingCapacity: true)
+
+                count = word.count
+            }
+            
+            collectedWords.append(word)
+        }
+
+        // Append the remainder
+        if !collectedWords.isEmpty {
+            result.append(collectedWords.map { String($0) }.joined(separator: seperator))
+        }
+
+        return result
     }
-    
+
 }
-extension Lyrics: Identifiable {
-    
+
+
+extension String {
+    func size(OfFont font: UIFont) -> CGSize {
+        return (self as NSString).size(withAttributes: [NSAttributedString.Key.font: font])
+    }
 }

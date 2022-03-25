@@ -20,9 +20,6 @@ struct LyricsCreaterView: View {
             if viewModel.canInputLyrics {
                 LyricsCreaterTextView()
                     .environmentObject(viewModel)
-                
-                Divider()
-                BottomBar()
             } else {
                 Form {
                     Section {
@@ -72,7 +69,6 @@ struct LyricsCreaterView: View {
             } label: {
                 Text(viewModel.canInputLyrics ? "Save" : "Continue")
             }
-            .disabled(viewModel.canInputLyrics ? viewModel.lyrics.text.isEmpty : !viewModel.isValidArtist() )
         }
         
     }

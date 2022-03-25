@@ -12,6 +12,8 @@ extension NSParagraphStyle {
     
     static let nonLineBreak: NSParagraphStyle = {
         $0.lineBreakMode = .byClipping
+        $0.alignment = NSTextAlignment.left
+        $0.allowsDefaultTighteningForTruncation = false
         return $0
     }(NSMutableParagraphStyle())
 }

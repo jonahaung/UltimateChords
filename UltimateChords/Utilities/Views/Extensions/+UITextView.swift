@@ -14,6 +14,7 @@ extension UITextView {
         return rects.map{ $0.rect }.reduce(CGRect.null) { partialResult, rect in
             partialResult.union(rect)
         }
+        
         var returnRect = CGRect.zero
         for thisSelRect in rects {
             if thisSelRect == rects.first {
@@ -77,27 +78,4 @@ extension UITextView {
         }
         return nil
     }
-    
-    func scrollToCorrectPosition() {
-        if self.isFirstResponder {
-            self.scrollRangeToVisible(NSMakeRange(-1, 0)) // Scroll to bottom
-        } else {
-            self.scrollRangeToVisible(NSMakeRange(0, 0)) // Scroll to top
-        }
-    }
-    func ensureCaretToTheEnd() {
-        selectedTextRange = textRange(from: endOfDocument, to: endOfDocument)
-    }
-}
-
-extension UIScrollView{
-
-    func scrollToBottom(animated: Bool) {
-        var offset = contentOffset
-        let inset = contentInset
-        offset.y = max(-inset.top, contentSize.height - bounds.height + inset.bottom + safeAreaInsets.bottom)
-        
-        setContentOffset(offset, animated: animated)
-    }
-    
 }

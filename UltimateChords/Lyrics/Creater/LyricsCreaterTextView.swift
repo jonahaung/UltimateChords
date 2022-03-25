@@ -13,8 +13,12 @@ struct LyricsCreaterTextView: UIViewRepresentable {
     
     func makeUIView(context: Context) -> WidthFittingTextView {
         let uiView = WidthFittingTextView()
-        uiView.typingAttributes = [.font: context.coordinator.lyrics.textFont(), .paragraphStyle: NSParagraphStyle.nonLineBreak]
+        uiView.typingAttributes = [.font: XFont.body(for: context.coordinator.lyrics.title), .paragraphStyle: NSParagraphStyle.nonLineBreak]
+        uiView.isEditable = true
+        uiView.isSelectable = true
+        uiView.isDinamicFontSizeEnabled = false
         uiView.widthFittingTextViewDelegate = context.coordinator
+        uiView.attributedText = context.coordinator.lyrics.displayText
         return uiView
     }
     
