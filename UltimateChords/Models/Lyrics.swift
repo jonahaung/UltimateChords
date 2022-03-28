@@ -26,82 +26,13 @@ class Lyrics: Identifiable {
         self.init(id: cLyrics.id!, title: cLyrics.title ?? "", artist: cLyrics.artist ?? "", text: cLyrics.text ?? "")
     }
     
-    enum DisplayMode {
-        case Default, Editing, TextOnly
-    }
-    var displayMode = DisplayMode.Default
+    
     
 }
 
 extension Lyrics {
     
-    func pdfData() -> Data? {
-        if let url = Pdf.createPdf(from: self.displayText) {
-            return try? Data.init(contentsOf: url)
-        }
-        return nil
-    }
-    
-    var displayText: NSAttributedString {
-        switch displayMode {
-        case .Default:
-            return redableText()
-        case .Editing:
-            return chordProText()
-        case .TextOnly:
-            return textOnly()
-        }
-    }
-    
-    private func createTitle() -> NSMutableAttributedString {
-        let title = NSAttributedString(self.title, style: .title).mutable
-        title.append(.init("\r" + self.artist.newLine, style: .subheadline))
-        return title
-    }
-    
-   
-    private func redableText() -> NSAttributedString {
-        let attrStr = createTitle()
-        func processLines(textLines: [String]) {
-            
-            for var textLine in textLines {
-                var chordLine = String()
-                
-                while let match = RegularExpression.chordPattern.firstMatch(in: textLine, options: [], range: textLine.range()) {
-                    if match.numberOfRanges == 0 {
-                        break
-                    }
-                    let nsString = textLine as NSString
-                    let subRange = match.range
-                    let subString = nsString.substring(with: subRange)
-                    
-                    textLine = (textLine as NSString).replacingCharacters(in: subRange, with: "\u{200c}")
-                   
-                    if chordLine.utf16.count >= subRange.location {
-                        chordLine += String(subString)
-                    } else {
-                        while chordLine.utf16.count < subRange.location {
-                            chordLine += " "
-                        }
-                        chordLine += String(subString)
-                    }
-                }
-                
-                chordLine = RegularExpression.chordPattern.stringByReplacingMatches(in: chordLine, withTemplate: "$1")
-                if !chordLine.isWhitespace {
-                    attrStr.append(.init(chordLine.newLine, foreGroundColor: UIColor.systemRed))
-                }
-                if !textLine.isWhitespace {
-                    attrStr.append(.init(textLine.newLine))
-                }
-            }
-        }
-        processLines(textLines: text.lines())
-        
-        return attrStr
-    }
-    
-    private func textOnly() -> NSAttributedString {
+    func textOnly() -> NSAttributedString {
         
         let attrStr = createTitle()
         let text = RegularExpression.chordPattern.stringByReplacingMatches(in: self.text, withTemplate: String())
@@ -140,6 +71,60 @@ extension Lyrics {
         }
         return tags
     }
+    
+    func pdfData() -> Data? {
+        return Pdf.data(from: ChordPro.parse(string: text).attributedText)
+    }
+    
+    
+    
+    private func createTitle() -> NSMutableAttributedString {
+        let title = NSAttributedString(self.title, style: .title).mutable
+        title.append(.init("\r" + self.artist.newLine, style: .subheadline))
+        return title
+    }
+    
+   
+    private func redableText() -> NSAttributedString {
+        let attrStr = createTitle()
+        func processLines(textLines: [String]) {
+            
+            for var textLine in textLines {
+                var chordLine = String()
+                
+                while let match = RegularExpression.chordPattern.firstMatch(in: textLine, options: [], range: textLine.range()) {
+        
+                    let nsString = textLine as NSString
+                    let subRange = match.range
+                    let subString = nsString.substring(with: subRange)
+                    
+                    textLine = (textLine as NSString).replacingCharacters(in: subRange, with: "\u{200c}")
+                   
+                    if chordLine.utf16.count >= subRange.location {
+                        chordLine += String(subString)
+                    } else {
+                        while chordLine.utf16.count < subRange.location {
+                            chordLine += " "
+                        }
+                        chordLine += String(subString)
+                    }
+                }
+                
+                chordLine = RegularExpression.chordPattern.stringByReplacingMatches(in: chordLine, withTemplate: "$1")
+                if !chordLine.isWhitespace {
+                    attrStr.append(.init(chordLine.newLine, foreGroundColor: UIColor.systemRed))
+                }
+                if !textLine.isWhitespace {
+                    attrStr.append(.init(textLine.newLine))
+                }
+            }
+        }
+        processLines(textLines: text.lines())
+        
+        return attrStr
+    }
+    
+    
 }
 
 extension String {
@@ -169,7 +154,6 @@ extension String {
 
         return result
     }
-
 }
 
 

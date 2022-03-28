@@ -9,79 +9,84 @@ import UIKit
 
 final class LyricsCreaterViewModel: NSObject, ObservableObject {
     
-    var lyrics = Lyrics(title: "Perfect", artist: "Ed Sheron", text: perfect)
-    @Published var canInputLyrics = false
+    @Published var lyrics = Lyrics(title: "", artist: "", text: perfect)
     
-    override init() {
-        lyrics.displayMode = .Editing
-    }
     func isValidArtist() -> Bool {
         !lyrics.artist.isEmpty && !lyrics.artist.isEmpty
     }
     
     func save() {
-        CLyrics.create(lyrics: self.lyrics)
+        _ = CLyrics.create(lyrics: self.lyrics)
     }
 }
 
-extension LyricsCreaterViewModel: WidthFittingTextViewDelegate {
+extension LyricsCreaterViewModel: UITextViewDelegate {
     
-    func textView(_ textView: WidthFittingTextView, didAdjustFontSize fontSize: CGFloat) {
-        print(fontSize)
-    }
-    
-    func textViewDidChange(_ textView: WidthFittingTextView) {
-        self.lyrics.text = textView.text
+    func textViewDidChange(_ textView: UITextView) {
+        lyrics.title = textView.text.words().randomElement() ?? ""
+        lyrics.text = textView.text
     }
 }
-
 
  let perfect = """
-(VERSE)
-I found a [G]love for [Em]me
-Darling just [C]dive right in, and follow my [D]lead
-Well I found a [G]girl beautiful[Em] and sweet
-I never [C]knew you were the someone waiting for [D]me
 
-(PRE-CHORUS)
-Cause we were just kids when we [G]fell in love
-Not knowing [Em]what it was, I will not [C]give you up this [G]ti-[D]ime
-But darling just [G]kiss me slow, your heart is [Em]all I own
-And in your [C]eyes you’re holding [D]mine
+တရားမျှတ လွတ်လပ်ခြင်းနဲ့မသွေ၊
+တို့ပြည်၊ တို့မြေ၊
+များလူခပ်သိမ်း၊ ငြိမ်းချမ်းစေဖို့၊
+ခွင့်တူညီမျှ၊ ဝါဒဖြူစင်တဲ့ပြည်၊
+တို့ပြည်၊ တို့မြေ၊
+ပြည်ထောင်စုအမွေ၊ အမြဲတည်တံ့စေ၊
+အဓိဋ္ဌာန်ပြုပေ၊ ထိန်းသိမ်းစို့လေ
 
-(CHORUS)
-Baby, [Em]I’m [C]dancing in the [G]dark, with [D]you between my [Em]arms
-[C]Barefoot on the [G]grass, [D]listening to our [Em]favorite song
-When you [C]said you looked a [G]mess, I whispered [D]underneath my [Em]breath
-But you [C]heard it, darling [G]you look [D]perfect tonight
-[G] [D/F#] [Em] [D] [C] - [D]
+𝄆 ကမ္ဘာမကျေ၊ မြန်မာပြည်၊
+တို့ဘိုးဘွား အမွေစစ်မို့ ချစ်မြတ်နိုးပေ။ 𝄇
+ပြည်ထောင်စုကို အသက်ပေးလို့ တို့ကာကွယ်မလေ၊
+ဒါတို့ပြည် ဒါတို့မြေ တို့ပိုင်နက်မြေ။
+တို့ပြည် တို့မြေ အကျိုးကို ညီညာစွာတို့တစ်တွေ
+ထမ်းဆောင်ပါစို့လေ တို့တာဝန်ပေ အဖိုးတန်မြေ။
 
-(VERSE)
-Well I found a [G]woman, stronger than [Em]anyone I know
-She shares my [C]dreams, I hope that someday I’ll share her [D]home
-I found a [G]love, to carry [Em]more than just my secrets
-To carry [C]love, to carry children of our [D]own
+တရားမျှတ လွတ်လပ်ခြင်းနဲ့မသွေ၊
+တို့ပြည်၊ တို့မြေ၊
+များလူခပ်သိမ်း၊ ငြိမ်းချမ်းစေဖို့၊
+ခွင့်တူညီမျှ၊ ဝါဒဖြူစင်တဲ့ပြည်၊
+တို့ပြည်၊ တို့မြေ၊
+ပြည်ထောင်စုအမွေ၊ အမြဲတည်တံ့စေ၊
+အဓိဋ္ဌာန်ပြုပေ၊ ထိန်းသိမ်းစို့လေ
 
-(PRE-CHORUS)
-We are still kids, but we’re [G]so in love, fighting [Em]against all odds
-I know that we’ll [C]be alright this [G]ti-[D]ime
-Darling just [G]hold my hand, be my girl, I’ll [Em]be your man
-I see my [C]future in your [D]eyes
+𝄆 ကမ္ဘာမကျေ၊ မြန်မာပြည်၊
+တို့ဘိုးဘွား အမွေစစ်မို့ ချစ်မြတ်နိုးပေ။ 𝄇
+ပြည်ထောင်စုကို အသက်ပေးလို့ တို့ကာကွယ်မလေ၊
+ဒါတို့ပြည် ဒါတို့မြေ တို့ပိုင်နက်မြေ။
+တို့ပြည် တို့မြေ အကျိုးကို ညီညာစွာတို့တစ်တွေ
+ထမ်းဆောင်ပါစို့လေ တို့တာဝန်ပေ အဖိုးတန်မြေ။
 
-(CHORUS)
-Baby, [Em]I’m [C]dancing in the [G]dark, with [D]you between my [Em]arms
-[C]Barefoot on the [G]grass, [D]listening to our [Em]favorite song
-When I [C]saw you in that [G]dress, looking so [D]beautiful
-I [Em]don't [C]deserve this, darling [G]you look [D]perfect tonight
+တရားမျှတ လွတ်လပ်ခြင်းနဲ့မသွေ၊
+တို့ပြည်၊ တို့မြေ၊
+များလူခပ်သိမ်း၊ ငြိမ်းချမ်းစေဖို့၊
+ခွင့်တူညီမျှ၊ ဝါဒဖြူစင်တဲ့ပြည်၊
+တို့ပြည်၊ တို့မြေ၊
+ပြည်ထောင်စုအမွေ၊ အမြဲတည်တံ့စေ၊
+အဓိဋ္ဌာန်ပြုပေ၊ ထိန်းသိမ်းစို့လေ
 
-(BRIDGE)
-[G] [Em] [C] [D]
+𝄆 ကမ္ဘာမကျေ၊ မြန်မာပြည်၊
+တို့ဘိုးဘွား အမွေစစ်မို့ ချစ်မြတ်နိုးပေ။ 𝄇
+ပြည်ထောင်စုကို အသက်ပေးလို့ တို့ကာကွယ်မလေ၊
+ဒါတို့ပြည် ဒါတို့မြေ တို့ပိုင်နက်မြေ။
+တို့ပြည် တို့မြေ အကျိုးကို ညီညာစွာတို့တစ်တွေ
+ထမ်းဆောင်ပါစို့လေ တို့တာဝန်ပေ အဖိုးတန်မြေ။
 
-(CHORUS)
-Baby, [Em]I’m [C]dancing in the [G]dark, with [D]you between my [Em]arms
-[C]Barefoot on the [G]grass, [D]listening to our [Em]favorite song
-I have [C]faith in what I [G]see, now I know [D]I have met an [Em]angel
-In [C]person, and [G]she looks [D]perfect
-No I [C]don't deserve it, [D]you look perfect tonight
-[G] [D/F#] [Em] [D] [C] - [D] -
+တရားမျှတ လွတ်လပ်ခြင်းနဲ့မသွေ၊
+တို့ပြည်၊ တို့မြေ၊
+များလူခပ်သိမ်း၊ ငြိမ်းချမ်းစေဖို့၊
+ခွင့်တူညီမျှ၊ ဝါဒဖြူစင်တဲ့ပြည်၊
+တို့ပြည်၊ တို့မြေ၊
+ပြည်ထောင်စုအမွေ၊ အမြဲတည်တံ့စေ၊
+အဓိဋ္ဌာန်ပြုပေ၊ ထိန်းသိမ်းစို့လေ
+
+𝄆 ကမ္ဘာမကျေ၊ မြန်မာပြည်၊
+တို့ဘိုးဘွား အမွေစစ်မို့ ချစ်မြတ်နိုးပေ။ 𝄇
+ပြည်ထောင်စုကို အသက်ပေးလို့ တို့ကာကွယ်မလေ၊
+ဒါတို့ပြည် ဒါတို့မြေ တို့ပိုင်နက်မြေ။
+တို့ပြည် တို့မြေ အကျိုးကို ညီညာစွာတို့တစ်တွေ
+ထမ်းဆောင်ပါစို့လေ တို့တာဝန်ပေ အဖိုးတန်မြေ။
 """

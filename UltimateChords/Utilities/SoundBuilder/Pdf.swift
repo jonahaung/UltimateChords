@@ -9,7 +9,8 @@ import PDFKit
 
 struct Pdf {
     
-    static func createPdf(from attributedString: NSAttributedString) -> URL? {
+    static func data(from attributedString: NSAttributedString) -> Data {
+        
         let pdfRenderer = PDFDINA4PrintRenderer()
         let printFormatter = UISimpleTextPrintFormatter(attributedText: attributedString)
         pdfRenderer.addPrintFormatter(printFormatter, startingAtPageAt: 0)
@@ -17,10 +18,9 @@ struct Pdf {
        
         do {
             try pdfRenderer.renderPDF(to: documentURL)
-            return documentURL
+            return try Data.init(contentsOf: documentURL)
         } catch {
-            print(error)
-            return nil
+            fatalError()
         }
     }
     

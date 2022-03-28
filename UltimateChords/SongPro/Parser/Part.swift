@@ -2,12 +2,13 @@
 
 import Foundation
 
-public class Part: Identifiable {
-    public var id = UUID()
-    public var chord: String?
-    public var lyric: String?
+class Part: Identifiable {
     
-    public var empty: Bool {
+    var id = UUID()
+    var chord: String?
+    var lyric: String?
+    
+    var empty: Bool {
         return (chord ?? "").isEmpty && (lyric ?? "").isEmpty
     }
 }

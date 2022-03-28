@@ -19,6 +19,7 @@ struct PdfView: UIViewRepresentable {
     init(_ data: Data, singlePage: Bool = false) {
         self.data = data
         self.singlePage = singlePage
+        
     }
 
     func makeUIView(context _: UIViewRepresentableContext<PdfView>) -> UIViewType {

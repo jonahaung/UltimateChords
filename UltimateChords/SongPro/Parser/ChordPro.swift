@@ -7,7 +7,7 @@
 import SwiftUI
 import SwiftyChords
 
-public class ChordPro {
+class ChordPro {
     
     static let directiveRegex = try? NSRegularExpression(pattern: "\\{(\\w*):([^%]*)\\}")
     static let directiveEmptyRegex = try? NSRegularExpression(pattern: "\\{(\\w*)\\}")
@@ -17,38 +17,35 @@ public class ChordPro {
     static let chordsRegex = try? NSRegularExpression(pattern: "\\[([\\w#b\\/]+)\\]?", options: .caseInsensitive)
     
     static func parse(string: String) -> Song {
-        print("\nParsing Song")
         var song = Song()
         song.rawText = string
         var currentSection = Sections()
         song.sections.append(currentSection)
-        
-        for text in string.lines() {
-            if (text.starts(with: "{")) {
-                processDirective(text: text, song: &song, currentSection: &currentSection)
+        string.lines().forEach { line in
+            if line.starts(with: "{") {
+                processDirective(text: line, song: &song, currentSection: &currentSection)
+            } else if line.starts(with: "#"){
+                let songLine = Line()
+                songLine.comment = line
+                currentSection.lines.append(songLine)
             } else {
-                processLyrics(text: text, song: &song, currentSection: &currentSection)
+                processLyrics(text: line, song: &song, currentSection: &currentSection)
             }
         }
-        /// A new section will always be added when and empty new-line is found,
-        /// however, if that's just at the end of a file it will leave us with this empty section.
+        
         if currentSection.lines.isEmpty {
-            /// Remove this section
             song.sections.removeLast()
         }
-        /// Turn the song into a HTML page
-        processHtml(song: &song)
-        /// All done!
         return song
     }
     
     // MARK: - func: processDirective
     fileprivate static func processDirective(text: String, song: inout Song, currentSection: inout Sections) {
-       
         var key: String?
         var value: String?
-        /// First, stuff with a value
-        if let match = directiveRegex?.firstMatch(in: text, options: [], range: NSRange(location: 0, length: text.utf16.count)) {
+        
+        
+        if let match = RegularExpression.directivePattern.firstMatch(in: text, range: text.range()) {
             if let keyRange = Range(match.range(at: 1), in: text) {
                 key = text[keyRange].trimmingCharacters(in: .newlines)
             }
@@ -67,14 +64,18 @@ public class ChordPro {
             case "c", "comment":
                 processComments(text: value!, song: &song, currentSection: &currentSection)
             case "soc":
+                currentSection.sectionKind = .Cho
                 processSection(text: value!, type: "chorus", song: &song, currentSection: &currentSection)
             case "sot":
+                currentSection.sectionKind = .Tab
                 processSection(text: value!, type: "tab", song: &song, currentSection: &currentSection)
             case "sov":
+                currentSection.sectionKind = .Verse
                 processSection(text: value!, type: "verse", song: &song, currentSection: &currentSection)
             case "sog":
                 processSection(text: value!, type: "grid", song: &song, currentSection: &currentSection)
             case "chorus":
+                currentSection.sectionKind = .Cho
                 processSection(text: value!, type: "chorus", song: &song, currentSection: &currentSection)
                 currentSection = Sections()
                 song.sections.append(currentSection)
@@ -100,6 +101,8 @@ public class ChordPro {
                 break
             }
         }
+        
+        
         /// Second, stuff without a value
         if let match = directiveEmptyRegex?.firstMatch(in: text, options: [], range: NSRange(location: 0, length: text.utf16.count)) {
             if let keyRange = Range(match.range(at: 1), in: text) {
@@ -124,17 +127,18 @@ public class ChordPro {
         }
     }
     
+    
     // MARK: - func: processSection
     fileprivate static func processSection(text: String, type: String, song: inout Song, currentSection: inout Sections) {
         if currentSection.lines.isEmpty {
             /// There is already an empty section
             currentSection.type = type
-            currentSection.name = text
+            currentSection.name = type
         } else {
             /// Make a new section
             currentSection = Sections()
             currentSection.type = type
-            currentSection.name = text
+            currentSection.name = type
             song.sections.append(currentSection)
         }
     }
@@ -175,8 +179,10 @@ public class ChordPro {
             }
             return
         }
+        
         /// Start with a fresh line:
-        let line = Line()
+        var line = Line()
+        
         if text.starts(with: "|-") || currentSection.type == "tab" {
             if currentSection.type == nil {
                 currentSection.type = "tab"
@@ -186,8 +192,7 @@ public class ChordPro {
             if currentSection.type == nil {
                 currentSection.type = "grid"
             }
-            if let measureMatches = measuresRegex?.matches(in: text, range: NSRange(location: 0, length: text.utf16.count)) {
-                
+            if let measureMatches = measuresRegex?.matches(in: text, range: text.range()) {
                 var measures = [Measure]()
                 
                 for match in measureMatches {
@@ -209,61 +214,150 @@ public class ChordPro {
                 line.measures = measures
             }
         } else {
-            if let matches = lyricsRegex?.matches(in: text, range: NSRange(location: 0, length: text.utf16.count)) {
-                
-                for match in matches {
-                    let part = Part()
-                    
-                    if let keyRange = Range(match.range(at: 1), in: text) {
-                        part.chord = text[keyRange]
-                            .trimmingCharacters(in: .newlines)
-                            .replacingOccurrences(of: "[", with: "")
-                            .replacingOccurrences(of: "]", with: "")
-                        if currentSection.type == nil {
-                            currentSection.type = "verse"
-                        }
-                        /// Use the first chord as key for the song if not set.
-                        if song.key == nil {
-                            song.key = part.chord
-                        }
-                        /// Save in the chord list
-                        if !song.chords.contains(where: { $0.name == part.chord! }) {
-                            let process = processChord(chord: part.chord!)
-                            let chord = Chord(name: part.chord!, key: process.key, suffix: process.suffix, define: "")
-                            song.chords.append(chord)
-                        }
-                    } else {
-                        part.chord = ""
-                    }
-                    if let valueRange = Range(match.range(at: 2), in: text) {
-                        /// See https://stackoverflow.com/questions/31534742/space-characters-being-removed-from-end-of-string-uilabel-swift
-                        /// for the funny stuff added to the string...
-                        part.lyric = String(text[valueRange] + "\u{200c}")
-                    } else {
-                        part.lyric = ""
-                    }
-                    if !(part.empty) {
-                        line.parts.append(part)
-                    }
-                }
+            processParts(text, song: &song, currentSection: &currentSection, line: &line)
+            
+        }
+        line.parts.forEach { part in
+            if !song.chords.contains(where: { $0.name == part.chord! }) {
+                let process = processChord(chord: part.chord!)
+                let chord = Chord(name: part.chord!, key: process.key, suffix: process.suffix, define: "")
+                song.chords.append(chord)
             }
         }
         currentSection.lines.append(line)
     }
     
-    // MARK: - func: processHtml; turn the song into HTML
-    private static func processHtml(song: inout Song) {
-        print("Convert '" + (song.title ?? "no title") + "' into HTML")
-//        song.html = buildSong(song: song)
+    
+    private static func processParts(_ text: String, song: inout Song, currentSection: inout Sections, line: inout Line) {
+        
+        let font = XFont.body(for: text)
+        let cFont = XFont.chord()
+        
+        text.lines().forEach { string in
+            
+            var chordLine = String()
+            var wordLine = String()
+            
+            
+            lyricsRegex!.matches(in: string, range: string.range()).forEach { match in
+                var chord = ""
+                var word = ""
+                
+                if let keyRange = Range(match.range(at: 1), in: string) {
+                    chord = string[keyRange]
+                        .trimmingCharacters(in: .newlines)
+                        .replacingOccurrences(of: "[", with: "")
+                        .replacingOccurrences(of: "]", with: "")
+                    
+                    if currentSection.type == nil {
+                        currentSection.type = "verse"
+                    }
+                    /// Use the first chord as key for the song if not set.
+                    if song.key == nil {
+                        song.key = chord
+                    }
+                    
+                }
+                
+                if let valueRange = Range(match.range(at: 2), in: string) {
+                    /// See https://stackoverflow.com/questions/31534742/space-characters-being-removed-from-end-of-string-uilabel-swift
+                    /// for the funny stuff added to the string...
+                    word = String(string[valueRange] + "\u{200c}")
+                }
+                
+                let part = Part()
+                part.chord = chord
+                part.lyric = word
+                
+                if !(part.empty) {
+                    line.parts.append(part)
+                    
+                    chordLine += chord
+                    wordLine += word
+                    
+                    while chordLine.widthOfString(usingFont: cFont) < wordLine.widthOfString(usingFont: font) {
+                        chordLine += " "
+                    }
+                }
+            }
+            
+            if !chordLine.isWhitespace {
+                line.chordLine = chordLine.newLine
+            }
+            if !wordLine.isWhitespace {
+                line.lyricsLine = wordLine.newLine
+            }
+        }
     }
     
+    private static func processLines(_ text: String, song: inout Song, currentSection: inout Sections, line: inout Line) {
+        func processLines(textLines: [String]) {
+            for var textLine in textLines {
+                
+                var chordLine = String()
+                
+                while let match = RegularExpression.chordPattern.firstMatch(in: textLine, options: [], range: textLine.range()) {
+                    
+                    let nsString = textLine as NSString
+                    let subRange = match.range
+                    let subString = nsString.substring(with: subRange)
+                    
+                    textLine = (textLine as NSString).replacingCharacters(in: subRange, with: "")
+                    
+                    
+                    let chord = String(subString)
+                    if chordLine.utf16.count >= subRange.location {
+                        
+                        chordLine += chord
+                    } else {
+                        while chordLine.utf16.count < subRange.location {
+                            chordLine += " "
+                        }
+                        chordLine += chord
+                    }
+                }
+                
+                chordLine = RegularExpression.chordPattern.stringByReplacingMatches(in: chordLine, withTemplate: "$1")
+                if !chordLine.isWhitespace {
+                    line.chordLine = chordLine.newLine
+                    //                    attrStr.append(.init(chordLine.newLine, foreGroundColor: UIColor.systemRed))
+                }
+                if !textLine.isWhitespace {
+                    line.lyricsLine = textLine.newLine
+                    //                    attrStr.append(.init(textLine.newLine))
+                }
+                
+                
+                
+                //                var chords = chordLine.words()
+                //                var lyrics = textLine.words()
+                //
+                //                while chords.count < lyrics.count {
+                //                    chords.append(" ")
+                //                }
+                //                while lyrics.count < chords.count {
+                //                    lyrics.append(" ")
+                //                }
+                //                print(textLine.words())
+                //                zip(chordLine.words(), textLine.words()).forEach { c, l in
+                //                    let part = Part()
+                //                    part.chord = c
+                //                    part.lyric = l
+                //                    print(part.chord, part.lyric)
+                //                    line.parts.append(part)
+                //                }
+                
+            }
+        }
+        processLines(textLines: text.lines())
+    }
     // MARK: - func: processChord; find key and suffix
     private static func processChord(chord: String) -> (key: Chords.Key, suffix: Chords.Suffix) {
         
         var key: Chords.Key = .c
         var suffix: Chords.Suffix = .major
         
-        print("Parsing chords")
+        
         
         let chordRegex = try? NSRegularExpression(pattern: "([CDEFGABb#]+)(.*)")
         if let match = chordRegex?.firstMatch(in: chord, options: [], range: NSRange(location: 0, length: chord.utf16.count)) {

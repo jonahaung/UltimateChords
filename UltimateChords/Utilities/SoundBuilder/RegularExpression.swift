@@ -23,6 +23,23 @@ enum RegularExpression {
             fatalError()
         }
     }()
+    
+    static let lyricsPattern: NSRegularExpression = {
+        do {
+            return try NSRegularExpression(pattern: "(\\[[\\w#b/]+])?([^\\[]*)", options: .caseInsensitive)
+        }catch {
+            fatalError()
+        }
+    }()
+    
+    static let directivePattern: NSRegularExpression = {
+        do {
+            return try NSRegularExpression(pattern: "\\{(\\w*):([^%]*)\\}", options: [])
+        }catch {
+            fatalError()
+        }
+    }()
+    
 }
 
 extension NSRegularExpression {

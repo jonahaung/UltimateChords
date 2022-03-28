@@ -11,18 +11,19 @@ struct LyricsCreaterTextView: UIViewRepresentable {
     
     @EnvironmentObject var viewModel: LyricsCreaterViewModel
     
-    func makeUIView(context: Context) -> WidthFittingTextView {
-        let uiView = WidthFittingTextView()
+    func makeUIView(context: Context) -> EditableTextView {
+        let uiView = EditableTextView()
         uiView.typingAttributes = [.font: XFont.body(for: context.coordinator.lyrics.title), .paragraphStyle: NSParagraphStyle.nonLineBreak]
-        uiView.isEditable = true
+        uiView.isEditable = false
         uiView.isSelectable = true
-        uiView.isDinamicFontSizeEnabled = false
-        uiView.widthFittingTextViewDelegate = context.coordinator
-        uiView.attributedText = context.coordinator.lyrics.displayText
+        uiView.attributedText = context.coordinator.lyrics.text.lyricAttrString()
+        uiView.keyboardDismissMode = .interactive
+        uiView.delegate = context.coordinator
+        uiView.setTupEditing()
         return uiView
     }
     
-    func updateUIView(_ uiView: WidthFittingTextView, context: Context) {
+    func updateUIView(_ uiView: EditableTextView, context: Context) {
         
     }
     
@@ -30,4 +31,5 @@ struct LyricsCreaterTextView: UIViewRepresentable {
         return viewModel
     }
 }
+
 

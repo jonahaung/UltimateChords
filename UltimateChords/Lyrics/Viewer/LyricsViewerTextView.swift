@@ -13,13 +13,16 @@ struct LyricsViewerTextView: UIViewRepresentable {
     
     func makeUIView(context: Context) -> WidthFittingTextView {
         let uiView = WidthFittingTextView()
-        uiView.isDinamicFontSizeEnabled = true
+        uiView.isDinamicFontSizeEnabled = false
         uiView.isEditable = false
+        uiView.isSelectable = true
         return uiView
     }
     
     func updateUIView(_ uiView: WidthFittingTextView, context: Context) {
-        uiView.attributedText = context.coordinator.lyrics.displayText
+        uiView.attributedText = context.coordinator.displayText
+        uiView.fontSizePercent = context.coordinator.zoom
+    
     }
     
     func makeCoordinator() -> LyricsViewerViewModel {

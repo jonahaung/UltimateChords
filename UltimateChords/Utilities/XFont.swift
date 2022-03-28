@@ -34,12 +34,16 @@ struct XFont {
     
     static func body(for text: String) -> UIFont {
         let fontName = text.isMyanar ? MyanmarFont.MyanmarAngoun.rawValue : "NotoSansMonoExtraCondensed-SemiBold"
-        return UIFont(name: fontName, size: UIFont.labelFontSize)!
+        return UIFont(name: fontName, size: 18)!
     }
     
     static func footnote(for text: String) -> UIFont {
         let fontName = text.isMyanar ? MyanmarFont.MyanmarSansPro.rawValue : "NotoSansMonoExtraCondensed-Regular"
         return .init(name: fontName, size: UIFont.systemFontSize)!
+    }
+    
+    static func chord() -> UIFont {
+        .init(name: "HelveticaNeue-CondensedBold", size: 16)!
     }
 }
 

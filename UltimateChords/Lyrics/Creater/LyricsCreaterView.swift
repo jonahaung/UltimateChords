@@ -8,66 +8,52 @@
 import SwiftUI
 
 struct LyricsCreaterView: View {
-    private enum Field: Int, Hashable {
-        case Artist, Title, Lyrics
-    }
+    
     @StateObject private var viewModel = LyricsCreaterViewModel()
-    @FocusState private var field: Int?
     @Environment(\.dismiss) private var dismiss
+    @State private var showForm = false
     
     var body: some View {
-        VStack(spacing: 0) {
-            if viewModel.canInputLyrics {
-                LyricsCreaterTextView()
-                    .environmentObject(viewModel)
-            } else {
-                Form {
-                    Section {
-                        HStack {
-                            XIcon(.music_quarternote_3)
-                                .foregroundColor(.pink)
-                            TextField("Title", text: $viewModel.lyrics.title)
-                                .focused($field, equals: 0)
+        GeometryReader { geo in
+            ScrollView {
+                VStack {
+                    if showForm {
+                        Form{
+                            Section {
+                                TextField.init("Title", text: $viewModel.lyrics.title)
+                                TextField.init("Artist", text: $viewModel.lyrics.artist)
+                            }
                         }
-                    
-                        HStack {
-                            XIcon(.music_quarternote_3)
-                                .foregroundColor(.pink)
-                            TextField("Artist", text: $viewModel.lyrics.artist)
-                                .focused($field, equals: 1)
+                        .frame(width: geo.size.width, height: geo.size.height)
+                        .transition(.move(edge: .bottom))
+                    }
+                    LyricsCreaterTextView()
+                        .frame(width: geo.size.width, height: geo.size.height)
+                        .environmentObject(viewModel)
+                }.overlay(
+                    Button {
+                        withAnimation {
+                            showForm.toggle()
                         }
-                        
-                    }
-                }
-                .task {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        field = 0
-                    }
-                }
-                .onSubmit {
-                    if viewModel.isValidArtist() {
-                        viewModel.canInputLyrics = true
-                    } else {
-                        field! += 1
-                    }
-                }
+                    } label: {
+                        XIcon(showForm ? .square_and_pencil : .music_note_list)
+                            .padding()
+                    }.imageScale(.large)
+                    , alignment: .topTrailing
+                )
             }
         }
-        .navigationBarTitle(viewModel.canInputLyrics ? viewModel.lyrics.title : "", displayMode: .inline)
+        .navigationBarTitle("Create")
         .navigationBarItems(trailing: TopBar())
     }
     
     private func TopBar() -> some View {
         HStack {
             Button {
-                if viewModel.canInputLyrics {
-                    viewModel.save()
-                    dismiss()
-                } else if viewModel.isValidArtist() {
-                    viewModel.canInputLyrics = true
-                }
+                viewModel.save()
+                dismiss()
             } label: {
-                Text(viewModel.canInputLyrics ? "Save" : "Continue")
+                Text("Save")
             }
         }
         

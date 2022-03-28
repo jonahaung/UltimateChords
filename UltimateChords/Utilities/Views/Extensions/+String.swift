@@ -21,8 +21,11 @@ extension String {
         return trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
     
+    var whiteSpace: String {
+        self.appending(" ")
+    }
     var newLine: String {
-        self + "\r"
+        self.appending("\r")
     }
 }
 extension String {

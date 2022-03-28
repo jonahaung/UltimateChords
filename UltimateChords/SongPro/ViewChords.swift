@@ -28,7 +28,7 @@ struct ViewChords: View {
                                 .rotation3DEffect(.degrees(180), axis: (x: 1, y: 0, z: 0))
 #endif
 #if os(iOS)
-                            Image(uiImage: (image ?? UIImage(named: "AppIcon"))!)
+                            Image(uiImage: (image ?? UIImage(systemName: "applelogo")!))
 #endif
                         }
                     }

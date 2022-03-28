@@ -2,11 +2,14 @@
 
 import Foundation
 
-public class Line: Identifiable {
-    public var id = UUID()
-    public var parts = [Part]()
-    public var measures = [Measure]()
-    public var tablature: String?
-    public var comment: String?
-    public var plain: String?
+class Line: Identifiable {
+    var id = UUID()
+    var parts = [Part]()
+    var measures = [Measure]()
+    var tablature: String?
+    var comment: String?
+    var plain: String?
+    
+    var chordLine: String?
+    var lyricsLine: String?
 }

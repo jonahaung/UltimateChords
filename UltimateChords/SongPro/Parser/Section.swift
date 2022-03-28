@@ -2,9 +2,16 @@
 
 import Foundation
 
-public class Sections: Identifiable {
-    public var id = UUID()
-    public var name: String?
-    public var type: String?
-    public var lines = [Line]()
+class Sections: Identifiable {
+    
+    var id = UUID()
+    var name: String?
+    var type: String?
+    var lines = [Line]()
+    
+    var sectionKind = SectionKind.Text
+    
+    enum SectionKind {
+        case Tab, Cho, Verse, Text, Comments
+    }
 }
