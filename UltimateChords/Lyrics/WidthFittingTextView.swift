@@ -6,49 +6,36 @@
 //
 
 import UIKit
-
+protocol WidthFittingTextViewDelegate: AnyObject {
+    func textView(textView: WidthFittingTextView, didAdjustFontSize text: NSAttributedString)
+}
 class WidthFittingTextView: TextView {
-
-    var isDinamicFontSizeEnabled = true
-
+    
+    weak var delegate2: WidthFittingTextViewDelegate?
+    var isDinamicFontSizeEnabled = true {
+        didSet {
+            guard oldValue != isDinamicFontSizeEnabled else { return }
+            adjustFontSizeIfNeeded()
+        }
+    }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        if hasText {
-            adjustFontSize()
-        }
+        adjustFontSizeIfNeeded()
     }
     
-    var fontSizePercent: CGFloat = 1 {
-        didSet {
-            updateAttributes()
+    private func adjustFontSizeIfNeeded() {
+        if delegate2 != nil && isDinamicFontSizeEnabled {
+            adjustByDecreasingFontSize()
         }
     }
-    
-    private func updateAttributes() {
-        
-        textStorage.enumerateAttributes(in: self.text.range()) { attr, range, pointer in
-            var attr = attr
-            let oldFont = attr[.font] as? UIFont ?? XFont.body(for: self.text)
-            attr[.font] = oldFont.withSize(oldFont.pointSize * fontSizePercent)
-            
-            let newString = textStorage.attributedSubstring(from: range).string
-            
-            textStorage.replaceCharacters(in: range, with: NSAttributedString(string: newString, attributes: attr))
-        }
-        
+    private func adjustByDecreasingFontSize() {
+        guard !attributedText.string.isEmpty else { return }
+        let mutable = attributedText.mutable
+        var containerSize = textContainer.size
+        containerSize.width -= textContainer.lineFragmentPadding*2
+        mutable.adjustFontSize(to: containerSize.width)
+        self.attributedText = mutable
     }
-    
-    func adjustFontSize() {
-        guard isDinamicFontSizeEnabled, !attributedText.string.isEmpty else { return }
-        self.fontSizePercent = 1
-        let containerSize = textContainer.size
-        let largestSize = CGSize(width: .greatestFiniteMagnitude, height: containerSize.height)
-        while (containerSize.width) < attributedText.size(for: largestSize).width {
-            self.fontSizePercent -= 0.01
-        }
-    }
-    
-    
     
 }

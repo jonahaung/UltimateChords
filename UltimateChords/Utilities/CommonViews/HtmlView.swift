@@ -10,13 +10,15 @@ import WebKit
  
 struct HtmlView: UIViewRepresentable {
  
-    var htmlStgring: String
- 
+    var song: Song?
+    
     func makeUIView(context: Context) -> WKWebView {
         return WKWebView()
     }
  
     func updateUIView(_ webView: WKWebView, context: Context) {
-        webView.loadHTMLString(htmlStgring, baseURL: nil)
+        if let song = song {
+            webView.loadHTMLString(Html.parse(from: song), baseURL: nil)
+        }
     }
 }

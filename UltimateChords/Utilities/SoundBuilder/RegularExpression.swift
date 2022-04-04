@@ -23,7 +23,13 @@ enum RegularExpression {
             fatalError()
         }
     }()
-    
+    static let chordPattern3: NSRegularExpression = {
+        do {
+            return try NSRegularExpression(pattern: "([CDEFGABb#]+)(.*)", options: .caseInsensitive)
+        }catch {
+            fatalError()
+        }
+    }()
     static let lyricsPattern: NSRegularExpression = {
         do {
             return try NSRegularExpression(pattern: "(\\[[\\w#b/]+])?([^\\[]*)", options: .caseInsensitive)
@@ -40,12 +46,32 @@ enum RegularExpression {
         }
     }()
     
+    static let directiveEmptyRegex: NSRegularExpression = {
+        do {
+            return try NSRegularExpression(pattern: "\\{(\\w*)\\}", options: .caseInsensitive)
+        }catch {
+            fatalError()
+        }
+    }()
+    
+    static let lyricsRegex: NSRegularExpression = {
+        do {
+            return try NSRegularExpression(pattern: "(\\[[\\w#b/]+])?([^\\[]*)", options: .caseInsensitive)
+        }catch {
+            fatalError()
+        }
+    }()
+    
+    static let defineRegex = try! NSRegularExpression(pattern: "([a-z0-9#b/]+)(.*)", options: .caseInsensitive)
+    static let measuresRegex = try! NSRegularExpression(pattern: "([\\[[\\w#b\\/]+\\]\\s]+)[|]*", options: .caseInsensitive)
+    static let chordsRegex = try! NSRegularExpression(pattern: "\\[([\\w#b\\/]+)\\]?", options: .caseInsensitive)
+    
 }
 
 extension NSRegularExpression {
 
     func stringByReplacingMatches(in string: String, withTemplate template: String) -> String {
-        let r = NSRange.init(string.startIndex..<string.endIndex, in: string)
+        let r = NSRange(string.startIndex..<string.endIndex, in: string)
         return self.stringByReplacingMatches(in: string, options: [], range: r, withTemplate: template)
     }
     

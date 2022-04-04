@@ -16,9 +16,9 @@ struct SearchContent: View {
         Group {
             if isSearching {
                 List {
-                    Section(header: SearchTypeControl()) {
+                    Section {
                         ForEach(viewModel.results) {
-                            HomeCell(lyrics: $0)
+                            HomeCell(lyric: $0)
                         }
                     }
                 }

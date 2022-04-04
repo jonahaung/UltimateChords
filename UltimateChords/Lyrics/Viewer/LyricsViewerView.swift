@@ -7,131 +7,128 @@
 
 import SwiftUI
 
+extension LyricsViewerView {
+    enum ViewerMode: String, Identifiable, CaseIterable {
+        var id: ViewerMode {self}
+        case PDFView, HtmlView, TextView
+    }
+}
+
 struct LyricsViewerView: View {
     
-    @StateObject private var viewModel: LyricsViewerViewModel
-    @State private var showControls = false
-    @State private var showChords = false
+    @AppStorage("LyricsViewerView.mainVierMode") private var mainVierMode = ViewerMode.TextView.rawValue
+    @AppStorage("LyricsViewerView.showControls") private var showControls = false
+    @AppStorage("LyricsViewerView.showChords") private var showChords = false
+    @State private var fullScreenItem: ViewerMode?
     
-    init(_ lyrics: Lyrics) {
-        _viewModel = .init(wrappedValue: .init(lyrics))
-    }
+    @EnvironmentObject private var lyric: Lyric
+    @StateObject private var viewModel = LyricsViewerViewModel()
     
     var body: some View {
-        VStack {
-            LyricsViewerTextView()
-                .overlay(overlaySideMenu(), alignment: .trailing)
-                .overlay(overlayBottomMenu(), alignment: .bottom)
-            if showChords {
-                if let song = viewModel.song {
-                    chordsView(song)
-                        .transition(.scale)
-                    Divider()
+        lyricView(for: ViewerMode(rawValue: mainVierMode)!)
+            .overlay(chordsView(), alignment: .leading)
+            .overlay(overlaySideMenu(), alignment: .trailing)
+            .navigationBarItems(leading: NavLeading(), trailing: NavTrailing())
+            .navigationBarTitleDisplayMode(.inline)
+            .fullScreenCover(item: $fullScreenItem) { item in
+                PickerNavigationView {
+                    lyricView(for: item)
                 }
             }
-        }
-        .overlay(floatingMenu(), alignment: .bottomTrailing)
-        .navigationBarItems(trailing: NavTrailing())
-        .navigationBarTitleDisplayMode(.inline)
-        .environmentObject(viewModel)
-        .fullScreenCover(item: $viewModel.viewType) {
-            fullScreenCover($0)
-        }
-        .task {
-            await viewModel.loadSong()
-        }
-    }
-    
-    
-    private func NavTrailing() -> some View {
-        HStack {
-            Menu {
-                Button("PDF") {
-                    viewModel.viewType = .Pdf
-                }
-                Button("HTML") {
-                    viewModel.viewType = .Html
-                }
-            } label: {
-                XIcon(.square_and_arrow_up)
+            .task {
+                await viewModel.loadSong(lyric)
             }
-        }
+            .onDisappear{
+                lyric.updateLastView()
+            }
     }
     
-    private func floatingMenu() -> some View {
-        Toggle(isOn: $showControls, label: {
-            XIcon(.music_note_list)
-                .font(.title3)
-        }).padding().toggleStyle(.button)
-        
-    }
-    private func overlayBottomMenu() -> some View {
-        Group {
-            if showControls {
-                HStack {
-                    Toggle("Show Chords", isOn: $showChords).labelsHidden()
-                    Slider(value: $viewModel.zoom, in: .init(uncheckedBounds: (lower: 0.5, upper: 1.5)))
-                }
-                .padding(.leading)
-                
-            }
-        }
-    }
     private func overlaySideMenu() -> some View {
         Group {
             if showControls {
-                VStack {
-                    Spacer()
-                    Button {
-                        
+                VStack(spacing: 10) {
+                    Menu {
+                        ForEach(ViewerMode.allCases) { mode in
+                            Button(mode.rawValue) {
+                                fullScreenItem = mode
+                            }
+                        }
                     } label: {
-                        XIcon(showControls ? .square_and_pencil : .music_note_list)
-                    }.padding()
+                        XIcon(.square_and_arrow_up)
+                    }
+                    
+                    Toggle(isOn: $viewModel.isDinamicFontSizeEnabled) {
+                        XIcon(.textformat_size)
+                    }
+                    .toggleStyle(.button)
+                    .background()
                     
                     
-                    Button("PDF") {
-                        viewModel.viewType = .Pdf
-                    }.padding()
+                    Toggle(isOn: $showChords) {
+                        XIcon(.guitars)
+                    }
+                    .toggleStyle(.button)
+                    .background()
                     
-                    Button("HTML") {
-                        viewModel.viewType = .Html
-                    }.padding()
-                    
-                    Button {
-                        viewModel.toggleSelect()
+                    Menu {
+                        ForEach(Song.DisplayMode.allCases, id: \.self) { mode in
+                            Button(mode.rawValue) {
+                                viewModel.song?.setDisplayMode(mode)
+                            }
+                        }
                     } label: {
-                        XIcon(.music_quarternote_3)
-                    }.padding()
+                        XIcon(.text_viewfinder)
+                    }
                     
-                    Spacer()
-                }.font(.system(size: 18, weight: .semibold))
+                    
+                }
+                .font(.system(size: 20, weight: .semibold))
+                .padding(.trailing)
             }
         }
     }
     
-    private func fullScreenCover(_ type: LyricsViewerViewModel.ViewType) -> some View {
+    private func NavTrailing() -> some View {
+        HStack {
+            Picker("", selection: $mainVierMode) {
+                ForEach(ViewerMode.allCases, id: \.self) { mode in
+                    Text(mode.rawValue).tag(mode.rawValue)
+                }
+            }
+            .labelsHidden()
+        
+            Toggle(isOn: $showControls) {
+                XIcon(.music_note)
+            }
+        }
+    }
+    private func NavLeading() -> some View {
         Group {
-            switch type {
-            case .Pdf:
-                PickerNavigationView {
-                    if let song = viewModel.song {
-                        PdfView(song.pdfData)
-                    }
-                }
-            case .Html:
-                PickerNavigationView {
-                    if let song = viewModel.song {
-                        HtmlView(htmlStgring: song.html)
-                    }
-                }
-            case .Text:
-                EmptyView()
+            
+        }
+    }
+    
+    private func lyricView(for mode: ViewerMode) -> some View {
+        Group {
+            switch mode {
+            case .PDFView:
+                PdfView(attributedText: viewModel.song?.attributedText)
+            case .HtmlView:
+                HtmlView(song: lyric.song())
+            case .TextView:
+                LyricsViewerTextView()
+                    .environmentObject(viewModel)
             }
         }
     }
     
-    private func chordsView(_ song: Song) -> some View {
-        ViewChords(song: song)
+    private func chordsView() -> some View {
+        Group {
+            if showChords, let song = lyric.song() {
+                ChordsView(song: song)
+                    .frame(width: ChordsView.frame.width + 6)
+            }
+        }
     }
 }
 

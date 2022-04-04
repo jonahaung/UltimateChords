@@ -5,9 +5,9 @@
 import SwiftUI
 import SwiftyChords
 
-struct ViewChords: View {
-    @ObservedObject var song: Song
-    let frame = CGRect(x: 0, y: 0, width: 100, height: 150)
+struct ChordsView: View {
+    var song: Song
+    static let frame = CGRect(x: 0, y: 0, width: 100, height: 150)
     /// Get all chord diagrams
     static let chordsDatabase = Chords.guitar
     /// Sheet with chords
@@ -15,40 +15,36 @@ struct ViewChords: View {
     @State var selectedChord: Chord?
     
     var body: some View {
-        ScrollView(.horizontal) {
-            HStack {
+        ScrollView(.vertical, showsIndicators: false) {
+            LazyVStack {
                 ForEach(song.chords.sorted { $0.name < $1.name }) { chord in
-                    Group {
-                        Text(chord.name).foregroundColor(.accentColor).font(.title2)
-                        if let chordPosition = ViewChords.chordsDatabase.filter { $0.key == chord.key && $0.suffix == chord.suffix && $0.baseFret == chord.basefret} {
-                            let layer = chordPosition.first?.layer(rect: frame, showFingers: true, showChordName: false, forScreen: true)
-                            let image = layer?.image()
+                    VStack(spacing: 0) {
+                        if let chordPosition = ChordsView.chordsDatabase.filter { $0.key == chord.key && $0.suffix == chord.suffix && $0.baseFret == chord.basefret}, let layer = chordPosition.first?.shapeLayer(rect: ChordsView.frame, showFingers: true, showChordName: false), let image = layer.image() {
+                            
+                            
 #if os(macOS)
-                            Image(nsImage: (image ?? NSImage(named: "AppIcon"))!)
+                            Image(nsImage: image)
                                 .rotation3DEffect(.degrees(180), axis: (x: 1, y: 0, z: 0))
 #endif
 #if os(iOS)
-                            Image(uiImage: (image ?? UIImage(systemName: "applelogo")!))
+                            Image(uiImage: image)
 #endif
                         }
+                        
+                        Text(chord.name).italic()
                     }
-                    .onTapGesture {
-                        selectedChord = chord
-                        showChordSheet = true
-                    }
+                    .background()
+                    .tapToPresent(ChordsSheet(chord: chord), .Sheet)
                 }
             }
-            .padding(.trailing)
         }
-        .sheet(isPresented: $showChordSheet) {
-            ChordsSheet(chord: $selectedChord)
-        }
+       
     }
 }
 
 struct ChordsSheet: View {
     @Environment(\.presentationMode) var presentationMode
-    @Binding var chord: Chord?
+    var chord: Chord?
     var body: some View {
         let chordPosition = Chords.guitar.matching(key: chord!.key).matching(suffix: chord!.suffix)
         VStack {
@@ -63,7 +59,7 @@ struct ChordsSheet: View {
                 ) {
                     ForEach(chordPosition) { chord in
                         let frame = CGRect(x: 0, y: 0, width: 120, height: 180) // I find these sizes to be good.
-                        let layer = chord.layer(rect: frame, showFingers: true, showChordName: false, forScreen: true)
+                        let layer = chord.shapeLayer(rect: frame, showFingers: true, showChordName: false)
                         let image = layer.image() // might be exepensive. Use CALayer when possible.
 #if os(macOS)
                         Image(nsImage: image!)

@@ -9,120 +9,123 @@ import SwiftyChords
 
 class ChordPro {
     
-    static let directiveRegex = try? NSRegularExpression(pattern: "\\{(\\w*):([^%]*)\\}")
-    static let directiveEmptyRegex = try? NSRegularExpression(pattern: "\\{(\\w*)\\}")
     static let defineRegex = try? NSRegularExpression(pattern: "([a-z0-9#b/]+)(.*)", options: .caseInsensitive)
     static let lyricsRegex = try? NSRegularExpression(pattern: "(\\[[\\w#b/]+])?([^\\[]*)", options: .caseInsensitive)
     static let measuresRegex = try? NSRegularExpression(pattern: "([\\[[\\w#b\\/]+\\]\\s]+)[|]*", options: .caseInsensitive)
     static let chordsRegex = try? NSRegularExpression(pattern: "\\[([\\w#b\\/]+)\\]?", options: .caseInsensitive)
     
-    static func parse(string: String) -> Song {
-        var song = Song()
-        song.rawText = string
-        var currentSection = Sections()
-        song.sections.append(currentSection)
-        string.lines().forEach { line in
-            if line.starts(with: "{") {
-                processDirective(text: line, song: &song, currentSection: &currentSection)
-            } else if line.starts(with: "#"){
-                let songLine = Line()
-                songLine.comment = line
-                currentSection.lines.append(songLine)
-            } else {
-                processLyrics(text: line, song: &song, currentSection: &currentSection)
-            }
+    static func parse(rawText: String) -> Song {
+        
+        var song = Song(rawText: rawText)
+        
+        rawText.components(separatedBy: "{").forEach {
+            guard !$0.isWhitespace else { return }
+            let str = "{" + $0
+            var currentSection = Sections()
+            song.sections.append(currentSection)
+            processDirective(text: str, song: &song, currentSection: &currentSection)
         }
         
-        if currentSection.lines.isEmpty {
-            song.sections.removeLast()
-        }
+        
         return song
     }
     
-    // MARK: - func: processDirective
-    fileprivate static func processDirective(text: String, song: inout Song, currentSection: inout Sections) {
+
+    private static func processDirective(text: String, song: inout Song, currentSection: inout Sections) {
+        
         var key: String?
         var value: String?
         
-        
         if let match = RegularExpression.directivePattern.firstMatch(in: text, range: text.range()) {
+            
             if let keyRange = Range(match.range(at: 1), in: text) {
                 key = text[keyRange].trimmingCharacters(in: .newlines)
             }
             if let valueRange = Range(match.range(at: 2), in: text) {
                 value = text[valueRange].trimmingCharacters(in: .whitespacesAndNewlines)
-            }
-            switch key {
-            case "t", "title":
-                song.title = value!
-            case "st", "subtitle", "artist":
-                song.artist = value!
-            case "capo":
-                song.capo = value!
-            case "time":
-                song.time = value!
-            case "c", "comment":
-                processComments(text: value!, song: &song, currentSection: &currentSection)
-            case "soc":
-                currentSection.sectionKind = .Cho
-                processSection(text: value!, type: "chorus", song: &song, currentSection: &currentSection)
-            case "sot":
-                currentSection.sectionKind = .Tab
-                processSection(text: value!, type: "tab", song: &song, currentSection: &currentSection)
-            case "sov":
-                currentSection.sectionKind = .Verse
-                processSection(text: value!, type: "verse", song: &song, currentSection: &currentSection)
-            case "sog":
-                processSection(text: value!, type: "grid", song: &song, currentSection: &currentSection)
-            case "chorus":
-                currentSection.sectionKind = .Cho
-                processSection(text: value!, type: "chorus", song: &song, currentSection: &currentSection)
-                currentSection = Sections()
-                song.sections.append(currentSection)
-            case "define":
-                processDefine(text: value!, song: &song)
-            case "key":
-                song.key = value!
-            case "tempo":
-                song.tempo = value!
-            case "year":
-                song.year = value!
-            case "album":
-                song.album = value!
-            case "tuning":
-                song.tuning = value!
-            case "musicpath":
-                if let path = song.path {
-                    var musicpath = path.deletingLastPathComponent()
-                    musicpath.appendPathComponent(value!)
-                    song.musicpath = musicpath
+                
+                switch key {
+                case "t", "title":
+                    song.title = value!
+                case "st", "subtitle", "artist":
+                    song.artist = value!
+                case "capo":
+                    song.capo = value!
+                case "time":
+                    song.time = value!
+                case "c", "comment":
+                    processComments(text: value!, song: &song, currentSection: &currentSection)
+                case "sog":
+                    processSection(text: value!, type: "grid", song: &song, currentSection: &currentSection)
+                case "chorus":
+                    currentSection.sectionKind = .Cho
+                    processSection(text: value!, type: "chorus", song: &song, currentSection: &currentSection)
+                    currentSection = Sections()
+                    song.sections.append(currentSection)
+                case "define":
+                    processDefine(text: value!, song: &song)
+                case "key":
+                    song.key = value!
+                case "tempo":
+                    song.tempo = value!
+                case "year":
+                    song.year = value!
+                case "album":
+                    song.album = value!
+                case "tuning":
+                    song.tuning = value!
+                case "musicpath":
+                    if let path = song.path {
+                        var musicpath = path.deletingLastPathComponent()
+                        musicpath.appendPathComponent(value!)
+                        song.musicpath = musicpath
+                    }
+                default:
+                    break
                 }
-            default:
-                break
             }
         }
         
         
         /// Second, stuff without a value
-        if let match = directiveEmptyRegex?.firstMatch(in: text, options: [], range: NSRange(location: 0, length: text.utf16.count)) {
+        if let match = RegularExpression.directiveEmptyRegex.firstMatch(in: text, range: text.range()) {
+            
             if let keyRange = Range(match.range(at: 1), in: text) {
                 key = text[keyRange].trimmingCharacters(in: .newlines)
+                switch key {
+                case "soc":
+                    currentSection.sectionKind = .Cho
+                    processSection(text: "Chorus", type: "chorus", song: &song, currentSection: &currentSection)
+                case "sot":
+                    currentSection.sectionKind = .Tab
+                    processSection(text: "", type: "tab", song: &song, currentSection: &currentSection)
+                case "sog":
+                    processSection(text: "", type: "grid", song: &song, currentSection: &currentSection)
+                case "sov":
+                    currentSection.sectionKind = .Verse
+                    processSection(text: "Verse", type: "verse", song: &song, currentSection: &currentSection)
+                case "chorus":
+                    currentSection.sectionKind = .Cho
+                    processSection(text: "Repeat chorus", type: "chorus", song: &song, currentSection: &currentSection)
+                    currentSection = Sections()
+                    song.sections.append(currentSection)
+                default:
+                    break
+                }
             }
-            switch key {
-            case "soc":
-                processSection(text: "Chorus", type: "chorus", song: &song, currentSection: &currentSection)
-            case "sot":
-                processSection(text: "Tab", type: "tab", song: &song, currentSection: &currentSection)
-            case "sog":
-                processSection(text: "", type: "grid", song: &song, currentSection: &currentSection)
-            case "sov":
-                processSection(text: "Verse", type: "verse", song: &song, currentSection: &currentSection)
-            case "chorus":
-                processSection(text: "Repeat chorus", type: "chorus", song: &song, currentSection: &currentSection)
-                currentSection = Sections()
-                song.sections.append(currentSection)
-            default:
-                break
+
+        }
+        text.lines().forEach { line in
+            if line.starts(with: "{") {
+                let line = Line()
+                if currentSection.sectionKind == .Tab {
+                    line.tablature = currentSection.name
+                } else {
+                    line.plain = currentSection.name
+                }
+                currentSection.lines.append(line)
+            } else {
+                processLyrics(text: line, song: &song, currentSection: &currentSection)
             }
         }
     }
@@ -133,12 +136,12 @@ class ChordPro {
         if currentSection.lines.isEmpty {
             /// There is already an empty section
             currentSection.type = type
-            currentSection.name = type
+            currentSection.name = text
         } else {
             /// Make a new section
             currentSection = Sections()
             currentSection.type = type
-            currentSection.name = type
+            currentSection.name = text
             song.sections.append(currentSection)
         }
     }
@@ -156,8 +159,8 @@ class ChordPro {
                 value = text[valueRange].trimmingCharacters(in: .whitespacesAndNewlines)
             }
         }
-        let process = processChord(chord: key)
-        if let index = song.chords.firstIndex(where: { $0.name == process.key.rawValue }) {
+        let chord = Chord.chord(for: key)
+        if let index = song.chords.firstIndex(where: { $0.name == chord.key.rawValue }) {
             song.chords[index].define = value
         }
     }
@@ -172,13 +175,6 @@ class ChordPro {
     
     // MARK: - func: processLyrics
     fileprivate static func processLyrics(text: String, song: inout Song, currentSection: inout Sections) {
-        if text.isEmpty {
-            if !currentSection.lines.isEmpty {
-                currentSection = Sections()
-                song.sections.append(currentSection)
-            }
-            return
-        }
         
         /// Start with a fresh line:
         var line = Line()
@@ -215,12 +211,11 @@ class ChordPro {
             }
         } else {
             processParts(text, song: &song, currentSection: &currentSection, line: &line)
-            
         }
         line.parts.forEach { part in
             if !song.chords.contains(where: { $0.name == part.chord! }) {
-                let process = processChord(chord: part.chord!)
-                let chord = Chord(name: part.chord!, key: process.key, suffix: process.suffix, define: "")
+                var chord = Chord.chord(for: part.chord!)
+                chord.name = part.chord!
                 song.chords.append(chord)
             }
         }
@@ -271,13 +266,14 @@ class ChordPro {
                 
                 if !(part.empty) {
                     line.parts.append(part)
-                    
+    
                     chordLine += chord
                     wordLine += word
                     
-                    while chordLine.widthOfString(usingFont: cFont) < wordLine.widthOfString(usingFont: font) {
+                    while chordLine.widthOfString(usingFont: cFont) + cFont.pointSize < wordLine.widthOfString(usingFont: font) {
                         chordLine += " "
                     }
+                    chordLine += " "
                 }
             }
             
@@ -320,70 +316,13 @@ class ChordPro {
                 chordLine = RegularExpression.chordPattern.stringByReplacingMatches(in: chordLine, withTemplate: "$1")
                 if !chordLine.isWhitespace {
                     line.chordLine = chordLine.newLine
-                    //                    attrStr.append(.init(chordLine.newLine, foreGroundColor: UIColor.systemRed))
+
                 }
                 if !textLine.isWhitespace {
                     line.lyricsLine = textLine.newLine
-                    //                    attrStr.append(.init(textLine.newLine))
                 }
-                
-                
-                
-                //                var chords = chordLine.words()
-                //                var lyrics = textLine.words()
-                //
-                //                while chords.count < lyrics.count {
-                //                    chords.append(" ")
-                //                }
-                //                while lyrics.count < chords.count {
-                //                    lyrics.append(" ")
-                //                }
-                //                print(textLine.words())
-                //                zip(chordLine.words(), textLine.words()).forEach { c, l in
-                //                    let part = Part()
-                //                    part.chord = c
-                //                    part.lyric = l
-                //                    print(part.chord, part.lyric)
-                //                    line.parts.append(part)
-                //                }
-                
             }
         }
         processLines(textLines: text.lines())
     }
-    // MARK: - func: processChord; find key and suffix
-    private static func processChord(chord: String) -> (key: Chords.Key, suffix: Chords.Suffix) {
-        
-        var key: Chords.Key = .c
-        var suffix: Chords.Suffix = .major
-        
-        
-        
-        let chordRegex = try? NSRegularExpression(pattern: "([CDEFGABb#]+)(.*)")
-        if let match = chordRegex?.firstMatch(in: chord, options: [], range: NSRange(location: 0, length: chord.utf16.count)) {
-            if let keyRange = Range(match.range(at: 1), in: chord) {
-                var valueKey = chord[keyRange].trimmingCharacters(in: .newlines)
-                /// Dirty, some chords in the database are only in the flat version....
-                if valueKey == "G#" {
-                    valueKey = "Ab"
-                }
-                key = Chords.Key(rawValue: valueKey) ?? Chords.Key.c
-            }
-            if let valueRange = Range(match.range(at: 2), in: chord) {
-                /// ChordPro suffix are not always the suffixes in the database...
-                var suffixString = "major"
-                switch chord[valueRange] {
-                case "m":
-                    suffixString = "minor"
-                default:
-                    suffixString = String(chord[valueRange])
-                }
-                suffix = Chords.Suffix(rawValue: suffixString.trimmingCharacters(in: .newlines)) ?? Chords.Suffix.major
-            } else {
-                suffix = Chords.Suffix.major
-            }
-        }
-        return (key, suffix)
-    }
-    
 }

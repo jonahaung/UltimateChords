@@ -9,16 +9,25 @@ import PDFKit
 
 struct Pdf {
     
-    static func data(from attributedString: NSAttributedString) -> Data {
+    static func document(from attributedString: NSAttributedString) -> PDFDocument? {
+        PDFDocument(url: url(from: attributedString))
+    }
+    
+    static func url(from attributedString: NSAttributedString) -> URL {
         
-        let pdfRenderer = PDFDINA4PrintRenderer()
-        let printFormatter = UISimpleTextPrintFormatter(attributedText: attributedString)
+        let mutable = attributedString.mutable
+        mutable.adjustFontSize(to: XApp.PDF.A4.availiableWidth)
+        
+        let pdfRenderer = PDFDINA4PrintRenderer(pageSize: XApp.PDF.A4.size, margins: XApp.PDF.A4.margin)
+        
+        let printFormatter = UISimpleTextPrintFormatter(attributedText: mutable)
         pdfRenderer.addPrintFormatter(printFormatter, startingAtPageAt: 0)
-        let documentURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("ultimateChord.pdf")
-       
+        
+        let documentURL = FileManager.default.temporaryDirectory.appendingPathComponent("jonahaung.pdf")
+        
         do {
             try pdfRenderer.renderPDF(to: documentURL)
-            return try Data.init(contentsOf: documentURL)
+            return documentURL
         } catch {
             fatalError()
         }
@@ -28,7 +37,7 @@ struct Pdf {
         if let pdf = PDFDocument(url: url) {
             let pageCount = pdf.pageCount
             let documentContent = NSMutableAttributedString()
-
+            
             for i in 0 ..< pageCount {
                 guard let page = pdf.page(at: i) else { continue }
                 guard let pageContent = page.attributedString else { continue }
@@ -41,22 +50,25 @@ struct Pdf {
 }
 
 class PDFDINA4PrintRenderer: UIPrintPageRenderer {
-
-    let pageSize = CGSize(width: 595, height: 842)
-
+    
+    private let pageSize: CGSize
+    private let margins: UIEdgeInsets
+    
+    init(pageSize: CGSize, margins: UIEdgeInsets) {
+        self.pageSize = pageSize
+        self.margins = margins
+    }
     override var paperRect: CGRect {
         return CGRect(origin: .zero, size: pageSize)
     }
-
+    
     override var printableRect: CGRect {
-        let pageMargin: CGFloat = 60
-        let margins = UIEdgeInsets(top: pageMargin, left: pageMargin, bottom: pageMargin, right: pageMargin)
         return paperRect.inset(by: margins)
     }
-
+    
     func renderPDF(to url: URL) throws {
         prepare(forDrawingPages: NSMakeRange(0, numberOfPages))
-
+        
         let graphicsRenderer = UIGraphicsPDFRenderer(bounds: paperRect)
         try graphicsRenderer.writePDF(to: url) { context in
             for pageIndex in 0..<numberOfPages {
@@ -64,11 +76,5 @@ class PDFDINA4PrintRenderer: UIPrintPageRenderer {
                 drawPage(at: pageIndex, in: context.pdfContextBounds)
             }
         }
-    }
-}
-
-extension Data: Identifiable {
-    public var id: Data {
-        self
     }
 }

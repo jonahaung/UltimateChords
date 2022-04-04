@@ -6,59 +6,79 @@
 //
 
 import UIKit
+import SwiftyChords
 
+protocol EditableTextViewDelegate: AnyObject {
+    
+    func textView(textView: EditableTextView, didTap add: Bool)
+}
 class EditableTextView: TextView {
-    
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesEnded(touches, with: event)
-        if !isEditable {
-            if let first = touches.first {
-                let location = first.location(in: self)
-                if let word = self.getWordAtPosition(location), !word.isWhitespace {
-                    selectedTextRange = self.getWordRangeAtPosition(location)
-                }
-            }
-        }
-    }
 
+    var isChordMode = false
+    weak var delegagte2: EditableTextViewDelegate?
+    private var tags = [ChordTag]()
+    
     func setTupEditing() {
-        UIMenuController.shared.menuItems = [
-            .init(title: "Add Chord", action: #selector(highlightedAction(_:))),
-            .init(title: "Remove Chord", action: #selector(removeChords(_:))),
-        ]
+//        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTapGesture(_:)))
+//        addGestureRecognizer(tap)
     }
 
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         guard selectedTextRange != nil else { return false }
 
-        if action == #selector(highlightedAction(_:)) || action == #selector(removeChords(_:)) {
+        if action == #selector(addChord(_:)) || action == #selector(addChord(_:)) || action == #selector(removeChord(_:)) {
              return true
          }
          return false
     }
-
     
-    override func delete(_ sender: Any?) {
-        textStorage.deleteCharacters(in: selectedRange)
-        selectedRange.length = 0
-        delegate?.textViewDidChange?(self)
-    }
     
-    @objc func highlightedAction(_ sender: Any) {
-        let random = ["[G]", "[Am]", "[F]", "[C]", "[Dm]", "[Em]"]
-        self.textStorage.insert(NSAttributedString(string: random.randomElement()!, attributes: typingAttributes), at: selectedRange.location)
-        delegate?.textViewDidChange?(self)
-    }
-    @objc func removeChords(_ sender: Any) {
-        isEditable.toggle()
-        if isFirstResponder {
-            resignFirstResponder()
-            self.attributedText = ChordPro.parse(string: self.text).attributedText
-        }else {
-            becomeFirstResponder()
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        guard let last = Array(touches).last else { return }
+        let location = last.location(in: self)
+        if let range = self.getWordRangeAtPosition(location) {
+            self.selectedTextRange = range
+            let add = UIMenuItem(title: "+ Chord", action: #selector(addChord(_:)))
+            let remove = UIMenuItem(title: "remove", action: #selector(removeChord(_:)))
+            UIMenuController.shared.menuItems = [add, remove]
+            UIMenuController.shared.showMenu(from: self, rect: .init(origin: location, size: .zero))
         }
+    }
+    
+    @objc private func addChord(_ sender: Any) {
+        delegagte2?.textView(textView: self, didTap: true)
+    }
+    
+    @objc private func removeChord(_ sender: Any) {
+        delegagte2?.textView(textView: self, didTap: false)
+    }
+    
+    func addChord(chord: Chord) {
+        let oldSelected = selectedRange
+        selectedRange.length = 0
         
+        let key = chord.key.rawValue
+        var suff = chord.suffix.rawValue
+        if chord.suffix == .major {
+            suff = ""
+        } else if chord.suffix == .minor {
+            suff = "m"
+        }
+        let x = "[" + key + suff + "]"
+        self.insertText(x)
+        self.delegate?.textViewDidChange?(self)
+        
+        if !self.tags.isEmpty {
+            self.text = self.attributedText.string
+        }
+        tags = AttributedString.getChordTags(for: self.text)
+        let mutable = self.attributedText.mutable
+        tags.forEach { tag in
+            mutable.addAttributes(tag.customTextAttributes, range: tag.range)
+        }
+        self.attributedText = mutable
+        self.selectedRange = oldSelected
     }
     
 }

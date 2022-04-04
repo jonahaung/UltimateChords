@@ -2,7 +2,7 @@
 
 import Foundation
 
-class Song: Identifiable, ObservableObject {
+struct Song: Identifiable {
     
     var id = UUID()
     var title: String?
@@ -18,10 +18,14 @@ class Song: Identifiable, ObservableObject {
     var musicpath: URL?
     var custom = [String: String]()
     var sections = [Sections]()
-    var rawText: String?
     var chords = [Chord]()
     
-    public var html: String { Html.parse(from: self) }
-    public lazy var attributedText: NSAttributedString = AttributedString.parse(from: self)
-    var pdfData: Data { Pdf.data(from: attributedText) }
+    internal var rawText: String
+    
+    init(rawText: String) {
+        self.rawText = rawText
+    }
+
+    internal var displayMode = DisplayMode.Default
 }
+

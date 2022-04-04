@@ -8,8 +8,14 @@
 import UIKit
 
 struct ChordTag {
-    var name : String
+    var chord : String
     var range: NSRange
     var data : [String: Any] = [:]
-    var customTextAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: UIColor.link]
+    var customTextAttributes: [NSAttributedString.Key: Any] = [.font: XFont.chord(), .foregroundColor: UIColor.systemPink, .baselineOffset: 10]
+}
+
+extension ChordTag: Equatable {
+    static func == (lhs: ChordTag, rhs: ChordTag) -> Bool {
+        lhs.chord == rhs.chord && lhs.range == rhs.range
+    }
 }

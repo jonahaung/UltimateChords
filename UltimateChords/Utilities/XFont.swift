@@ -43,7 +43,7 @@ struct XFont {
     }
     
     static func chord() -> UIFont {
-        .init(name: "HelveticaNeue-CondensedBold", size: 16)!
+        .init(name: "NotoSansMonoExtraCondensed-SemiBold", size: UIFont.labelFontSize)!
     }
 }
 

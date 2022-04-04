@@ -6,69 +6,64 @@
 //
 
 import UIKit
-import SwiftUI
 
 struct AttributedString {
     
     static func parse(from song: Song) -> NSAttributedString {
-        var attrString = createTitle(from: song)
+        let attrString = NSMutableAttributedString()
         song.sections.forEach {
-            sectionView($0, &attrString)
+            sectionView($0, attrString)
         }
         return attrString
     }
     
-    private static func createTitle(from song: Song) -> NSMutableAttributedString {
+    static func createTitle(from song: Song) -> NSMutableAttributedString {
         let title = NSAttributedString(song.title ?? "", style: .title).mutable
         title.append(.init("\r" + (song.artist ?? "").newLine, style: .subheadline))
         return title
     }
     
-    private static func sectionView(_ section: Sections,_ attrString: inout NSMutableAttributedString) {
+    private static func sectionView(_ section: Sections,_ attrString: NSMutableAttributedString) {
         section.lines.forEach {
-            lineView($0, &attrString)
+            lineView($0, attrString)
         }
-        attrString.newLine()
-        attrString.newLine()
-    }
-    
-    private static func lineView(_ line: Line,_ attrString: inout NSMutableAttributedString) {
-        if let comment = line.comment {
-            let commentView = NSAttributedString(string: comment.newLine, attributes: [.foregroundColor: UIColor.secondaryLabel, .font: UIFont.italicSystemFont(ofSize: 15)])
-            attrString.append(commentView)
-        }
-        if let plain = line.plain {
-            let x = NSAttributedString(string: plain.trimmed().newLine, attributes: [.foregroundColor: UIColor.systemMint, .font: UIFont.systemFont(ofSize: UIFont.labelFontSize)])
-            attrString.append(x)
-        }
-        if !line.measures.isEmpty {
-            measuresViewText(line, &attrString)
-        } else if let tablature = line.tablature {
-            attrString.append(.init(tablature, style: .body, foreGroundColor: .systemRed))
+        if !section.lines.isEmpty {
             attrString.newLine()
+        }
+    }
+    
+    private static func lineView(_ line: Line,_ attrString: NSMutableAttributedString) {
+        if let comment = line.comment?.trimmed() {
+            commentView(comment, attrString)
+        }else if let plain = line.plain?.trimmed() {
+            plainView(plain, attrString)
+        } else if let tablature = line.tablature?.trimmed() {
+           tablatureView(tablature, attrString)
+        } else if !line.measures.isEmpty {
+            measuresViewText(line, attrString)
         } else {
-            partsView(line, &attrString)
+            partsView(line, attrString)
         }
     }
     
     
-    private static func measuresViewText(_ line: Line,_ attrString: inout NSMutableAttributedString) {
+    private static func measuresViewText(_ line: Line,_ attrString: NSMutableAttributedString) {
         
-        var str  = "\n"
-        line.measures.forEach { measure in
-            str += "\n"
-            measure.chords.forEach { chord in
-                str += chord + " "
-            }
-            str += "\n"
-        }
-        str += "\n"
-        attrString.append(.init(str, style: .subheadline, foreGroundColor: .systemMint))
+//        var str  = "\n"
+//        line.measures.forEach { measure in
+//            str += "\n"
+//            measure.chords.forEach { chord in
+//                str += chord + " "
+//            }
+//            str += "\n"
+//        }
+//        str += "\n"
+//        attrString.append(.init(str, style: .subheadline, foreGroundColor: .systemMint))
     }
     
     
     
-    private static func partsView(_ line: Line,_ attrString: inout NSMutableAttributedString) {
+    private static func partsView(_ line: Line,_ attrString: NSMutableAttributedString) {
         if let chordLine = line.chordLine {
             attrString.append(chordLine.chordAttrStr)
         }
@@ -77,41 +72,95 @@ struct AttributedString {
             attrString.append(lyricsLine.lyricAttrString())
         }
         
-//        let lineString = NSMutableAttributedString()
-//        line.parts.forEach { part in
-//            let lyrics = part.lyric?.trimmed() ?? " "
-//            var chord = part.chord?.trimmed() ?? String()
-//
-//            if lyrics.isWhitespace {
-//                chord += "-"
-//            }
-//            let fullLine = chord+lyrics
-//
-//            let partString = NSMutableAttributedString(fullLine)
-//
-//            partString.setAttributes([.baselineOffset: lyrics.isWhitespace ? 0 : UIFont.labelFontSize, .font: XFont.chord(), .foregroundColor: UIColor.systemPink], range: NSRange(location: 0, length: chord.utf16.count))
-//
-//            lineString.append(partString)
-//        }
-//
-//        if !lineString.string.isWhitespace {
-//            attrString.append(lineString)
-//            attrString.newLine()
-//        }
-       
+        //        let lineString = NSMutableAttributedString()
+        //        line.parts.forEach { part in
+        //            let lyrics = part.lyric?.trimmed() ?? " "
+        //            var chord = part.chord?.trimmed() ?? String()
+        //
+        //            if lyrics.isWhitespace {
+        //                chord += "-"
+        //            }
+        //            let fullLine = chord+lyrics
+        //
+        //            let partString = NSMutableAttributedString(fullLine)
+        //
+        //            partString.setAttributes([.baselineOffset: lyrics.isWhitespace ? 0 : UIFont.labelFontSize, .font: XFont.chord(), .foregroundColor: UIColor.systemPink], range: NSRange(location: 0, length: chord.utf16.count))
+        //
+        //            lineString.append(partString)
+        //        }
+        //
+        //        if !lineString.string.isWhitespace {
+        //            attrString.append(lineString)
+        //            attrString.newLine()
+        //        }
+        
     }
     
-    private static func plainView(_ line: Line,_ attrString: inout NSMutableAttributedString) {
-        var html = String()
-        line.parts.forEach { part in
-            html += part.lyric!.trimmed()
+    private static func tablatureView(_ string: String, _ attrString: NSMutableAttributedString) {
+        string.lines().forEach { line in
+            attrString.append(.init(string: line.newLine, attributes: [.font: XFont.chord(), .foregroundColor: UIColor.secondaryLabel, .paragraphStyle: NSParagraphStyle.nonLineBreak]))
         }
-        html += "\r"
-        attrString.append(.init(html))
+    }
+    private static func plainView(_ string: String, _ attrString: NSMutableAttributedString) {
+        string.lines().forEach { line in
+            guard !line.isWhitespace else { return }
+            attrString.append(.init(string: line.newLine, attributes: [.font: XFont.chord(), .foregroundColor: UIColor.systemOrange, .paragraphStyle: NSParagraphStyle.lineBreak]))
+        }
+    }
+    private static func commentView(_ string: String, _ attrString: NSMutableAttributedString) {
+        attrString.append(.init(string: string.newLine, attributes: [.font: XFont.chord(), .foregroundColor: UIColor.tertiaryLabel, .paragraphStyle: NSParagraphStyle.nonLineBreak]))
+    }
+}
+
+extension AttributedString {
+    
+    static func displayText(for song: Song, with displayMode: Song.DisplayMode) -> NSAttributedString {
+        let attrStr = self.createTitle(from: song)
+        
+        switch displayMode {
+        case .Default:
+            attrStr.append(self.parse(from: song))
+        case .Editing:
+            attrStr.append(self.rawText(from: song))
+        case .TextOnly:
+            attrStr.append(self.textOnly(from: song))
+        case .Copyable:
+            attrStr.append(self.copyableText(from: song))
+        }
+        return attrStr
+    }
+    private static func textOnly(from song: Song) -> NSAttributedString {
+        .init(RegularExpression.chordPattern.stringByReplacingMatches(in: song.rawText, withTemplate: String()))
+    }
+    private static func rawText(from song: Song) -> NSAttributedString {
+        .init(song.rawText)
+    }
+    private static func copyableText(from song: Song) -> NSAttributedString {
+        let rawText = song.rawText
+        let mutable = NSMutableAttributedString(rawText.replacingOccurrences(of: "[", with: " ").replacingOccurrences(of: "]", with: " "))
+        
+        let items = getChordTags(for: rawText)
+        
+        items.forEach { tag in
+            mutable.addAttributes(tag.customTextAttributes, range: tag.range)
+        }
+        return mutable
     }
     
-    static let chordAttributes: [NSMutableAttributedString.Key: Any] = [.font: XFont.chord(), .foregroundColor: UIColor.systemPink, .paragraphStyle: NSParagraphStyle.chord, .baselineOffset: 0.7]
+    static func getChordTags(for rawText: String) -> [ChordTag] {
+        var items = [ChordTag]()
+        RegularExpression.chordPattern.matches(in: rawText, range: rawText.range()).forEach { match in
+            let nsString = rawText as NSString
+            let tagRange = match.range // (location: 20, length: 3]
+            let subString = nsString.substring(with: tagRange) // [G]
+            let chord = subString
+            let item = ChordTag.init(chord: chord, range: tagRange)
+            items.append(item)
+        }
+        return items
+    }
 }
+
 extension NSAttributedString {
     
     convenience init(_ string: String, style: XFont.Style = .body, foreGroundColor: UIColor = .label) {
@@ -138,23 +187,46 @@ extension NSAttributedString {
         let framesetter = CTFramesetterCreateWithAttributedString(self)
         return CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRange(), nil, largestSize, nil)
     }
+    
 }
 
 extension NSMutableAttributedString {
+    
     func newLine() {
         append(.init(string: "\r"))
     }
+    
+    private func adjustFontRatio(factor: CGFloat) {
+        self.enumerateAttribute(.font, in: NSRange(location: 0, length: self.length)) { value, range, pointer in
+            if let font = value as? UIFont {
+                self.removeAttribute(.font, range: range)
+                self.addAttribute(.font, value: font.withSize(font.pointSize * factor), range: range)
+            }
+        }
+    }
+    
+    func adjustFontSize(to availiableWidth: CGFloat) {
+        var percent: CGFloat = 1
+        beginEditing()
+        while availiableWidth < self.size(for: CGSize(width: .greatestFiniteMagnitude, height: availiableWidth*2)).width  {
+            percent -= 0.01
+            adjustFontRatio(factor: percent)
+        }
+        endEditing()
+    }
 }
-extension String {
 
+extension String {
+    
     func widthOfString(usingFont font: UIFont) -> CGFloat {
         let fontAttributes = [NSAttributedString.Key.font: font]
         let size = self.size(withAttributes: fontAttributes)
         return size.width
     }
-
+    
     var chordAttrStr: NSMutableAttributedString {
-        .init(string: self, attributes: AttributedString.chordAttributes)
+        let attributes: [NSAttributedString.Key: Any] = [.font: XFont.chord(), .foregroundColor: UIColor.red, .paragraphStyle: NSParagraphStyle.nonLineBreak]
+        return .init(string: self, attributes: attributes)
     }
     
     func lyricAttrString() -> NSMutableAttributedString {

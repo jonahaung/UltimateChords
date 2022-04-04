@@ -6,49 +6,34 @@
 //
 
 import SwiftUI
-
+import SwiftyChords
 struct LyricsCreaterView: View {
     
     @StateObject private var viewModel = LyricsCreaterViewModel()
     @Environment(\.dismiss) private var dismiss
-    @State private var showForm = false
+    @State private var chordText = ""
+    @FocusState private var isUsernameFocused: Bool
     
     var body: some View {
-        GeometryReader { geo in
-            ScrollView {
-                VStack {
-                    if showForm {
-                        Form{
-                            Section {
-                                TextField.init("Title", text: $viewModel.lyrics.title)
-                                TextField.init("Artist", text: $viewModel.lyrics.artist)
-                            }
-                        }
-                        .frame(width: geo.size.width, height: geo.size.height)
-                        .transition(.move(edge: .bottom))
-                    }
-                    LyricsCreaterTextView()
-                        .frame(width: geo.size.width, height: geo.size.height)
-                        .environmentObject(viewModel)
-                }.overlay(
-                    Button {
-                        withAnimation {
-                            showForm.toggle()
-                        }
-                    } label: {
-                        XIcon(showForm ? .square_and_pencil : .music_note_list)
-                            .padding()
-                    }.imageScale(.large)
-                    , alignment: .topTrailing
-                )
+        VStack {
+            LyricsCreaterTextView()
+                .environmentObject(viewModel)
+            
+            if viewModel.showChordPicker {
+                ChordPicker(chord: $viewModel.chord)
             }
         }
         .navigationBarTitle("Create")
-        .navigationBarItems(trailing: TopBar())
+        .navigationBarItems(trailing: navTrailing())
     }
     
-    private func TopBar() -> some View {
+    private func navTrailing() -> some View {
         HStack {
+            Toggle(isOn: $viewModel.isChordMode) {
+                XIcon(.tuningfork)
+            }
+            XIcon(.music_note)
+                .tapToPresent(PickerNavigationView { LyricCreaterControls() }.environmentObject(viewModel))
             Button {
                 viewModel.save()
                 dismiss()

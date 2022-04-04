@@ -9,19 +9,19 @@ import SwiftUI
 
 struct HomeCell: View {
     
-    let lyrics: Lyrics
+    let lyric: Lyric
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text(lyrics.title)
-                .font(XFont.headline(for: lyrics.title).font)
+            Text(lyric.title )
+                .font(XFont.headline(for: lyric.title ).font)
             HStack {
                 XIcon(.music_note)
                     .foregroundColor(.pink)
-                Text(lyrics.artist)
+                Text(lyric.artist )
             }
-            .font(XFont.footnote(for: lyrics.artist).font)
+            .font(XFont.footnote(for: lyric.artist ).font)
         }
-        .tapToPush(LyricsViewerView(lyrics))
+        .tapToPush(LyricsViewerView().environmentObject(lyric))
     }
 }

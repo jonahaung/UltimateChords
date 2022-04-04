@@ -9,27 +9,24 @@ import SwiftUI
 
 struct HomeView: View {
     
+    @Environment(\.managedObjectContext) private var viewContext
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Lyric.lastViewed, ascending: false)], animation: .default)
+    private var lyrics: FetchedResults<Lyric>
+    
     @StateObject private var viewModel = HomeViewModel()
     @StateObject private var searchViewModel = SearchViewModel()
     
     var body: some View {
         List {
-            ForEach(viewModel.lyrics) {
-                HomeCell(lyrics: Lyrics(cLyrics: $0))
+            ForEach(lyrics) {
+                HomeCell(lyric: $0)
             }
+            .onDelete(perform: self.deleteItems)
         }
-        .task {
-            viewModel.fetch()
-        }
-        .refreshable {
-            viewModel.fetch()
-        }
+    
         .onChange(of: viewModel.documentString) { newValue in
             guard let newValue = newValue else { return }
-            let song = ChordPro.parse(string: newValue)
-            let lyrics = Lyrics(title: song.title ?? "", artist: song.artist ?? "", text: newValue)
-            let cLycics = CLyrics.create(lyrics: lyrics)
-            viewModel.lyrics.insert(cLycics, at: 0)
+            viewModel.save(string: newValue)
         }
         .overlay(SearchContent().environmentObject(searchViewModel))
         .searchable(text: $searchViewModel.searchText, prompt: Text("Title or Artist"))
@@ -45,10 +42,21 @@ struct HomeView: View {
                 .tapToPush(LyricsCreaterView())
         }
     }
+    
+   
+    private func deleteItems(offsets: IndexSet) {
+        withAnimation {
+            offsets.map { lyrics[$0] }.forEach(viewContext.delete)
+
+            do {
+                try viewContext.save()
+            } catch {
+                // Replace this implementation with code to handle the error appropriately.
+                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                let nsError = error as NSError
+                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            }
+        }
+    }
 }
 
-extension String: Identifiable {
-    public var id: String { self }
-    
-    
-}
