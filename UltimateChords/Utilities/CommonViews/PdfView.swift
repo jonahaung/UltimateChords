@@ -13,16 +13,18 @@ struct PdfView: UIViewRepresentable {
     typealias UIViewType = PDFView
     
     let attributedText: NSAttributedString?
-
+    
     func makeUIView(context _: UIViewRepresentableContext<PdfView>) -> UIViewType {
         let pdfView = PDFView()
         pdfView.autoScales = true
         pdfView.displayMode = .singlePageContinuous
+
         return pdfView
     }
 
     func updateUIView(_ pdfView: UIViewType, context _: UIViewRepresentableContext<PdfView>) {
-        pdfView.document = Pdf.document(from: attributedText ?? .init())
-    
+        if let attributedText = attributedText {
+            pdfView.document = Pdf.document(from: attributedText)
+        }
     }
 }

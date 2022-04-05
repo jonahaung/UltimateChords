@@ -91,7 +91,7 @@ struct AttributedString {
 
 extension AttributedString {
     
-    static func displayText(for song: Song, with displayMode: Song.DisplayMode) -> NSAttributedString {
+    static func displayText(for song: Song, with displayMode: LyricViewerService.DisplayMode) -> NSAttributedString {
         let attrStr = self.createTitle(from: song)
         
         switch displayMode {
@@ -106,6 +106,7 @@ extension AttributedString {
         }
         return attrStr
     }
+    
     private static func textOnly(from song: Song) -> NSAttributedString {
         .init(RegularExpression.chordPattern.stringByReplacingMatches(in: song.rawText, withTemplate: String()))
     }

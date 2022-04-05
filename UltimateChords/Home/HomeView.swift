@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+import IRLPDFScanContent
 struct HomeView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
@@ -23,7 +23,6 @@ struct HomeView: View {
             }
             .onDelete(perform: self.deleteItems)
         }
-    
         .onChange(of: viewModel.documentString) { newValue in
             guard let newValue = newValue else { return }
             viewModel.save(string: newValue)
@@ -36,6 +35,9 @@ struct HomeView: View {
     
     private func navTrailing() -> some View {
         HStack {
+            Text("Scanner").tapToPush(PDFScannerView())
+            XIcon(.doc_text_viewfinder)
+                .tapToPresent(CameraView(), .Sheet)
             XIcon(.doc_text_viewfinder)
                 .tapToPresent(DocumentPicker(fileContent: $viewModel.documentString))
             XIcon(.square_and_pencil)
@@ -51,10 +53,7 @@ struct HomeView: View {
             do {
                 try viewContext.save()
             } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                fatalError()
             }
         }
     }

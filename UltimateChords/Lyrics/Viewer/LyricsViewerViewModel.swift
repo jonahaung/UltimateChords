@@ -12,22 +12,27 @@ class LyricsViewerViewModel: ObservableObject {
     
     private let service = LyricViewerService()
     
+    @Published var attributedText = NSAttributedString()
     
-    @Published var song: Song?
-    var isDinamicFontSizeEnabled = UserDefault.isDinamicFontSizeEnabled {
+    @Published var isDinamicFontSizeEnabled = UserDefault.isDinamicFontSizeEnabled {
         didSet {
             guard oldValue != isDinamicFontSizeEnabled else { return }
             UserDefault.isDinamicFontSizeEnabled = isDinamicFontSizeEnabled
-            objectWillChange.send()
         }
     }
     
     private var subscriptions = Set<AnyCancellable>()
     
     init() {
-        service.$song.sink { [weak self] song in
-            guard let song = song else { return }
-            self?.song = song
+        //        service.$song.sink { [weak self] song in
+        //            guard let song = song else { return }
+        //            self?.song = song
+        //        }
+        //        .store(in: &self.subscriptions)
+        
+        service.$attributedText.sink { [weak self] x in
+            guard let x = x else { return }
+            self?.attributedText = x
         }
         .store(in: &self.subscriptions)
     }
@@ -39,7 +44,15 @@ extension LyricsViewerViewModel {
     func configure(_ lyric: Lyric) async {
         await service.configure(lyric: lyric)
     }
-
+    
+    func setDisplayMode(_ newValue: LyricViewerService.DisplayMode) {
+        service.setDisplayMode(newValue)
+    }
+    
+    func getSong() -> Song? {
+        service.song
+    }
+    
 }
 
 extension LyricsViewerViewModel: WidthFittingTextViewDelegate {

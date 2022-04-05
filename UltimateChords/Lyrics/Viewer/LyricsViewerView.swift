@@ -21,6 +21,7 @@ struct LyricsViewerView: View {
     @AppStorage("LyricsViewerView.showChords") private var showChords = false
     @State private var fullScreenItem: ViewerMode?
     
+    @State private var item: ActivityItem?
     @EnvironmentObject private var lyric: Lyric
     @StateObject private var viewModel = LyricsViewerViewModel()
     
@@ -30,9 +31,9 @@ struct LyricsViewerView: View {
             .overlay(overlaySideMenu(), alignment: .trailing)
             .navigationBarItems(leading: NavLeading(), trailing: NavTrailing())
             .navigationBarTitleDisplayMode(.inline)
-            .fullScreenCover(item: $fullScreenItem) { item in
+            .fullScreenCover(item: $fullScreenItem) { x in
                 PickerNavigationView {
-                    lyricView(for: item)
+                    lyricView(for: x)
                 }
             }
             .task {
@@ -41,6 +42,23 @@ struct LyricsViewerView: View {
             .onDisappear{
                 lyric.updateLastView()
             }
+    }
+    
+    private func getItems() -> [Any] {
+        guard let fullScreenItem = fullScreenItem else {
+            return []
+        }
+        
+        var items = [Any]()
+        switch fullScreenItem {
+        case .PDFView:
+            items.append(Pdf.url(from: viewModel.attributedText))
+        case .HtmlView:
+            items.append(Html.parse(from: viewModel.getSong() ?? Song.init(rawText: lyric.text!)))
+        case .TextView:
+            items.append(viewModel.attributedText.mutable)
+        }
+        return items
     }
     
     private func overlaySideMenu() -> some View {
@@ -56,7 +74,14 @@ struct LyricsViewerView: View {
                     } label: {
                         XIcon(.square_and_arrow_up)
                     }
-                    
+                    Button {
+                        item = ActivityItem(
+                            items: Pdf.url(from: viewModel.attributedText)
+                        )
+                    } label: {
+                        Text("PDF")
+                    }
+                    .activitySheet($item)
                     Toggle(isOn: $viewModel.isDinamicFontSizeEnabled) {
                         XIcon(.textformat_size)
                     }
@@ -71,9 +96,9 @@ struct LyricsViewerView: View {
                     .background()
                     
                     Menu {
-                        ForEach(Song.DisplayMode.allCases, id: \.self) { mode in
+                        ForEach(LyricViewerService.DisplayMode.allCases, id: \.self) { mode in
                             Button(mode.rawValue) {
-                                viewModel.song?.setDisplayMode(mode)
+                                viewModel.setDisplayMode(mode)
                             }
                         }
                     } label: {
@@ -96,7 +121,7 @@ struct LyricsViewerView: View {
                 }
             }
             .labelsHidden()
-        
+            
             Toggle(isOn: $showControls) {
                 XIcon(.music_note)
             }
@@ -112,9 +137,9 @@ struct LyricsViewerView: View {
         Group {
             switch mode {
             case .PDFView:
-                PdfView(attributedText: viewModel.song?.attributedText)
+                PdfView(attributedText: viewModel.attributedText)
             case .HtmlView:
-                HtmlView(song: lyric.song())
+                HtmlView(song: viewModel.getSong() ?? .init(rawText: lyric.text!))
             case .TextView:
                 LyricsViewerTextView()
                     .environmentObject(viewModel)

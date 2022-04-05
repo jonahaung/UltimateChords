@@ -24,6 +24,9 @@ class EditableTextView: TextView {
     }
 
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        guard !isEditable else {
+            return super.canPerformAction(action, withSender: sender)
+        }
         guard selectedTextRange != nil else { return false }
 
         if action == #selector(addChord(_:)) || action == #selector(addChord(_:)) || action == #selector(removeChord(_:)) {

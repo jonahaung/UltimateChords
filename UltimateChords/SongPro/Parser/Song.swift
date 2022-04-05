@@ -25,34 +25,5 @@ struct Song: Identifiable {
     init(rawText: String) {
         self.rawText = rawText
     }
-
-    internal var displayMode = DisplayMode.Default
 }
 
-extension Song {
-    
-    enum DisplayMode: String, CaseIterable {
-        case Default, Copyable, Editing, TextOnly
-        func next() -> DisplayMode {
-            switch self {
-            case .Default:
-                return .Copyable
-            case .Copyable:
-                return .Editing
-            case .Editing:
-                return .TextOnly
-            case .TextOnly:
-                return .Default
-            }
-        }
-    }
-    
-    var attributedText: NSAttributedString {
-        AttributedString.displayText(for: self, with: displayMode)
-    }
-
-    mutating func setDisplayMode(_ newValue: DisplayMode) {
-        self.displayMode = newValue
-    }
-
-}

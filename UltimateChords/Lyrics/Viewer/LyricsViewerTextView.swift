@@ -20,7 +20,7 @@ struct LyricsViewerTextView: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: WidthFittingTextView, context: Context) {
-        uiView.attributedText = context.coordinator.song?.attributedText
+        uiView.attributedText = context.coordinator.attributedText
         uiView.isDinamicFontSizeEnabled = context.coordinator.isDinamicFontSizeEnabled
     }
     

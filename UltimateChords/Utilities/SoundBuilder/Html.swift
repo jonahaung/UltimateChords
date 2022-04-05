@@ -22,7 +22,7 @@ struct Html {
                    """
         /// Add  colors from the assets catalog  to the css
         html += "--accentColor: \(Color.red);\n"
-        html += "--highlightColor: \(Color.green);\n"
+        html += "--highlightColor: \(Color.yellow);\n"
         html += "--sectionColor: \(Color.blue);\n"
         html += "--commentBackground: \(Color.gray);\n"
         html += "}\n"

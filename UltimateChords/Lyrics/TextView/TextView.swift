@@ -20,18 +20,4 @@ class TextView: UITextView {
     }
     
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
-    
-    
-//    func applyTags(_ tags: [ChordTag]?) {
-//        guard let tags = tags else {
-//            return
-//        }
-//        
-//        let mutableText = attributedText.mutable
-//        chordTags.forEach { tag in
-//            mutableText.addAttributes(tag.customTextAttributes, range: tag.range)
-//        }
-//        attributedText = mutableText
-//        chordTags = tags
-//    }
 }

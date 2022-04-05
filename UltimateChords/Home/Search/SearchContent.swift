@@ -25,16 +25,5 @@ struct SearchContent: View {
             }
         }
     }
-    
-    private func SearchTypeControl() -> some View {
-        Picker("What is your favorite color?", selection: $viewModel.searchType) {
-            ForEach(SearchViewModel.SearchType.allCases, id: \.self) { type in
-                Text(type.rawValue)
-                    .tag(type)
-            }
-        }
-        .pickerStyle(.segmented)
-        .labelsHidden()
-    }
 }
 
