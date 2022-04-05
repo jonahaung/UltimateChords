@@ -13,6 +13,9 @@ class LyricsViewerViewModel: ObservableObject {
     private let service = LyricViewerService()
     
     @Published var attributedText = NSAttributedString()
+    @Published var displayMode = LyricViewerService.DisplayMode.Default
+    @Published var showChords = false
+    @Published var activityItem: ActivityItem?
     
     @Published var isDinamicFontSizeEnabled = UserDefault.isDinamicFontSizeEnabled {
         didSet {
@@ -24,15 +27,14 @@ class LyricsViewerViewModel: ObservableObject {
     private var subscriptions = Set<AnyCancellable>()
     
     init() {
-        //        service.$song.sink { [weak self] song in
-        //            guard let song = song else { return }
-        //            self?.song = song
-        //        }
-        //        .store(in: &self.subscriptions)
-        
         service.$attributedText.sink { [weak self] x in
             guard let x = x else { return }
             self?.attributedText = x
+        }
+        .store(in: &self.subscriptions)
+        
+        service.$displayMode.sink { [weak self] x in
+            self?.displayMode = x
         }
         .store(in: &self.subscriptions)
     }

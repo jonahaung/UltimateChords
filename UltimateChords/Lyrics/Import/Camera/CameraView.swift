@@ -37,7 +37,6 @@ struct CameraView: View {
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 60, height: 60)
                     .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                    .animation(.spring())
                     .tapToPresent(ImageViewer(image: model.photo.image!), .FullScreen)
             } else {
                 RoundedRectangle(cornerRadius: 10)
@@ -107,7 +106,6 @@ struct CameraView: View {
                                 }
                             }
                         )
-                        .animation(.easeInOut)
                     
                     HStack {
                         

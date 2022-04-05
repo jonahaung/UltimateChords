@@ -14,7 +14,7 @@ struct LyricsViewerTextView: UIViewRepresentable {
     func makeUIView(context: Context) -> WidthFittingTextView {
         let uiView = WidthFittingTextView()
         uiView.isEditable = false
-        uiView.isSelectable = true
+        uiView.isSelectable = false
         uiView.delegate2 = context.coordinator
         return uiView
     }
