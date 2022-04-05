@@ -2,7 +2,3 @@
 
 import Foundation
 
-class Measure: Identifiable {
-    var id = UUID()
-    var chords = [String]()
-}

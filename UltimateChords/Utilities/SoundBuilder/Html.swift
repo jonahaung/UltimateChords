@@ -71,7 +71,7 @@ struct Html {
 
         return html
     }
-    private static func sectionView(_ section: Sections) -> String {
+    private static func sectionView(_ section:  Song.Sections) -> String {
 
         var html = ""
         html += "<div class=\"section "
@@ -88,7 +88,7 @@ struct Html {
         
         return html
     }
-    private static func measuresView(_ line: Line) -> String {
+    private static func measuresView(_ line: Song.Line) -> String {
         
         var html = "<div class=\"measures\">"
         line.measures.forEach { measure in
@@ -103,7 +103,7 @@ struct Html {
         return html
     }
     
-    private static func partsView(_ line: Line) -> String {
+    private static func partsView(_ line: Song.Line) -> String {
         
         var html = "<div class=\"line\">"
         line.parts.forEach { part in
@@ -116,7 +116,7 @@ struct Html {
         return html
     }
     
-    private static func plainView(_ line: Line) -> String {
+    private static func plainView(_ line: Song.Line) -> String {
         
         var html = "<div class=\"line\">"
         line.parts.forEach { part in

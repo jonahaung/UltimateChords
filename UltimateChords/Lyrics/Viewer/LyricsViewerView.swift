@@ -36,7 +36,7 @@ struct LyricsViewerView: View {
                 }
             }
             .task {
-                await viewModel.loadSong(lyric)
+                await viewModel.configure(lyric)
             }
             .onDisappear{
                 lyric.updateLastView()

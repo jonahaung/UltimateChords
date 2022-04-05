@@ -21,17 +21,15 @@ class ChordPro {
         rawText.components(separatedBy: "{").forEach {
             guard !$0.isWhitespace else { return }
             let str = "{" + $0
-            var currentSection = Sections()
+            var currentSection = Song.Sections()
             song.sections.append(currentSection)
             processDirective(text: str, song: &song, currentSection: &currentSection)
         }
-        
-        
         return song
     }
     
 
-    private static func processDirective(text: String, song: inout Song, currentSection: inout Sections) {
+    private static func processDirective(text: String, song: inout Song, currentSection: inout  Song.Sections) {
         
         var key: String?
         var value: String?
@@ -60,7 +58,7 @@ class ChordPro {
                 case "chorus":
                     currentSection.sectionKind = .Cho
                     processSection(text: value!, type: "chorus", song: &song, currentSection: &currentSection)
-                    currentSection = Sections()
+                    currentSection =  Song.Sections()
                     song.sections.append(currentSection)
                 case "define":
                     processDefine(text: value!, song: &song)
@@ -107,7 +105,7 @@ class ChordPro {
                 case "chorus":
                     currentSection.sectionKind = .Cho
                     processSection(text: "Repeat chorus", type: "chorus", song: &song, currentSection: &currentSection)
-                    currentSection = Sections()
+                    currentSection =  Song.Sections()
                     song.sections.append(currentSection)
                 default:
                     break
@@ -117,7 +115,7 @@ class ChordPro {
         }
         text.lines().forEach { line in
             if line.starts(with: "{") {
-                let line = Line()
+                let line = Song.Line()
                 if currentSection.sectionKind == .Tab {
                     line.tablature = currentSection.name
                 } else {
@@ -132,14 +130,14 @@ class ChordPro {
     
     
     // MARK: - func: processSection
-    fileprivate static func processSection(text: String, type: String, song: inout Song, currentSection: inout Sections) {
+    fileprivate static func processSection(text: String, type: String, song: inout Song, currentSection: inout  Song.Sections) {
         if currentSection.lines.isEmpty {
             /// There is already an empty section
             currentSection.type = type
             currentSection.name = text
         } else {
             /// Make a new section
-            currentSection = Sections()
+            currentSection =  Song.Sections()
             currentSection.type = type
             currentSection.name = text
             song.sections.append(currentSection)
@@ -166,18 +164,18 @@ class ChordPro {
     }
     
     // MARK: - func: processComments
-    fileprivate static func processComments(text: String, song: inout Song, currentSection: inout Sections) {
-        let line = Line()
+    fileprivate static func processComments(text: String, song: inout Song, currentSection: inout  Song.Sections) {
+        let line = Song.Line()
         line.comment = text.trimmingCharacters(in: .newlines)
         /// Add the comment as a new line.
         currentSection.lines.append(line)
     }
     
     // MARK: - func: processLyrics
-    fileprivate static func processLyrics(text: String, song: inout Song, currentSection: inout Sections) {
+    fileprivate static func processLyrics(text: String, song: inout Song, currentSection: inout  Song.Sections) {
         
         /// Start with a fresh line:
-        var line = Line()
+        var line = Song.Line()
         
         if text.starts(with: "|-") || currentSection.type == "tab" {
             if currentSection.type == nil {
@@ -189,14 +187,14 @@ class ChordPro {
                 currentSection.type = "grid"
             }
             if let measureMatches = measuresRegex?.matches(in: text, range: text.range()) {
-                var measures = [Measure]()
+                var measures = [Song.Measure]()
                 
                 for match in measureMatches {
                     if let measureRange = Range(match.range(at: 1), in: text) {
                         let measureText = text[measureRange].trimmingCharacters(in: .newlines)
                         if let chordsMatches = chordsRegex?.matches(in: measureText, range: NSRange(location: 0, length: measureText.utf16.count)) {
                             
-                            let measure = Measure()
+                            let measure = Song.Measure()
                             measure.chords = chordsMatches.map {
                                 if let chordsRange = Range($0.range(at: 1), in: measureText) {
                                     return String(measureText[chordsRange].trimmingCharacters(in: .newlines))
@@ -223,7 +221,7 @@ class ChordPro {
     }
     
     
-    private static func processParts(_ text: String, song: inout Song, currentSection: inout Sections, line: inout Line) {
+    private static func processParts(_ text: String, song: inout Song, currentSection: inout  Song.Sections, line: inout Song.Line) {
         
         let font = XFont.body(for: text)
         let cFont = XFont.chord()
@@ -260,7 +258,7 @@ class ChordPro {
                     word = String(string[valueRange] + "\u{200c}")
                 }
                 
-                let part = Part()
+                let part = Song.Part()
                 part.chord = chord
                 part.lyric = word
                 
@@ -286,7 +284,7 @@ class ChordPro {
         }
     }
     
-    private static func processLines(_ text: String, song: inout Song, currentSection: inout Sections, line: inout Line) {
+    private static func processLines(_ text: String, song: inout Song, currentSection: inout  Song.Sections, line: inout Song.Line) {
         func processLines(textLines: [String]) {
             for var textLine in textLines {
                 

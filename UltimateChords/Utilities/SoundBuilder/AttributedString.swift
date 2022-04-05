@@ -23,7 +23,7 @@ struct AttributedString {
         return title
     }
     
-    private static func sectionView(_ section: Sections,_ attrString: NSMutableAttributedString) {
+    private static func sectionView(_ section:  Song.Sections,_ attrString: NSMutableAttributedString) {
         section.lines.forEach {
             lineView($0, attrString)
         }
@@ -32,7 +32,7 @@ struct AttributedString {
         }
     }
     
-    private static func lineView(_ line: Line,_ attrString: NSMutableAttributedString) {
+    private static func lineView(_ line: Song.Line,_ attrString: NSMutableAttributedString) {
         if let comment = line.comment?.trimmed() {
             commentView(comment, attrString)
         }else if let plain = line.plain?.trimmed() {
@@ -47,7 +47,7 @@ struct AttributedString {
     }
     
     
-    private static func measuresViewText(_ line: Line,_ attrString: NSMutableAttributedString) {
+    private static func measuresViewText(_ line: Song.Line,_ attrString: NSMutableAttributedString) {
         
 //        var str  = "\n"
 //        line.measures.forEach { measure in
@@ -63,7 +63,7 @@ struct AttributedString {
     
     
     
-    private static func partsView(_ line: Line,_ attrString: NSMutableAttributedString) {
+    private static func partsView(_ line: Song.Line,_ attrString: NSMutableAttributedString) {
         if let chordLine = line.chordLine {
             attrString.append(chordLine.chordAttrStr)
         }
@@ -71,29 +71,6 @@ struct AttributedString {
         if let lyricsLine = line.lyricsLine {
             attrString.append(lyricsLine.lyricAttrString())
         }
-        
-        //        let lineString = NSMutableAttributedString()
-        //        line.parts.forEach { part in
-        //            let lyrics = part.lyric?.trimmed() ?? " "
-        //            var chord = part.chord?.trimmed() ?? String()
-        //
-        //            if lyrics.isWhitespace {
-        //                chord += "-"
-        //            }
-        //            let fullLine = chord+lyrics
-        //
-        //            let partString = NSMutableAttributedString(fullLine)
-        //
-        //            partString.setAttributes([.baselineOffset: lyrics.isWhitespace ? 0 : UIFont.labelFontSize, .font: XFont.chord(), .foregroundColor: UIColor.systemPink], range: NSRange(location: 0, length: chord.utf16.count))
-        //
-        //            lineString.append(partString)
-        //        }
-        //
-        //        if !lineString.string.isWhitespace {
-        //            attrString.append(lineString)
-        //            attrString.newLine()
-        //        }
-        
     }
     
     private static func tablatureView(_ string: String, _ attrString: NSMutableAttributedString) {
@@ -196,7 +173,7 @@ extension NSMutableAttributedString {
         append(.init(string: "\r"))
     }
     
-    private func adjustFontRatio(factor: CGFloat) {
+     func adjustFontRatio(factor: CGFloat) {
         self.enumerateAttribute(.font, in: NSRange(location: 0, length: self.length)) { value, range, pointer in
             if let font = value as? UIFont {
                 self.removeAttribute(.font, range: range)
