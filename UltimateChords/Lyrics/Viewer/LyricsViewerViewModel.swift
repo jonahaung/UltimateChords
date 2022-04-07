@@ -7,59 +7,45 @@
 
 import UIKit
 import Combine
+import SwiftUI
 
 class LyricsViewerViewModel: ObservableObject {
     
-    private let service = LyricViewerService()
-    
-    @Published var attributedText = NSAttributedString()
-    @Published var displayMode = LyricViewerService.DisplayMode.Default
-    @Published var showChords = false
+    @Published var song: Song?
+    @Published var showControls = false
     @Published var activityItem: ActivityItem?
     
-    @Published var isDinamicFontSizeEnabled = UserDefault.isDinamicFontSizeEnabled {
-        didSet {
-            guard oldValue != isDinamicFontSizeEnabled else { return }
-            UserDefault.isDinamicFontSizeEnabled = isDinamicFontSizeEnabled
-        }
+    var attributedText: NSAttributedString {
+        AttributedString.displayText(for: song, with: displayMode)
     }
     
-    private var subscriptions = Set<AnyCancellable>()
-    
-    init() {
-        service.$attributedText.sink { [weak self] x in
-            guard let x = x else { return }
-            self?.attributedText = x
-        }
-        .store(in: &self.subscriptions)
-        
-        service.$displayMode.sink { [weak self] x in
-            self?.displayMode = x
-        }
-        .store(in: &self.subscriptions)
+    var isDinamicFontSizeEnabled: Bool {
+        get { UserDefault.LyricViewer.isDinamicFontSizeEnabled }
+        set { UserDefault.LyricViewer.isDinamicFontSizeEnabled = newValue; hideControlsIfNeeded() }
     }
     
+    var showChords: Bool {
+        get { UserDefault.LyricViewer.showChords }
+        set { UserDefault.LyricViewer.showChords = newValue; objectWillChange.send(); hideControlsIfNeeded() }
+    }
+    var displayMode: UserDefault.LyricViewer.DisplayMode {
+        get { UserDefault.LyricViewer.displayMode }
+        set { UserDefault.LyricViewer.displayMode = newValue; objectWillChange.send(); hideControlsIfNeeded() }
+    }
 }
 
 extension LyricsViewerViewModel {
     
     func configure(_ lyric: Lyric) async {
-        await service.configure(lyric: lyric)
+        self.song = lyric.song()
     }
     
-    func setDisplayMode(_ newValue: LyricViewerService.DisplayMode) {
-        service.setDisplayMode(newValue)
+    func hideControlsIfNeeded() {
+        if showControls {
+            withAnimation {
+                showControls = false
+            }
+        }
     }
-    
-    func getSong() -> Song? {
-        service.song
-    }
-    
 }
 
-extension LyricsViewerViewModel: WidthFittingTextViewDelegate {
-    
-    func textView(textView: WidthFittingTextView, didAdjustFontSize text: NSAttributedString) {
-        
-    }
-}

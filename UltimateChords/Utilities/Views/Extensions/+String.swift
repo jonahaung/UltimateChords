@@ -27,8 +27,15 @@ extension String {
     var whiteSpace: String {
         self.appending(" ")
     }
+    func prepending(_ s: String) -> String {
+        s + self
+    }
     var newLine: String {
         self.appending("\r")
+    }
+    
+    var nonLineBreak: String {
+        self.replacingOccurrences(of: " ", with: "\u{00a0}")
     }
 }
 extension String {

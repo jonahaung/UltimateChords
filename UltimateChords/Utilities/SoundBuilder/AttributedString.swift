@@ -9,7 +9,7 @@ import UIKit
 
 struct AttributedString {
     
-    static func parse(from song: Song) -> NSAttributedString {
+    static func defaultText(from song: Song) -> NSAttributedString {
         let attrString = NSMutableAttributedString()
         song.sections.forEach {
             sectionView($0, attrString)
@@ -17,11 +17,11 @@ struct AttributedString {
         return attrString
     }
     
-    static func createTitle(from song: Song) -> NSMutableAttributedString {
-        let title = NSAttributedString(song.title ?? "", style: .title).mutable
-        title.append(.init("\r" + (song.artist ?? "").newLine, style: .subheadline))
-        return title
-    }
+//    static func createTitle(from song: Song) -> NSMutableAttributedString {
+//        let title = NSAttributedString(song.title ?? "", style: .title).mutable
+//        title.append(.init("\r" + (song.artist ?? "").newLine, style: .subheadline))
+//        return title
+//    }
     
     private static func sectionView(_ section:  Song.Sections,_ attrString: NSMutableAttributedString) {
         section.lines.forEach {
@@ -91,12 +91,16 @@ struct AttributedString {
 
 extension AttributedString {
     
-    static func displayText(for song: Song, with displayMode: LyricViewerService.DisplayMode) -> NSAttributedString {
-        let attrStr = self.createTitle(from: song)
+    static func displayText(for song: Song?, with displayMode: UserDefault.LyricViewer.DisplayMode) -> NSAttributedString {
+        guard let song = song else {
+            return .init()
+        }
+
+        let attrStr = NSMutableAttributedString()
         
         switch displayMode {
         case .Default:
-            attrStr.append(self.parse(from: song))
+            attrStr.append(self.defaultText(from: song))
         case .Editing:
             attrStr.append(self.rawText(from: song))
         case .TextOnly:

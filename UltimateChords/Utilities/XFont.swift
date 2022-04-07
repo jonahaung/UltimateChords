@@ -10,17 +10,31 @@ import SwiftUI
 struct XFont {
 
     enum MyanmarFont: String {
-        case MyanmarSansPro, MyanmarAngoun, MyanmarSquare, MasterpieceSpringRev
+        case MyanmarSansPro, MyanmarAngoun, MyanmarSquare, MasterpieceSpringRev, NotoSansMyanmar
     }
     enum Style {
         case title, headline, body, subheadline, footnote
+        var size: CGFloat {
+            switch self {
+            case .title:
+                return UIFont.preferredFont(forTextStyle: .title1).pointSize
+            case .headline:
+                return UIFont.preferredFont(forTextStyle: .headline).pointSize
+            case .body:
+                return UIFont.preferredFont(forTextStyle: .body).pointSize
+            case .subheadline:
+                return UIFont.preferredFont(forTextStyle: .subheadline).pointSize
+            case .footnote:
+                return UIFont.preferredFont(forTextStyle: .footnote).pointSize
+            }
+        }
     }
     
     // Automatic Fonts
     static func title(for text: String) -> UIFont {
         let isMyanmar = text.isMyanar
-        let size = isMyanmar ? 40 : UIFont.preferredFont(forTextStyle: .title1).pointSize
-        let fontName = isMyanmar ? MyanmarFont.MasterpieceSpringRev.rawValue : "NotoSansMonoExtraCondensed-Black"
+        let size = isMyanmar ? 42 : UIFont.preferredFont(forTextStyle: .title1).pointSize
+        let fontName = isMyanmar ? MyanmarFont.MasterpieceSpringRev.rawValue : "NotoSansMonoExtraCondensed-Bold"
         return UIFont(name: fontName, size: size)!
     }
     static func headline(for text: String) -> UIFont {
@@ -28,13 +42,13 @@ struct XFont {
         return .init(name: fontName, size: UIFont.buttonFontSize)!
     }
     static func subheadline(for text: String) -> UIFont {
-        let fontName = text.isMyanar ? MyanmarFont.MyanmarAngoun.rawValue : "NotoSansMonoExtraCondensed-Regular"
+        let fontName = text.isMyanar ? MyanmarFont.MyanmarSansPro.rawValue : "NotoSansMonoExtraCondensed-Regular"
         return UIFont(name: fontName, size: UIFont.systemFontSize)!
     }
     
     static func body(for text: String) -> UIFont {
         let fontName = text.isMyanar ? MyanmarFont.MyanmarAngoun.rawValue : "NotoSansMonoExtraCondensed-Medium"
-        return UIFont(name: fontName, size: UIFont.labelFontSize)!
+        return UIFont(name: fontName, size: UIFont.labelFontSize - 1)!
     }
     
     static func footnote(for text: String) -> UIFont {
@@ -43,7 +57,11 @@ struct XFont {
     }
     
     static func chord() -> UIFont {
-        .init(name: "NotoSansMonoExtraCondensed-Medium", size: UIFont.labelFontSize)!
+        .init(name: "NotoSansMonoExtraCondensed-Medium", size: UIFont.labelFontSize - 1)!
+    }
+    
+    static func universal(for style: UIFont.TextStyle) -> UIFont {
+        .init(name: MyanmarFont.MyanmarSansPro.rawValue, size: UIFont.preferredFont(forTextStyle: style).pointSize) ?? UIFont.preferredFont(forTextStyle: style)
     }
 }
 

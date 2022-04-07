@@ -21,14 +21,14 @@ struct PickerNavigationView<Content: View>: View {
             content()
                 .navigationBarItems(leading: Leading())
                 .navigationBarTitleDisplayMode(.inline)
-        }
+        }.navigationViewStyle(.stack)
     }
     
     private func Leading() -> some View {
         Button {
             presentationMode.wrappedValue.dismiss()
         } label: {
-            XIcon(.xmark)
+            Text("Cancel")
         }
 
     }

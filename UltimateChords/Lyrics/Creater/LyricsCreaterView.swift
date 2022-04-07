@@ -25,15 +25,33 @@ struct LyricsCreaterView: View {
         }
         .navigationBarTitle("Create")
         .navigationBarItems(trailing: navTrailing())
+        .fullScreenCover(item: $viewModel.importMode) { mode in
+            ImageImporterView(mode) { string in
+                if let string = string {
+                    viewModel.didImportText(text: string)
+                }
+            }
+        }
     }
     
     private func navTrailing() -> some View {
         HStack {
+
             Toggle(isOn: $viewModel.isChordMode) {
                 XIcon(.tuningfork)
             }
             XIcon(.music_note)
                 .tapToPresent(PickerNavigationView { LyricCreaterControls() }.environmentObject(viewModel))
+            XIcon(.square_and_arrow_down)
+                .tapToShowComfirmationDialog {
+                    ForEach(ImageImporter.Mode.allCases) { mode in
+                        Button {
+                            viewModel.importMode = mode
+                        } label: {
+                            Text(mode.description)
+                        }
+                    }
+                }
             Button {
                 viewModel.save()
                 dismiss()

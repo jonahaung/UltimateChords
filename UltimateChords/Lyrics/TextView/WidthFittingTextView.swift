@@ -6,34 +6,33 @@
 //
 
 import UIKit
-protocol WidthFittingTextViewDelegate: AnyObject {
-    func textView(textView: WidthFittingTextView, didAdjustFontSize text: NSAttributedString)
-}
+import SwiftUI
+
 class WidthFittingTextView: TextView {
     
-    weak var delegate2: WidthFittingTextViewDelegate?
-    var isDinamicFontSizeEnabled = true {
-        didSet {
-            guard oldValue != isDinamicFontSizeEnabled else { return }
-            adjustFontSizeIfNeeded()
-        }
+    private var isDinamicFontSizeEnabled: Binding<Bool>
+    
+    init(_ isDinamicFontSizeEnabled: Binding<Bool>) {
+        self.isDinamicFontSizeEnabled = isDinamicFontSizeEnabled
+        super.init()
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     override func layoutSubviews() {
         super.layoutSubviews()
         adjustFontSizeIfNeeded()
     }
     
     private func adjustFontSizeIfNeeded() {
-        if delegate2 != nil && isDinamicFontSizeEnabled {
+        if isDinamicFontSizeEnabled.wrappedValue {
             adjustByDecreasingFontSize()
         }
     }
     private func adjustByDecreasingFontSize() {
-        guard !attributedText.string.isEmpty else { return }
         let mutable = attributedText.mutable
-        var containerSize = textContainer.size
-        containerSize.width -= textContainer.lineFragmentPadding*2
+        let containerSize = UIScreen.main.bounds.size
         mutable.adjustFontSize(to: containerSize.width)
         self.attributedText = mutable
     }

@@ -9,98 +9,86 @@ import SwiftUI
 
 struct LyricViewerControls: View {
     
-    @EnvironmentObject var viewModel: LyricsViewerViewModel
-    
+    @EnvironmentObject private var viewModel: LyricsViewerViewModel
     
     var body: some View {
-        PickerNavigationView {
-            Form{
-                Section{
-                    HStack {
-                        Text("Transpose")
-                        Spacer()
-                        Button{
-                            
-                        }label: {
-                            XIcon(.arrow_up_circle_fill)
-                        }.buttonStyle(.borderless)
+        Form{
+            Section{
+                HStack {
+                    Text("Transpose")
+                    Spacer()
+                    Button{
                         
-                        Text("0")
-                        
-                        Button{
-                            
-                        }label: {
-                            XIcon(.arrow_down_circle_fill)
-                        }.buttonStyle(.borderless)
-        
-                    }
-                }
-                Section {
-                    Menu {
-                        ForEach(LyricViewerService.DisplayMode.allCases, id: \.self) { mode in
-                            Button(mode.rawValue) {
-                                viewModel.setDisplayMode(mode)
-                            }
-                        }
-                    } label: {
-                        HStack {
-                            Text("Text Display Mode")
-                                .foregroundColor(.secondary)
-                            Spacer()
-                            Text(viewModel.displayMode.rawValue)
-                        }
-                    }
+                    }label: {
+                        XIcon(.arrow_up_circle_fill)
+                    }.buttonStyle(.borderless)
                     
-                    Toggle("Automatically adjust size", isOn: $viewModel.isDinamicFontSizeEnabled)
-                        .toggleStyle(.switch)
+                    Text("0")
                     
-                    Toggle("Show Guitar Chords", isOn: $viewModel.showChords)
-                        .toggleStyle(.switch)
-                }
-                
-                Section {
-                    
-                    Button {
+                    Button{
                         
-                    } label: {
-                        HStack {
-                            XIcon(.heart_fill)
-                                .foregroundColor(.pink)
-                            Text("Add to favourites")
-                        }
-                    }
-                    Button {
-                        
-                    } label: {
-                        HStack {
-                            XIcon(.star_fill)
-                                .foregroundColor(.orange)
-                            Text("Rate this lyric")
-                        }
-                    }
-                    Button {
-                        
-                    } label: {
-                        HStack {
-                            XIcon(.square_and_pencil)
-                                .foregroundColor(.mint)
-                            Text("Edit for yourself")
-                        }
-                    }
-                    
-                    Button("Report this song") {
-                        
-                    }
-                }
-                
-                Section {
-                    Text("View as PDF Document")
-                        .tapToPresent(PdfView(attributedText: viewModel.attributedText))
-                    Text("View as HTML Document")
-                        .tapToPresent(HtmlView(song: viewModel.getSong()!))
+                    }label: {
+                        XIcon(.arrow_down_circle_fill)
+                    }.buttonStyle(.borderless)
+    
                 }
             }
-            .navigationTitle(viewModel.getSong()?.title ?? "")
+            Section {
+                Picker("Text Display Mode", selection: $viewModel.displayMode) {
+                    ForEach(UserDefault.LyricViewer.DisplayMode.allCases, id: \.self) { mode in
+                        Text(mode.rawValue)
+                            .tag(mode)
+                    }
+                }
+                
+                Toggle("Automatically adjust size", isOn: $viewModel.isDinamicFontSizeEnabled)
+                    .toggleStyle(.switch)
+                
+                Toggle("Show Guitar Chords", isOn: $viewModel.showChords)
+                    .toggleStyle(.switch)
+            }
+            
+            Section {
+                
+                Button {
+                    
+                } label: {
+                    HStack {
+                        XIcon(.heart_fill)
+                            .foregroundColor(.pink)
+                        Text("Add to favourites")
+                    }
+                }
+                Button {
+                    
+                } label: {
+                    HStack {
+                        XIcon(.star_fill)
+                            .foregroundColor(.orange)
+                        Text("Rate this lyric")
+                    }
+                }
+                Button {
+                    
+                } label: {
+                    HStack {
+                        XIcon(.square_and_pencil)
+                            .foregroundColor(.mint)
+                        Text("Edit for yourself")
+                    }
+                }
+                
+                Button("Report this song") {
+                    
+                }
+            }
+            
+            Section {
+                Text("View as PDF Document")
+                    .tapToPresent(PdfView(attributedText: viewModel.attributedText))
+                Text("View as HTML Document")
+                    .tapToPresent(HtmlView(song: viewModel.song ?? .init(rawText: "")))
+            }
         }
     }
 }

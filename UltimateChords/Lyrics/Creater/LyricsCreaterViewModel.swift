@@ -9,7 +9,7 @@ import UIKit
 import SwiftyChords
 
 final class LyricsCreaterViewModel: NSObject, ObservableObject {
-    
+    @Published var importMode: ImageImporter.Mode?
     @Published var tempSong = CreateLyrics(title: "", artist: "", text: "")
     @Published var isEditable = true
     @Published var isChordMode = false
@@ -41,6 +41,11 @@ final class LyricsCreaterViewModel: NSObject, ObservableObject {
     func didAddChord(chord: Chord) {
         self.chord = nil
         didCompleteChordBlk?(chord)
+    }
+    
+    func didImportText(text: String) {
+        tempSong.text.append(text.newLine)
+        didUpdateTextBlk?(tempSong.text)
     }
 }
 

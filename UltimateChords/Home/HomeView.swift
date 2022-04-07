@@ -23,10 +23,7 @@ struct HomeView: View {
             }
             .onDelete(perform: self.deleteItems)
         }
-        .onChange(of: viewModel.documentString) { newValue in
-            guard let newValue = newValue else { return }
-            viewModel.save(string: newValue)
-        }
+        
         .overlay(SearchContent().environmentObject(searchViewModel))
         .searchable(text: $searchViewModel.searchText, prompt: Text("Title or Artist"))
         .navigationTitle("Home")
@@ -35,11 +32,8 @@ struct HomeView: View {
     
     private func navTrailing() -> some View {
         HStack {
-            Text("Scanner").tapToPush(PDFScannerView())
             XIcon(.doc_text_viewfinder)
-                .tapToPresent(CameraView(), .Sheet)
-            XIcon(.doc_text_viewfinder)
-                .tapToPresent(DocumentPicker(fileContent: $viewModel.documentString))
+                .tapToPresent(DocumentPicker(fileContent: $viewModel.documentString), .FullScreen)
             XIcon(.square_and_pencil)
                 .tapToPush(LyricsCreaterView())
         }

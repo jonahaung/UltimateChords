@@ -86,6 +86,7 @@ extension Lyric {
         let title = NSPredicate(format: "rawTitle CONTAINS[cd] %@", text.urlEncoded)
         let artist = NSPredicate(format: "rawArtist CONTAINS[cd] %@", text.urlEncoded)
         request.predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [title, artist])
+        request.sortDescriptors = [NSSortDescriptor(key: "lastViewed", ascending: false)]
         do {
             return try context.fetch(request)
         } catch {

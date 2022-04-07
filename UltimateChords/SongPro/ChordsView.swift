@@ -15,26 +15,19 @@ struct ChordsView: View {
     @State var selectedChord: Chord?
     
     var body: some View {
-        ScrollView(.vertical, showsIndicators: false) {
-            LazyVStack {
+        ScrollView(.horizontal, showsIndicators: false) {
+            LazyHStack {
                 ForEach(song.chords.sorted { $0.name < $1.name }) { chord in
                     VStack(spacing: 0) {
-                        if let chordPosition = ChordsView.chordsDatabase.filter { $0.key == chord.key && $0.suffix == chord.suffix && $0.baseFret == chord.basefret}, let layer = chordPosition.first?.shapeLayer(rect: ChordsView.frame, showFingers: true, showChordName: false), let image = layer.image() {
-                            
-                            
-#if os(macOS)
-                            Image(nsImage: image)
-                                .rotation3DEffect(.degrees(180), axis: (x: 1, y: 0, z: 0))
-#endif
-#if os(iOS)
+                        if let chordPosition = ChordsView.chordsDatabase.filter { $0.key == chord.key && $0.suffix == chord.suffix && $0.baseFret == chord.basefret}, let layer = chordPosition.first?.shapeLayer(rect: ChordsView.frame, showFingers: true, showChordName: true), let image = layer.image()?.withRenderingMode(.alwaysTemplate) {
                             Image(uiImage: image)
-#endif
+                                .resizable()
+                                .scaledToFit()
+                                .tapToPresent(ChordsSheet(chord: chord), .Sheet)
+                                .foregroundStyle(.secondary)
+                                .frame(width:ChordsView.frame.width, height: ChordsView.frame.height)
                         }
-                        
-                        Text(chord.name).italic()
                     }
-                    .background()
-                    .tapToPresent(ChordsSheet(chord: chord), .Sheet)
                 }
             }
         }

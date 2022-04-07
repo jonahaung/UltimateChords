@@ -10,44 +10,53 @@ import SwiftUI
 
 struct LyricsViewerView: View {
     
-    
-    @EnvironmentObject private var lyric: Lyric
+    let lyric: Lyric
     @StateObject private var viewModel = LyricsViewerViewModel()
     
     var body: some View {
         GeometryReader { geo in
-            ZStack(alignment: .bottom) {
-                ScrollView([.horizontal], showsIndicators:  false) {
-                    LazyHStack {
-                        LyricsViewerTextView()
-                            .frame(width: geo.size.width)
-                            .environmentObject(viewModel)
+            ScrollView(.vertical, showsIndicators: false) {
+                LazyVStack(alignment: .leading, spacing: 0) {
+                    
+                    if viewModel.showControls {
+                        LyricViewerControls()
+                            .frame(height: geo.frame(in: .global).height)
+                            .transition(.move(edge: .bottom))
+                    } else {
+                        titleView()
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            LyricsViewerTextView()
+                                .activitySheet($viewModel.activityItem)
+                        }
+                        .transition(.move(edge: .bottom))
                     }
                 }
-                bottomMenu()
             }
-            .overlay(chordsView(), alignment: .leading)
-            .navigationBarItems(trailing: NavTrailing())
+            .frame(width: geo.size.width)
+            .overlay(bottomMenu(), alignment: .bottomTrailing)
             .navigationBarTitleDisplayMode(.inline)
+            .navigationBarItems(trailing: NavTrailing())
+            .environmentObject(viewModel)
             .task {
                 await viewModel.configure(lyric)
             }
-            .onDisappear{
-                lyric.updateLastView()
-            }
-            .activitySheet($viewModel.activityItem)
+            
         }
+        
     }
     
     
     private func bottomMenu() -> some View {
-        HStack {
-            Spacer()
+        Button {
+            withAnimation {
+                viewModel.showControls.toggle()
+            }
+        } label: {
             XIcon(.music_note_list)
                 .font(.title)
-                .tapToPresent(LyricViewerControls().environmentObject(viewModel))
-            
-        }.padding()
+                .padding()
+        }
+
     }
     
     private func NavTrailing() -> some View {
@@ -68,14 +77,31 @@ struct LyricsViewerView: View {
             }
     }
     
-    
-    private func chordsView() -> some View {
-        Group {
-            if viewModel.showChords, let song = lyric.song() {
-                ChordsView(song: song)
-                    .frame(width: ChordsView.frame.width + 6)
+    private func titleView() -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(alignment: .lastTextBaseline) {
+                Text(lyric.title.whiteSpace)
+                    .font(.init(XFont.title(for: lyric.title)))
+                +
+                Text(lyric.artist.nonLineBreak.whiteSpace)
+                    .font(XFont.universal(for: .footnote).font)
+                    .foregroundColor(.secondary)
+                +
+                
+                Text((viewModel.song?.album?.prepending("[").appending("]").nonLineBreak ?? String()))
+                    .font(XFont.universal(for: .footnote).font)
+                    .foregroundColor(.secondary)
+            }
+            
+            SongKeyView(song: viewModel.song)
+            
+            if viewModel.showChords {
+                ChordsView(song: viewModel.song ?? .init(rawText: ""))
             }
         }
+        .padding(.horizontal, 5)
+        .padding(.top)
+        .transition(.move(edge: .leading))
     }
 }
 
