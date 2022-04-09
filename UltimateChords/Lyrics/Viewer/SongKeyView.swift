@@ -14,10 +14,9 @@ struct SongKeyView: View {
     var body: some View {
         Group {
             if let key = song?.key {
-                HStack(alignment: .lastTextBaseline, spacing: 1) {
+                HStack(spacing: 1) {
                     Text("Key")
                         .font(.footnote)
-                        .italic()
                         .foregroundStyle(.tertiary)
                     Text(key)
                         .font(.title3)

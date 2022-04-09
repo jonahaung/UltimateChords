@@ -19,24 +19,13 @@ extension Lyric {
         }
         return song
     }
-    var title: String {
-        get {
-            rawTitle?.urlDecoded ?? ""
-        }
-    }
-    
-    var artist: String {
-        get {
-            rawArtist?.urlDecoded ?? ""
-        }
-    }
     
     convenience init(title: String, artist: String, text: String) {
         let context = Persistence.shared.context
         self.init(context: context)
         self.id = UUID().uuidString
-        self.rawTitle = title.urlEncoded
-        self.rawArtist = artist.urlEncoded
+        self.title = title
+        self.artist = artist
         self.text = text
         self.date = Date()
         self.lastViewed = Date()
@@ -53,6 +42,7 @@ extension Lyric {
     class func all() -> [Lyric] {
         let context = Persistence.shared.context
         let request = NSFetchRequest<Lyric>(entityName: Lyric.entity().name!)
+        request.sortDescriptors = [NSSortDescriptor(key: "lastViewed", ascending: false)]
         do {
             return try context.fetch(request)
         } catch {
@@ -83,8 +73,8 @@ extension Lyric {
     class func search(text: String) -> [Lyric] {
         let context = Persistence.shared.context
         let request = NSFetchRequest<Lyric>(entityName: Lyric.entity().name!)
-        let title = NSPredicate(format: "rawTitle CONTAINS[cd] %@", text.urlEncoded)
-        let artist = NSPredicate(format: "rawArtist CONTAINS[cd] %@", text.urlEncoded)
+        let title = NSPredicate(format: "title CONTAINS[cd] %@", text)
+        let artist = NSPredicate(format: "artist CONTAINS[cd] %@", text)
         request.predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [title, artist])
         request.sortDescriptors = [NSSortDescriptor(key: "lastViewed", ascending: false)]
         do {

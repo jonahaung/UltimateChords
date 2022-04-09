@@ -7,30 +7,34 @@
 
 import SwiftUI
 
-struct TapToShowComfirmationDialogStyle<CContent: View>: ViewModifier {
+struct TapToShowComfirmationDialogStyle: ViewModifier {
     
+    @State var items: [DialogItem]
     @State private var show = false
-    
-    private let cContent: () -> CContent
-    
-    init(@ViewBuilder content: @escaping () -> CContent) {
-        self.cContent = content
-    }
-    
+
     func body(content: Content) -> some View {
         Button {
             show = true
         } label: {
             content
         }
-        .confirmationDialog("", isPresented: $show, titleVisibility: .hidden) {
-            cContent()
+        .confirmationDialog("", isPresented: $show) {
+            ForEach(items) {
+                Button($0.title, action: $0.action)
+            }
         }
     }
 }
 
+struct DialogItem: Identifiable {
+    
+    var id: String { title }
+    
+    let title: String
+    let action: ( () -> Void )
+}
 extension View {
-    func tapToShowComfirmationDialog<CContent: View>(@ViewBuilder content: @escaping () -> CContent) -> some View {
-        ModifiedContent(content: self, modifier: TapToShowComfirmationDialogStyle(content: content))
+    func tapToShowComfirmationDialog(items: [DialogItem]) -> some View {
+        ModifiedContent(content: self, modifier: TapToShowComfirmationDialogStyle(items: items))
     }
 }

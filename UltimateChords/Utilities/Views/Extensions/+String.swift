@@ -9,7 +9,16 @@ import UIKit
 extension String: Identifiable {
     public var id: String { self }
 }
-
+extension Optional where Wrapped: Collection {
+    var isNilOrEmpty: Bool {
+        return self?.isEmpty ?? true
+    }
+}
+extension Optional where Wrapped == String {
+    var str: String {
+        return self ?? "nil"
+    }
+}
 extension String {
 
     var urlDecoded: String {
@@ -31,7 +40,7 @@ extension String {
         s + self
     }
     var newLine: String {
-        self.appending("\r")
+        self.appending("\n")
     }
     
     var nonLineBreak: String {

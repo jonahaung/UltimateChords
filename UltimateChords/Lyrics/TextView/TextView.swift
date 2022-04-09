@@ -17,6 +17,7 @@ class TextView: UITextView {
         textContainer.lineFragmentPadding = XApp.TextView.lineFragmentPadding
         showsVerticalScrollIndicator = false
         dataDetectorTypes = []
+        backgroundColor = .clear
     }
     
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }

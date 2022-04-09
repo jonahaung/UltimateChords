@@ -17,7 +17,7 @@ class ObjectTracker<T: Hashable> {
     var seenStrings = [T: Observation]()
     var bestCount = Int64(0)
     var bestString: T?
-    var quality = 15
+    var quality = 5
     var resetLoop = Int64(0)
     
    

@@ -43,15 +43,7 @@ struct LyricsCreaterView: View {
             XIcon(.music_note)
                 .tapToPresent(PickerNavigationView { LyricCreaterControls() }.environmentObject(viewModel))
             XIcon(.square_and_arrow_down)
-                .tapToShowComfirmationDialog {
-                    ForEach(ImageImporter.Mode.allCases) { mode in
-                        Button {
-                            viewModel.importMode = mode
-                        } label: {
-                            Text(mode.description)
-                        }
-                    }
-                }
+                .tapToShowComfirmationDialog(items: dialogs())
             Button {
                 viewModel.save()
                 dismiss()
@@ -62,6 +54,13 @@ struct LyricsCreaterView: View {
         
     }
     
+    private func dialogs() -> [DialogItem] {
+        ImageImporter.Mode.allCases.map { mode in
+            DialogItem(title: mode.description) {
+                viewModel.importMode = mode
+            }
+        }
+    }
     private func BottomBar() -> some View {
         HStack {
             Spacer()

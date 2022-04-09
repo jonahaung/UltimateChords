@@ -17,12 +17,6 @@ struct AttributedString {
         return attrString
     }
     
-//    static func createTitle(from song: Song) -> NSMutableAttributedString {
-//        let title = NSAttributedString(song.title ?? "", style: .title).mutable
-//        title.append(.init("\r" + (song.artist ?? "").newLine, style: .subheadline))
-//        return title
-//    }
-    
     private static func sectionView(_ section:  Song.Sections,_ attrString: NSMutableAttributedString) {
         section.lines.forEach {
             lineView($0, attrString)
@@ -87,16 +81,26 @@ struct AttributedString {
     private static func commentView(_ string: String, _ attrString: NSMutableAttributedString) {
         attrString.append(.init(string: string.newLine, attributes: [.font: XFont.chord(), .foregroundColor: UIColor.tertiaryLabel, .paragraphStyle: NSParagraphStyle.nonLineBreak]))
     }
+    private static func title(from song: Song) -> NSMutableAttributedString {
+        let mutable = NSMutableAttributedString()
+        if let title = song.title {
+            mutable.append(.init(string: title, attributes: [.font: XFont.title(for: title), .foregroundColor: UIColor.label]))
+        }
+        if let artist = song.artist {
+            mutable.append(.init(string: artist.newLine, attributes: [.font: XFont.universal(for: .footnote), .foregroundColor: UIColor.secondaryLabel]))
+        }
+        return mutable
+    }
 }
 
 extension AttributedString {
     
-    static func displayText(for song: Song?, with displayMode: UserDefault.LyricViewer.DisplayMode) -> NSAttributedString {
+    static func displayText(for song: Song?, with displayMode: UserDefault.LyricViewer.DisplayMode, showTitle: Bool = false) -> NSAttributedString {
         guard let song = song else {
             return .init()
         }
 
-        let attrStr = NSMutableAttributedString()
+        let attrStr = showTitle ? title(from: song) : NSMutableAttributedString()
         
         switch displayMode {
         case .Default:
@@ -141,6 +145,8 @@ extension AttributedString {
         }
         return items
     }
+    
+    
 }
 
 extension NSAttributedString {

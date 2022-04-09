@@ -1,25 +1,29 @@
 //
-//  WidthFittingTextView.swift
+//  TextLabel.swift
 //  UltimateChords
 //
-//  Created by Aung Ko Min on 22/3/22.
+//  Created by Aung Ko Min on 9/4/22.
 //
 
 import UIKit
 import SwiftUI
 
-class WidthFittingTextView: TextView {
+class TextLabel: UILabel {
+
+    private var chordTags = [ChordTag]()
+    
+  
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     
     private var isDinamicFontSizeEnabled: Binding<Bool>
     
     init(_ isDinamicFontSizeEnabled: Binding<Bool>) {
         self.isDinamicFontSizeEnabled = isDinamicFontSizeEnabled
-        super.init()
+        super.init(frame: .zero)
+        adjustsFontSizeToFitWidth = true
+        numberOfLines = 0
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     override func layoutSubviews() {
         super.layoutSubviews()
         adjustFontSizeIfNeeded()
@@ -31,10 +35,9 @@ class WidthFittingTextView: TextView {
         }
     }
     private func adjustByDecreasingFontSize() {
-        let mutable = attributedText.mutable
+        let mutable = attributedText?.mutable
         let containerSize = UIScreen.main.bounds.size
-        mutable.adjustFontSize(to: containerSize.width - 5)
+        mutable?.adjustFontSize(to: containerSize.width)
         self.attributedText = mutable
     }
-    
 }

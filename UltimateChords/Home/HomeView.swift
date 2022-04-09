@@ -18,12 +18,12 @@ struct HomeView: View {
     
     var body: some View {
         List {
-            ForEach(lyrics) {
+            ForEach(viewModel.lyrics) {
                 HomeCell(lyric: $0)
+//                    .environmentObject($0)
             }
             .onDelete(perform: self.deleteItems)
         }
-        
         .overlay(SearchContent().environmentObject(searchViewModel))
         .searchable(text: $searchViewModel.searchText, prompt: Text("Title or Artist"))
         .navigationTitle("Home")

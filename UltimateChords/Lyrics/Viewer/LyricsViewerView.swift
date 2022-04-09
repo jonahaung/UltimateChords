@@ -10,39 +10,45 @@ import SwiftUI
 
 struct LyricsViewerView: View {
     
-    let lyric: Lyric
+    
     @StateObject private var viewModel = LyricsViewerViewModel()
+    private var lyric: CreateLyrics
+    
+    @State private var showMenuDialog = false
+    
+    init(_ lyric: CreateLyrics) {
+        self.lyric = lyric
+    }
     
     var body: some View {
-        GeometryReader { geo in
-            ScrollView(.vertical, showsIndicators: false) {
-                LazyVStack(alignment: .leading, spacing: 0) {
-                    
-                    if viewModel.showControls {
-                        LyricViewerControls()
-                            .frame(height: geo.frame(in: .global).height)
-                            .transition(.move(edge: .bottom))
-                    } else {
-                        titleView()
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            LyricsViewerTextView()
-                                .activitySheet($viewModel.activityItem)
-                        }
-                        .transition(.move(edge: .bottom))
+        VStack(spacing: 0) {
+            NavBar {
+                SongKeyView(song: viewModel.song)
+                Spacer()
+                shareButton()
+            }
+            ScrollView([.horizontal, .vertical], showsIndicators: false) {
+                ScrollViewReader { scrollView in
+                    if viewModel.showChords {
+                        ChordsView(song: viewModel.song ?? .init(rawText: ""))
                     }
+                    LyricsViewerTextView()
+                        .id(0)
+                        .task {
+                            viewModel.configure(lyric)
+                            scrollView.scrollTo(0, anchor: .topLeading)
+                        }
                 }
             }
-            .frame(width: geo.size.width)
-            .overlay(bottomMenu(), alignment: .bottomTrailing)
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(trailing: NavTrailing())
-            .environmentObject(viewModel)
-            .task {
-                await viewModel.configure(lyric)
-            }
             
+            if viewModel.showControls {
+                LyricViewerControls()
+                    .transition(.move(edge: .bottom))
+            }
         }
-        
+        .environmentObject(viewModel)
+        .activitySheet($viewModel.activityItem)
+        .overlay(bottomMenu(), alignment: .bottomTrailing)
     }
     
     
@@ -56,52 +62,26 @@ struct LyricsViewerView: View {
                 .font(.title)
                 .padding()
         }
-
     }
     
-    private func NavTrailing() -> some View {
-        XIcon(.square_and_arrow_up)
-            .tapToShowComfirmationDialog {
-                Button("Export as PDF") {
-                    viewModel.activityItem = .init(items: Pdf.url(from: viewModel.attributedText))
-                }
-                Button("Export Plain Text") {
-                    viewModel.activityItem = .init(items: viewModel.attributedText.string)
-                }
-                Button("Copy Texts") {
-                    UIPasteboard.general.string = viewModel.attributedText.string
-                }
-                Button("Print Page") {
-                    
-                }
+    private func shareButton() -> some View {
+        Menu {
+            Button("Export as PDF") {
+                viewModel.activityItem = .init(items: Pdf.url(from: viewModel.attributedText))
             }
-    }
-    
-    private func titleView() -> some View {
-        VStack(alignment: .leading, spacing: 0) {
-            HStack(alignment: .lastTextBaseline) {
-                Text(lyric.title.whiteSpace)
-                    .font(.init(XFont.title(for: lyric.title)))
-                +
-                Text(lyric.artist.nonLineBreak.whiteSpace)
-                    .font(XFont.universal(for: .footnote).font)
-                    .foregroundColor(.secondary)
-                +
+            Button("Export Plain Text") {
+                viewModel.activityItem = .init(items: viewModel.attributedText.string)
+            }
+            Button("Copy Texts") {
+                UIPasteboard.general.string = viewModel.attributedText.string
+            }
+            Button("Print Page") {
                 
-                Text((viewModel.song?.album?.prepending("[").appending("]").nonLineBreak ?? String()))
-                    .font(XFont.universal(for: .footnote).font)
-                    .foregroundColor(.secondary)
             }
-            
-            SongKeyView(song: viewModel.song)
-            
-            if viewModel.showChords {
-                ChordsView(song: viewModel.song ?? .init(rawText: ""))
-            }
+        } label: {
+            XIcon(.square_and_arrow_up)
+                .padding()
         }
-        .padding(.horizontal, 5)
-        .padding(.top)
-        .transition(.move(edge: .leading))
     }
 }
 

@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21D62" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Lyric" representedClassName="Lyric" syncable="YES" codeGenerationType="class">
+        <attribute name="album" optional="YES" attributeType="String"/>
+        <attribute name="artist" attributeType="String"/>
         <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" attributeType="String"/>
         <attribute name="lastViewed" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="rawArtist" attributeType="String"/>
-        <attribute name="rawTitle" attributeType="String"/>
         <attribute name="text" attributeType="String"/>
+        <attribute name="title" attributeType="String"/>
+        <attribute name="writer" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="Lyric" positionX="-18" positionY="36" width="128" height="119"/>
+        <element name="Lyric" positionX="-18" positionY="36" width="128" height="149"/>
     </elements>
 </model>

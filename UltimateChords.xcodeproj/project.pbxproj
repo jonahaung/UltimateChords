@@ -98,6 +98,9 @@
 		47A3E5FC27E4F8D400412B89 /* +ParagraphStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47A3E5FB27E4F8D400412B89 /* +ParagraphStyle.swift */; };
 		47BB283327F0CFDC00852C1D /* EditableTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BB283227F0CFDC00852C1D /* EditableTextView.swift */; };
 		47BFC43527F2282F00B4F261 /* DPTagTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BFC43427F2282F00B4F261 /* DPTagTextView.swift */; };
+		47EB308028017CF700913B6A /* NavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47EB307F28017CF700913B6A /* NavBar.swift */; };
+		47EB308228018D0F00913B6A /* TextLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47EB308128018D0F00913B6A /* TextLabel.swift */; };
+		47EB3084280191C100913B6A /* Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47EB3083280191C100913B6A /* Size.swift */; };
 		47FB8A3C27E2A72E006799FC /* XFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47FB8A3B27E2A72E006799FC /* XFont.swift */; };
 		47FB8A4527E2AC3F006799FC /* NotoSansMono_ExtraCondensed-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 47FB8A4327E2AC3F006799FC /* NotoSansMono_ExtraCondensed-Medium.ttf */; };
 		47FB8A4627E2AC3F006799FC /* NotoSansMono_ExtraCondensed-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 47FB8A4427E2AC3F006799FC /* NotoSansMono_ExtraCondensed-Regular.ttf */; };
@@ -195,6 +198,9 @@
 		47A3E5FB27E4F8D400412B89 /* +ParagraphStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+ParagraphStyle.swift"; sourceTree = "<group>"; };
 		47BB283227F0CFDC00852C1D /* EditableTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableTextView.swift; sourceTree = "<group>"; };
 		47BFC43427F2282F00B4F261 /* DPTagTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPTagTextView.swift; sourceTree = "<group>"; };
+		47EB307F28017CF700913B6A /* NavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavBar.swift; sourceTree = "<group>"; };
+		47EB308128018D0F00913B6A /* TextLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextLabel.swift; sourceTree = "<group>"; };
+		47EB3083280191C100913B6A /* Size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Size.swift; sourceTree = "<group>"; };
 		47FB89E327E2A3E3006799FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		47FB8A3B27E2A72E006799FC /* XFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XFont.swift; sourceTree = "<group>"; };
 		47FB8A4327E2AC3F006799FC /* NotoSansMono_ExtraCondensed-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansMono_ExtraCondensed-Medium.ttf"; sourceTree = "<group>"; };
@@ -327,6 +333,7 @@
 				4782A49927E8E9CC00FA0FC9 /* WidthFittingTextView.swift */,
 				4761E7FB27EF789700BBA301 /* TextView.swift */,
 				47BFC43427F2282F00B4F261 /* DPTagTextView.swift */,
+				47EB308128018D0F00913B6A /* TextLabel.swift */,
 			);
 			path = TextView;
 			sourceTree = "<group>";
@@ -428,6 +435,7 @@
 				477DA77C27E0E88800C143C4 /* TapToPresentStyle.swift */,
 				477DA77D27E0E88800C143C4 /* TapToPushStyle.swift */,
 				4726962627FC7205009FE548 /* TapToShowComfirmationDialog.swift */,
+				47EB3083280191C100913B6A /* Size.swift */,
 			);
 			path = ViewModifiers;
 			sourceTree = "<group>";
@@ -516,6 +524,7 @@
 				4708C46827ED2F6E00481172 /* DocumentPicker.swift */,
 				4726964F27FF0AFA009FE548 /* DocumentScannerView.swift */,
 				476B42FF27FBDA3200C30BF3 /* ActivityView */,
+				47EB307F28017CF700913B6A /* NavBar.swift */,
 			);
 			path = CommonViews;
 			sourceTree = "<group>";
@@ -659,6 +668,7 @@
 				4726962727FC7205009FE548 /* TapToShowComfirmationDialog.swift in Sources */,
 				4708C47A27ED37B400481172 /* ChordPro.swift in Sources */,
 				476B431427FC0F9900C30BF3 /* PhotoCaptureProcessor.swift in Sources */,
+				47EB308028017CF700913B6A /* NavBar.swift in Sources */,
 				476B431727FC0F9900C30BF3 /* CameraView.swift in Sources */,
 				476B429427FB255200C30BF3 /* ChordPicker.swift in Sources */,
 				472BE8DC27EAB3A500A41D54 /* ChordTag.swift in Sources */,
@@ -697,6 +707,7 @@
 				477DA76727E0E7C800C143C4 /* HomeView.swift in Sources */,
 				4726963327FE98DF009FE548 /* OcrImage.swift in Sources */,
 				4782A48F27E8D6AA00FA0FC9 /* +UITextView.swift in Sources */,
+				47EB308228018D0F00913B6A /* TextLabel.swift in Sources */,
 				4782A4A627E930C300FA0FC9 /* UltimateChords.xcdatamodeld in Sources */,
 				4726966027FF1FB4009FE548 /* CGImagePropertyOrientation.swift in Sources */,
 				4782A4A027E92C9200FA0FC9 /* +Lyric.swift in Sources */,
@@ -715,6 +726,7 @@
 				4726965C27FF123D009FE548 /* Quadrilateral.swift in Sources */,
 				476B428E27F9E90F00C30BF3 /* LCreateLyrics.swift in Sources */,
 				4726962927FC7B7A009FE548 /* LyricViewerControls.swift in Sources */,
+				47EB3084280191C100913B6A /* Size.swift in Sources */,
 				47BFC43527F2282F00B4F261 /* DPTagTextView.swift in Sources */,
 				47FB8A4A27E2F3A4006799FC /* HtmlView.swift in Sources */,
 			);

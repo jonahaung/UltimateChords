@@ -30,9 +30,7 @@ class TextReconizerImage: ObservableObject {
 
 extension TextReconizerImage {
     func task() {
-        if let image = noiseReduced(image: self.image) {
-            cropToTextBoxes(image: image)
-        }
+        cropToTextBoxes(image: image)
     }
     
     private func cropToTextBoxes(image: UIImage) {

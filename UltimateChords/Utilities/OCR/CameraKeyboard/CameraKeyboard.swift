@@ -228,7 +228,7 @@ class CameraKeyboard: UIView {
     // MARK: text recognition
     private func detectText(buffer: CVPixelBuffer) {
         let request = VNRecognizeTextRequest(completionHandler: textRecognitionHandler)
-        request.recognitionLevel = .fast
+        request.recognitionLevel = .accurate
         request.usesLanguageCorrection = true
         performDetection(request: request, buffer: buffer)
     }
@@ -255,7 +255,7 @@ class CameraKeyboard: UIView {
             }
             return
         }
-        let region = CGRect(x: 0, y: 0.5, width: 1, height: 0)
+        
         let results = observations.compactMap { $0 as? VNRecognizedTextObservation}
         guard results.isEmpty == false else {
             return
@@ -263,14 +263,14 @@ class CameraKeyboard: UIView {
         
         var textBoxes = [(text: String, box: VNRecognizedTextObservation)]()
         for result in results {
-            for recText in result.topCandidates(1) where result.boundingBox.intersects(region) {
+            for recText in result.topCandidates(1) where result.boundingBox.contains(.init(x: 0.5, y: 0.5)) {
                 if !recText.string.isWhitespace {
                     textBoxes.append((recText.string, result))
                 }
             }
         }
         guard textBoxes.isEmpty == false else { return }
-        let text = textBoxes.map{ $0.text }.joined(separator: " ")
+        let text = textBoxes.map{ $0.text }.joined(separator: " ").trimmed()
         self.tracker.logFrame(objects: [text])
         if !self.isStabled, let x = self.tracker.getStableItem() {
             self.isStabled = true

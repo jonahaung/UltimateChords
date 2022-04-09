@@ -26,5 +26,6 @@ struct XIcon: View {
     
     var body: some View {
         Image(systemName: icon.systemName)
+            .aspectRatio(1, contentMode: .fit)
     }
 }

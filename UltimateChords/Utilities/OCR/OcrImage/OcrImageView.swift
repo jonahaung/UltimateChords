@@ -23,13 +23,14 @@ struct OcrImageView: View {
         Image(uiImage: recognizer.image)
             .resizable()
             .scaledToFit()
-        .task {
-            recognizer.task()
-        }
-        .onChange(of: recognizer.text) { newValue in
-            self.completionHandler(newValue)
-            presentationMode.wrappedValue.dismiss()
-        }
+            .overlay(loadingView)
+            .task {
+                recognizer.task()
+            }
+            .onChange(of: recognizer.text) { newValue in
+                self.completionHandler(newValue)
+                presentationMode.wrappedValue.dismiss()
+            }
     }
     
     private var loadingView: some View {

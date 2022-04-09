@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Combine
 import SwiftUI
 
 class LyricsViewerViewModel: ObservableObject {
@@ -16,7 +15,7 @@ class LyricsViewerViewModel: ObservableObject {
     @Published var activityItem: ActivityItem?
     
     var attributedText: NSAttributedString {
-        AttributedString.displayText(for: song, with: displayMode)
+        AttributedString.displayText(for: song, with: displayMode, showTitle: true)
     }
     
     var isDinamicFontSizeEnabled: Bool {
@@ -32,12 +31,22 @@ class LyricsViewerViewModel: ObservableObject {
         get { UserDefault.LyricViewer.displayMode }
         set { UserDefault.LyricViewer.displayMode = newValue; objectWillChange.send(); hideControlsIfNeeded() }
     }
+    deinit{
+        print("deinit")
+    }
 }
 
 extension LyricsViewerViewModel {
     
-    func configure(_ lyric: Lyric) async {
-        self.song = lyric.song()
+    func configure(_ lyric: CreateLyrics) {
+        var song = ChordPro.parse(rawText: lyric.text)
+        if song.title == nil {
+            song.title = lyric.title
+        }
+        if song.artist == nil {
+            song.artist = lyric.artist
+        }
+        self.song = song
     }
     
     func hideControlsIfNeeded() {

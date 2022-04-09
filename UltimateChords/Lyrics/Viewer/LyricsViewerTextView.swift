@@ -19,8 +19,11 @@ struct LyricsViewerTextView: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: WidthFittingTextView, context: Context) {
-        uiView.attributedText = viewModel.attributedText
+        uiView.attributedText = context.coordinator.attributedText
         uiView.setNeedsLayout()
     }
     
+    func makeCoordinator() -> LyricsViewerViewModel {
+        return viewModel
+    }
 }
