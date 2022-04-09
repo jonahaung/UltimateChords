@@ -20,9 +20,14 @@ struct HomeView: View {
         List {
             ForEach(viewModel.lyrics) {
                 HomeCell(lyric: $0)
-//                    .environmentObject($0)
             }
             .onDelete(perform: self.deleteItems)
+        }
+        .task {
+            viewModel.task()
+        }
+        .refreshable {
+            viewModel.refresh()
         }
         .overlay(SearchContent().environmentObject(searchViewModel))
         .searchable(text: $searchViewModel.searchText, prompt: Text("Title or Artist"))

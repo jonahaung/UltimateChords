@@ -9,6 +9,8 @@ import SwiftUI
 
 struct LyricViewerControls: View {
     
+    @Binding var isShowing: Bool
+    
     @EnvironmentObject private var viewModel: LyricsViewerViewModel
     
     var body: some View {
@@ -88,6 +90,10 @@ struct LyricViewerControls: View {
                     .tapToPresent(PdfView(attributedText: viewModel.attributedText))
                 Text("View as HTML Document")
                     .tapToPresent(HtmlView(song: viewModel.song ?? .init(rawText: "")))
+            }
+        }.refreshable {
+            withAnimation {
+                isShowing = false
             }
         }
     }

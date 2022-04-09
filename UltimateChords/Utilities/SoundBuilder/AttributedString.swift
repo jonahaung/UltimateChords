@@ -69,7 +69,7 @@ struct AttributedString {
     
     private static func tablatureView(_ string: String, _ attrString: NSMutableAttributedString) {
         string.lines().forEach { line in
-            attrString.append(.init(string: line.newLine, attributes: [.font: XFont.chord(), .foregroundColor: UIColor.secondaryLabel, .paragraphStyle: NSParagraphStyle.nonLineBreak]))
+            attrString.append(.init(string: line.newLine, attributes: [.font: XFont.chord(), .foregroundColor: UIColor.secondaryLabel]))
         }
     }
     private static func plainView(_ string: String, _ attrString: NSMutableAttributedString) {
@@ -79,18 +79,9 @@ struct AttributedString {
         }
     }
     private static func commentView(_ string: String, _ attrString: NSMutableAttributedString) {
-        attrString.append(.init(string: string.newLine, attributes: [.font: XFont.chord(), .foregroundColor: UIColor.tertiaryLabel, .paragraphStyle: NSParagraphStyle.nonLineBreak]))
+        attrString.append(.init(string: string.newLine, attributes: [.font: XFont.chord(), .foregroundColor: UIColor.tertiaryLabel]))
     }
-    private static func title(from song: Song) -> NSMutableAttributedString {
-        let mutable = NSMutableAttributedString()
-        if let title = song.title {
-            mutable.append(.init(string: title, attributes: [.font: XFont.title(for: title), .foregroundColor: UIColor.label]))
-        }
-        if let artist = song.artist {
-            mutable.append(.init(string: artist.newLine, attributes: [.font: XFont.universal(for: .footnote), .foregroundColor: UIColor.secondaryLabel]))
-        }
-        return mutable
-    }
+    
 }
 
 extension AttributedString {
@@ -112,6 +103,7 @@ extension AttributedString {
         case .Copyable:
             attrStr.append(self.copyableText(from: song))
         }
+        attrStr.addAttribute(.paragraphStyle, value: NSParagraphStyle.nonLineBreak, range: .init(location: 0, length: attrStr.length))
         return attrStr
     }
     
@@ -145,7 +137,16 @@ extension AttributedString {
         }
         return items
     }
-    
+    private static func title(from song: Song) -> NSMutableAttributedString {
+        let mutable = NSMutableAttributedString()
+        if let title = song.title {
+            mutable.append(.init(string: title, attributes: [.font: XFont.title(for: title), .foregroundColor: UIColor.label]))
+        }
+        if let artist = song.artist {
+            mutable.append(.init(string: artist.newLine.prepending("\n"), attributes: [.font: XFont.universal(for: .footnote), .foregroundColor: UIColor.secondaryLabel]))
+        }
+        return mutable
+    }
     
 }
 
@@ -165,7 +166,7 @@ extension NSAttributedString {
         case .headline:
             font = XFont.headline(for: string)
         }
-        self.init(string: string, attributes: [.font: font, .foregroundColor: foreGroundColor, .paragraphStyle: NSParagraphStyle.nonLineBreak])
+        self.init(string: string, attributes: [.font: font, .foregroundColor: foreGroundColor])
     }
     
     var mutable: NSMutableAttributedString { NSMutableAttributedString(attributedString: self) }
@@ -213,7 +214,7 @@ extension String {
     }
     
     var chordAttrStr: NSMutableAttributedString {
-        let attributes: [NSAttributedString.Key: Any] = [.font: XFont.chord(), .foregroundColor: UIColor.red, .paragraphStyle: NSParagraphStyle.nonLineBreak]
+        let attributes: [NSAttributedString.Key: Any] = [.font: XFont.chord(), .foregroundColor: UIColor.red]
         return .init(string: self, attributes: attributes)
     }
     

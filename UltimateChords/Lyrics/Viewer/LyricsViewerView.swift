@@ -14,8 +14,6 @@ struct LyricsViewerView: View {
     @StateObject private var viewModel = LyricsViewerViewModel()
     private var lyric: CreateLyrics
     
-    @State private var showMenuDialog = false
-    
     init(_ lyric: CreateLyrics) {
         self.lyric = lyric
     }
@@ -42,7 +40,8 @@ struct LyricsViewerView: View {
             }
             
             if viewModel.showControls {
-                LyricViewerControls()
+                Divider()
+                LyricViewerControls(isShowing: $viewModel.showControls)
                     .transition(.move(edge: .bottom))
             }
         }

@@ -237,10 +237,8 @@ class ChordPro {
                 var word = ""
                 
                 if let keyRange = Range(match.range(at: 1), in: string) {
-                    chord = string[keyRange]
-                        .trimmingCharacters(in: .newlines)
-                        .replacingOccurrences(of: "[", with: "")
-                        .replacingOccurrences(of: "]", with: "")
+                    chord = String(string[keyRange])
+                    chord = RegularExpression.chordPattern.stringByReplacingMatches(in: chord, withTemplate: "$1")
                     
                     if currentSection.type == nil {
                         currentSection.type = "verse"
@@ -255,7 +253,8 @@ class ChordPro {
                 if let valueRange = Range(match.range(at: 2), in: string) {
                     /// See https://stackoverflow.com/questions/31534742/space-characters-being-removed-from-end-of-string-uilabel-swift
                     /// for the funny stuff added to the string...
-                    word = String(string[valueRange] + "\u{200c}")
+//                    word = String(string[valueRange] + "\u{200c}")
+                    word = String(string[valueRange])
                 }
                 
                 let part = Song.Part()
@@ -264,7 +263,6 @@ class ChordPro {
                 
                 if !(part.empty) {
                     line.parts.append(part)
-    
                     chordLine += chord
                     wordLine += word
                     
