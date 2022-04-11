@@ -6,9 +6,8 @@
 //
 
 import Foundation
-import UIKit
 
-struct CreateLyrics: Identifiable {
+struct Lyric: Identifiable {
     
     let id: String
     var title: String

@@ -9,12 +9,9 @@ import SwiftUI
 
 @main
 struct UltimateChordsApp: App {
-    
-    let persistance = Persistence.shared
-    
     var body: some Scene {
         WindowGroup {
-            MainNavigationView().environment(\.managedObjectContext, persistance.container.viewContext)
+            MainNavigationView()
         }
     }
 }

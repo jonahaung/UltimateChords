@@ -12,9 +12,9 @@ struct LyricsViewerView: View {
     
     
     @StateObject private var viewModel = LyricsViewerViewModel()
-    private var lyric: CreateLyrics
+    private var lyric: Lyric
     
-    init(_ lyric: CreateLyrics) {
+    init(_ lyric: Lyric) {
         self.lyric = lyric
     }
     
@@ -25,39 +25,54 @@ struct LyricsViewerView: View {
                 Spacer()
                 shareButton()
             }
-            ScrollView([.horizontal, .vertical], showsIndicators: false) {
-                ScrollViewReader { scrollView in
-                    if viewModel.showChords {
-                        ChordsView(song: viewModel.song ?? .init(rawText: ""))
+            
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 0) {
+                    titleView()
+                        .padding(.horizontal, 8)
+                    if viewModel.showChords, let song = viewModel.song {
+                        ChordsView(song: song)
                     }
-                    LyricsViewerTextView()
-                        .id(0)
-                        .task {
-                            viewModel.configure(lyric)
-                            scrollView.scrollTo(0, anchor: .topLeading)
-                        }
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        LyricsViewerTextView()
+                    }
                 }
             }
-            
+        }
+        .overlay(controlsOverlay(), alignment: .bottom)
+        .overlay(bottomMenu(), alignment: .bottomTrailing)
+        .activitySheet($viewModel.activityItem)
+        .environmentObject(viewModel)
+        .task {
+            viewModel.configure(lyric)
+        }
+    }
+    
+    private func controlsOverlay() -> some View {
+        Group {
             if viewModel.showControls {
-                Divider()
                 LyricViewerControls(isShowing: $viewModel.showControls)
+                    .frame(height: UIScreen.main.bounds.height/2)
                     .transition(.move(edge: .bottom))
             }
         }
-        .environmentObject(viewModel)
-        .activitySheet($viewModel.activityItem)
-        .overlay(bottomMenu(), alignment: .bottomTrailing)
     }
-    
+    private func titleView() -> some View {
+        Text(lyric.title.whiteSpace)
+            .font(XFont.title(for: lyric.title).font)
+        +
+        Text(lyric.artist.nonLineBreak)
+            .font(XFont.universal(for: .subheadline).font)
+            .foregroundColor(.secondary)
+    }
     
     private func bottomMenu() -> some View {
         Button {
-            withAnimation {
+            withAnimation(.interactiveSpring()) {
                 viewModel.showControls.toggle()
             }
         } label: {
-            XIcon(.music_note_list)
+            XIcon(viewModel.showControls ? .xmark : .music_note_list)
                 .font(.title)
                 .padding()
         }

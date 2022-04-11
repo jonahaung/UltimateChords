@@ -12,15 +12,15 @@ struct LyricsViewerTextView: UIViewRepresentable {
     @EnvironmentObject var viewModel: LyricsViewerViewModel
     
     func makeUIView(context: Context) -> WidthFittingTextView {
-        let uiView = WidthFittingTextView($viewModel.isDinamicFontSizeEnabled)
+        let uiView = WidthFittingTextView()
         uiView.isEditable = false
         uiView.isScrollEnabled = false
+        uiView.textContainer.lineBreakMode = .byClipping
         return uiView
     }
     
     func updateUIView(_ uiView: WidthFittingTextView, context: Context) {
-        uiView.attributedText = context.coordinator.attributedText
-        uiView.setNeedsLayout()
+        uiView.update(context.coordinator.attributedText, adjustFontSize: context.coordinator.isDinamicFontSizeEnabled)
     }
     
     func makeCoordinator() -> LyricsViewerViewModel {

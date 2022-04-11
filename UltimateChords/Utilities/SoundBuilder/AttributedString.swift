@@ -184,25 +184,6 @@ extension NSMutableAttributedString {
     func newLine() {
         append(.init(string: "\r"))
     }
-    
-     func adjustFontRatio(factor: CGFloat) {
-        self.enumerateAttribute(.font, in: NSRange(location: 0, length: self.length)) { value, range, pointer in
-            if let font = value as? UIFont {
-                self.removeAttribute(.font, range: range)
-                self.addAttribute(.font, value: font.withSize(font.pointSize * factor), range: range)
-            }
-        }
-    }
-    
-    func adjustFontSize(to availiableWidth: CGFloat) {
-        var percent: CGFloat = 1
-        beginEditing()
-        while availiableWidth < self.size(for: CGSize(width: .greatestFiniteMagnitude, height: availiableWidth*2)).width  {
-            percent -= 0.01
-            adjustFontRatio(factor: percent)
-        }
-        endEditing()
-    }
 }
 
 extension String {
@@ -214,11 +195,17 @@ extension String {
     }
     
     var chordAttrStr: NSMutableAttributedString {
-        let attributes: [NSAttributedString.Key: Any] = [.font: XFont.chord(), .foregroundColor: UIColor.red]
+        let attributes: [NSAttributedString.Key: Any] = [.font: XFont.chord(), .foregroundColor: UIColor.red, .chord: 1]
         return .init(string: self, attributes: attributes)
     }
     
     func lyricAttrString() -> NSMutableAttributedString {
         .init(self)
     }
+}
+
+extension NSAttributedString.Key {
+    static var chord: NSAttributedString.Key = .init("Chord")
+    static var hashtag: NSAttributedString.Key = .init("Hashtag")
+    static var mention: NSAttributedString.Key = .init("Mention")
 }

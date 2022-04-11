@@ -9,60 +9,49 @@ import UIKit
 import SwiftyChords
 
 final class LyricsCreaterViewModel: NSObject, ObservableObject {
-    @Published var importMode: ImageImporter.Mode?
-    @Published var tempSong = CreateLyrics(title: "", artist: "", text: "")
+    
+    @Published var lyric = Lyric(title: "ခွင့်မပြု", artist: "ထူးအိမ်သင်", text: "")
     @Published var isEditable = true
-    @Published var isChordMode = false
-    @Published var showChordPicker = false
-    @Published var chord: Chord? {
-        didSet {
-            guard oldValue != chord else { return }
-            if let chord = chord {
-                didAddChord(chord: chord)
-            }
-        }
-    }
+
     
     var didCompleteChordBlk: ((Chord) -> Void)?
     var didUpdateTextBlk: ((String) -> Void)?
 
     
     func save() {
-        _ = Lyric(title: tempSong.title, artist: tempSong.artist, text: tempSong.text)
+        _ = CLyric(title: lyric.title, artist: lyric.artist, text: lyric.text)
     }
     
     func fillDemoData() {
-        let text = withoutChords
-        tempSong.title = text.words().randomElement() ?? ""
-        tempSong.artist = text.words().randomElement() ?? ""
-        tempSong.text = text
+        let text = withChords
+        lyric.title = text.words().randomElement() ?? ""
+        lyric.artist = text.words().randomElement() ?? ""
+        lyric.text = text
+        
         didUpdateTextBlk?(text)
-    }
-    func didAddChord(chord: Chord) {
-        self.chord = nil
-        didCompleteChordBlk?(chord)
     }
     
     func didImportText(text: String) {
-        tempSong.text.append(text.newLine)
-        didUpdateTextBlk?(tempSong.text)
+        lyric.text = text
+        didUpdateTextBlk?(text)
     }
 }
 
 extension LyricsCreaterViewModel: EditableTextViewDelegate {
     
     func textView(textView: EditableTextView, didTap add: Bool) {
-        self.showChordPicker = add
+        
     }
 }
 extension LyricsCreaterViewModel: UITextViewDelegate {
-    func textViewDidChange(_ textView: UITextView) {
-        tempSong.text = textView.text
-    }
     
+    func textViewDidChange(_ textView: UITextView) {
+        lyric.text = textView.text
+    }
+    func textViewDidEndEditing(_ textView: UITextView) {
+        textView.text = ChordProConverter.convert(textView.text)
+    }
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        
-        guard isChordMode else { return true }
         
         func pre() -> String {
            
@@ -174,6 +163,102 @@ let withoutChords = """
 ဒါတို့ပြည် [An]ဒါတို့မြေ [C]တို့ပိုင်နက်မြေ။[F]
 [C]တို့ပြည် တို့မြေ [F]အကျိုးကို [G]ညီညာစွာတို့တစ်တွေ[Am]
 [F]ထမ်းဆောင်ပါစို့လေ [G]တို့တာဝန်ပေ အဖိုးတန်မြေ။[C]
+"""
+let hotelCalifornia = """
+[Verse 1]
+Am                        E7
+On a dark desert highway, cool wind in my hair
+G                     D
+Warm smell of colitas rising up through the air
+F                         C
+Up ahead in the distance, I saw a shimmering light
+Dm
+My head grew heavy and my sight grew dim,
+E
+I had to stop for the night
+ 
+[Verse 2]
+Am                              E7
+There she stood in the doorway, I heard the mission bell
+G
+And I was thinking to myself
+              D
+This could be heaven or this could be hell
+F                         C
+Then she lit up a candle, and she showed me the way
+Dm
+There were voices down the corridor,
+E7
+I thought I heard them say...
+ 
+[Chorus]
+F                         C
+ Welcome to the Hotel California
+       E7                                         Am
+Such a lovely place (such a lovely place), such a lovely face
+F                                       C
+There's plenty of room at the Hotel California
+    Dm                                       E7
+Any time of year, (any time of year) You can find it here...
+ 
+[Verse 3]
+Am                           E7
+Her mind is Tiffany twisted, She got the Mercedes bends
+G                                   D
+She got a lot of pretty pretty boys that she calls friends
+F                                 C
+How they danced in the courtyard, sweet summer sweat
+Dm                      E7
+Some dance to remember, some dance to forget
+ 
+[Verse 4]
+Am                           E7
+So I called up the captain; "Please bring me my wine" (he said)
+G                                     D
+"We haven't had that spirit here since 1969"
+F                                       C
+And still those voices are calling from far away
+Dm
+Wake you up in the middle of the night
+E7
+Just to hear them say...
+ 
+[Chorus]
+F                         C
+ Welcome to the Hotel California
+       E7                                         Am
+Such a lovely place (such a lovely place), such a lovely face
+        F                             C
+They're livin' it up at the Hotel California
+       Dm                                               E7
+What a nice surprise (what a nice surprise), bring your alibis
+ 
+[Verse 5]
+Am                      E7
+Mirrors on the ceiling, the pink champagne on ice (and she said)
+G                               D
+We are all just prisoners here, of our own device
+F                             C
+And in the master's chambers, they gathered for the feast
+Dm
+They stab it with their steely knives, but they
+E7
+Just can't kill the beast
+ 
+[Verse 6]
+Am                           E7
+Last thing I remember, I was running for the door
+G                                     D
+I had to find the passage back to the place I was before
+F                                   C
+"Relax" said the night man, "we are programmed to receive,
+Dm
+You can check out any time you like
+E7
+But you can never leave"
+ 
+[Outro]
+Am E7 G D7 F C Dm E7  x5
 
 
 """

@@ -77,7 +77,7 @@ extension TextReconizerImage {
         
         if let uiImage = filteredImage.uiImage {
             DispatchQueue.main.async {
-                self.image = uiImage
+//                self.image = uiImage
                 self.detectTexts(forImage: uiImage)
             }
             

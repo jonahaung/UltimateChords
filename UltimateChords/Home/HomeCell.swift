@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HomeCell: View {
     
-    let lyric: CreateLyrics
+    let lyric: Lyric
     
     var body: some View {
         VStack(alignment: .leading) {

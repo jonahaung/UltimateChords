@@ -7,10 +7,10 @@
 
 import CoreData
 
-extension Lyric {
+extension CLyric {
     
     func song() -> Song {
-        var song = ChordPro.parse(rawText: text!)
+        var song = SongConverter.parse(rawText: text!)
         if song.title == nil {
             song.title = self.title
         }
@@ -37,11 +37,11 @@ extension Lyric {
     }
 }
 
-extension Lyric {
+extension CLyric {
     
-    class func all() -> [Lyric] {
+    class func all() -> [CLyric] {
         let context = Persistence.shared.context
-        let request = NSFetchRequest<Lyric>(entityName: Lyric.entity().name!)
+        let request = NSFetchRequest<CLyric>(entityName: CLyric.entity().name!)
         request.sortDescriptors = [NSSortDescriptor(key: "lastViewed", ascending: false)]
         do {
             return try context.fetch(request)
@@ -50,13 +50,13 @@ extension Lyric {
         }
     }
     
-    class func create(song: Song) -> Lyric {
-        return Lyric(title: song.title ?? "", artist: song.artist ?? "", text: song.rawText)
+    class func create(song: Song) -> CLyric {
+        return CLyric(title: song.title.str, artist: song.artist.str, text: song.rawText)
     }
     
-    class func cLyrics(for id: String) -> Lyric? {
+    class func cLyrics(for id: String) -> CLyric? {
         let context = Persistence.shared.context
-        let request = NSFetchRequest<Lyric>(entityName: Lyric.entity().name!)
+        let request = NSFetchRequest<CLyric>(entityName: CLyric.entity().name!)
         request.fetchLimit = 1
         do {
             return try context.fetch(request).first
@@ -65,14 +65,14 @@ extension Lyric {
         }
     }
     
-    class func delete(cLyrics: Lyric) {
+    class func delete(cLyrics: CLyric) {
         let context = Persistence.shared.context
         context.delete(cLyrics)
     }
     
-    class func search(text: String) -> [Lyric] {
+    class func search(text: String) -> [CLyric] {
         let context = Persistence.shared.context
-        let request = NSFetchRequest<Lyric>(entityName: Lyric.entity().name!)
+        let request = NSFetchRequest<CLyric>(entityName: CLyric.entity().name!)
         let title = NSPredicate(format: "title CONTAINS[cd] %@", text)
         let artist = NSPredicate(format: "artist CONTAINS[cd] %@", text)
         request.predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [title, artist])

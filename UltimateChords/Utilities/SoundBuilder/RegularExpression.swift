@@ -66,6 +66,16 @@ enum RegularExpression {
     static let measuresRegex = try! NSRegularExpression(pattern: "([\\[[\\w#b\\/]+\\]\\s]+)[|]*", options: .caseInsensitive)
     static let chordsRegex = try! NSRegularExpression(pattern: "\\[([\\w#b\\/]+)\\]?", options: .caseInsensitive)
     
+    
+    
+    static let chordsRegexForPlainText: NSRegularExpression = {
+        do {
+            return try NSRegularExpression(pattern: #"(\(*[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|min|aug|m|M|°|[0-9])*[\(]?[\d\/]*[\)]?(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|min|aug|m|M|°|[0-9])*[\d\/]*)*\)*)(?=[\s|$])(?! [a-z])"#, options: [])
+        }catch {
+            fatalError()
+        }
+    }()
+    
 }
 
 extension NSRegularExpression {

@@ -7,7 +7,7 @@
 import SwiftUI
 import SwiftyChords
 
-class ChordPro {
+class SongConverter {
     
     static let defineRegex = try? NSRegularExpression(pattern: "([a-z0-9#b/]+)(.*)", options: .caseInsensitive)
     static let lyricsRegex = try? NSRegularExpression(pattern: "(\\[[\\w#b/]+])?([^\\[]*)", options: .caseInsensitive)

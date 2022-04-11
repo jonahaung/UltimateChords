@@ -6,69 +6,35 @@
 //
 
 import SwiftUI
-import SwiftyChords
+
 struct LyricsCreaterView: View {
     
     @StateObject private var viewModel = LyricsCreaterViewModel()
-    @Environment(\.dismiss) private var dismiss
-    @State private var chordText = ""
-    @FocusState private var isUsernameFocused: Bool
+    @Environment(\.presentationMode) private var presentationMode
     
     var body: some View {
-        VStack {
+        ImportableView {
             LyricsCreaterTextView()
-                .environmentObject(viewModel)
-            
-            if viewModel.showChordPicker {
-                ChordPicker(chord: $viewModel.chord)
-            }
+        } onReceiveText: {
+            viewModel.didImportText(text: $0)
         }
+        .environmentObject(viewModel)
         .navigationBarTitle("Create")
         .navigationBarItems(trailing: navTrailing())
-        .fullScreenCover(item: $viewModel.importMode) { mode in
-            ImageImporterView(mode) { string in
-                if let string = string {
-                    viewModel.didImportText(text: string)
-                }
-            }
-        }
     }
     
     private func navTrailing() -> some View {
-        HStack {
-
-            Toggle(isOn: $viewModel.isChordMode) {
-                XIcon(.tuningfork)
-            }
+        HStack(spacing: 0) {
             XIcon(.music_note)
                 .tapToPresent(PickerNavigationView { LyricCreaterControls() }.environmentObject(viewModel))
-            XIcon(.square_and_arrow_down)
-                .tapToShowComfirmationDialog(items: dialogs())
             Button {
                 viewModel.save()
-                dismiss()
+                DispatchQueue.main.async {
+                    presentationMode.wrappedValue.dismiss()
+                }
             } label: {
                 Text("Save")
-            }
+            }.disabled(viewModel.lyric.text.isWhitespace)
         }
-        
-    }
-    
-    private func dialogs() -> [DialogItem] {
-        ImageImporter.Mode.allCases.map { mode in
-            DialogItem(title: mode.description) {
-                viewModel.importMode = mode
-            }
-        }
-    }
-    private func BottomBar() -> some View {
-        HStack {
-            Spacer()
-            Button{
-                hideKeyboard()
-            } label: {
-                XIcon(.chevron_down)
-            }
-        }.padding()
     }
 }

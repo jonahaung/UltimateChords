@@ -40,10 +40,12 @@ struct DocumentScannerView: UIViewControllerRepresentable {
         }
          
         func documentCameraViewController(_ controller: VNDocumentCameraViewController, didFinishWith scan: VNDocumentCameraScan) {
-            print("Document camera view controller did finish with ", scan)
-            let images = (0..<scan.pageCount).compactMap({ scan.imageOfPage(at: $0) })
-            completionHandler(images)
-            controller.dismiss(animated: true)
+            DispatchQueue.main.async {
+                print("Document camera view controller did finish with ", scan)
+                let images = (0..<scan.pageCount).compactMap({ scan.imageOfPage(at: $0) })
+                self.completionHandler(images)
+                controller.dismiss(animated: true)
+            }
         }
          
         func documentCameraViewControllerDidCancel(_ controller: VNDocumentCameraViewController) {

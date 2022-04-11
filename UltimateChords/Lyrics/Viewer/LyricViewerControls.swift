@@ -16,6 +16,24 @@ struct LyricViewerControls: View {
     var body: some View {
         Form{
             Section{
+                Button {
+                    guard let song = viewModel.song else { return }
+                    
+                    let key = song.key ?? "C"
+                    print(key)
+                    
+                    let mSong = PlainSong(AttributedString.defaultText(from: song).string)
+                    if let newSong = mSong.transposed(fromString: key, toString: "B") {
+                        let newText = newSong.lines.joined(separator: "\n")
+                        viewModel.song?.rawText = newText
+                        
+                        
+                    }
+                    
+                } label: {
+                    Text("Transpose")
+                }
+
                 HStack {
                     Text("Transpose")
                     Spacer()
@@ -92,7 +110,7 @@ struct LyricViewerControls: View {
                     .tapToPresent(HtmlView(song: viewModel.song ?? .init(rawText: "")))
             }
         }.refreshable {
-            withAnimation {
+            withAnimation(.interactiveSpring()) {
                 isShowing = false
             }
         }

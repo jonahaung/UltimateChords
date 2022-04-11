@@ -59,9 +59,7 @@ struct CameraView: View {
             Circle()
                 .foregroundColor(Color.gray.opacity(0.2))
                 .frame(width: 45, height: 45, alignment: .center)
-                .overlay(
-                    Image(systemName: "camera.rotate.fill")
-                        .foregroundColor(.white))
+                .overlay(Image(systemName: "camera.rotate.fill"))
         })
     }
     
@@ -71,13 +69,19 @@ struct CameraView: View {
                 Color.black.edgesIgnoringSafeArea(.all)
                 
                 VStack {
-                    Button(action: {
-                        model.switchFlash()
-                    }, label: {
-                        Image(systemName: model.isFlashOn ? "bolt.fill" : "bolt.slash.fill")
-                            .font(.system(size: 20, weight: .medium, design: .default))
-                    })
-                    .accentColor(model.isFlashOn ? .yellow : .white)
+                    HStack{
+                        Button("Cancel") {
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                        Spacer()
+                        Button(action: {
+                            model.switchFlash()
+                        }, label: {
+                            Image(systemName: model.isFlashOn ? "bolt.fill" : "bolt.slash.fill")
+                                .font(.system(size: 20, weight: .medium, design: .default))
+                        })
+                    }.padding()
+                    
                     
                     CameraPreview(session: model.session)
                         .gesture(
@@ -131,6 +135,7 @@ struct CameraView: View {
                 completionHandler(newValue?.image)
                 presentationMode.wrappedValue.dismiss()
             }
+            .accentColor(.white)
         }
     }
 }

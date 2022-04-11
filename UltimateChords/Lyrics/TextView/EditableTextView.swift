@@ -14,16 +14,6 @@ protocol EditableTextViewDelegate: AnyObject {
 
 class EditableTextView: TextView {
     
-    var isChordMode = false
-    weak var delegagte2: EditableTextViewDelegate?
-    private var tags = [ChordTag]()
-    
-    func setTupEditing() {
-        font = XFont.universal(for: .body)
-        self.inputAccessoryView = keyboardToolbar
-        cameraInputView.textField = self
-    }
-    
     private lazy var keyboardToolbar: UIToolbar = {
         let flexible = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         let doneBtn = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneDidTap))
@@ -44,62 +34,65 @@ class EditableTextView: TextView {
     
     private let cameraInputView = CameraKeyboard()
     
-    @objc private func addChord(_ sender: Any) {
-        delegagte2?.textView(textView: self, didTap: true)
+    override var text: String! {
+        didSet {
+            delegate?.textViewDidChange?(self)
+        }
     }
     
-    @objc private func removeChord(_ sender: Any) {
-        delegagte2?.textView(textView: self, didTap: false)
+    override func insertText(_ text: String) {
+        super.insertText(text)
+        delegate?.textViewDidChange?(self)
     }
     
-    func addChord(chord: Chord) {
-        let oldSelected = selectedRange
-        selectedRange.length = 0
-        
-        let key = chord.key.rawValue
-        var suff = chord.suffix.rawValue
-        if chord.suffix == .major {
-            suff = ""
-        } else if chord.suffix == .minor {
-            suff = "m"
-        }
-        let x = "[" + key + suff + "]"
-        self.insertText(x)
-        self.delegate?.textViewDidChange?(self)
-        
-        if !self.tags.isEmpty {
-            self.text = self.attributedText.string
-        }
-        tags = AttributedString.getChordTags(for: self.text)
-        let mutable = self.attributedText.mutable
-        tags.forEach { tag in
-            mutable.addAttributes(tag.customTextAttributes, range: tag.range)
-        }
-        self.attributedText = mutable
-        self.selectedRange = oldSelected
+    override func paste(_ sender: Any?) {
+        super.paste(sender)
+        delegate?.textViewDidChange?(self)
+    }
+    override func cut(_ sender: Any?) {
+        super.cut(sender)
+        delegate?.textViewDidChange?(self)
     }
     
     
+    weak var delegate2: EditableTextViewDelegate?
+    private var tags = [ChordTag]()
+    var isChordMode = false
+    
+    func setTupEditing() {
+        self.inputAccessoryView = keyboardToolbar
+        cameraInputView.textField = self
+    }
 }
+
 extension EditableTextView {
-    @objc
-    private func cameraDidTap() {
+    
+    @objc private func cameraDidTap() {
         self.inputAccessoryView = cameraToolbar
         self.inputView = cameraInputView
         cameraInputView.startCamera()
         self.reloadInputViews()
     }
     
-    @objc
-    private func keyboardDidTap() {
+    @objc private func keyboardDidTap() {
         self.inputAccessoryView = keyboardToolbar
         self.inputView = nil
         self.reloadInputViews()
     }
     
-    @objc
-    private func doneDidTap() {
+    @objc private func doneDidTap() {
         self.resignFirstResponder()
         keyboardDidTap()
+    }
+}
+
+extension EditableTextView {
+    
+    func apply(tags: [ChordTag]) {
+        let mutable = attributedText.mutable
+        tags.forEach { tag in
+            mutable.addAttributes([.foregroundColor: UIColor.systemBlue, .font: XFont.chord()], range: tag.range)
+        }
+        self.attributedText = mutable
     }
 }

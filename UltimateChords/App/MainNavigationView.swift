@@ -11,6 +11,7 @@ struct MainNavigationView: View {
     var body: some View {
         NavigationView {
             HomeView()
-        }.navigationViewStyle(.stack)
+        }
+        .navigationViewStyle(.stack)
     }
 }

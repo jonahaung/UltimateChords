@@ -6,13 +6,9 @@
 //
 
 import SwiftUI
-import IRLPDFScanContent
+
 struct HomeView: View {
-    
-    @Environment(\.managedObjectContext) private var viewContext
-    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Lyric.lastViewed, ascending: false)], animation: .default)
-    private var lyrics: FetchedResults<Lyric>
-    
+
     @StateObject private var viewModel = HomeViewModel()
     @StateObject private var searchViewModel = SearchViewModel()
     
@@ -47,12 +43,12 @@ struct HomeView: View {
    
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
-            offsets.map { lyrics[$0] }.forEach(viewContext.delete)
-
-            do {
-                try viewContext.save()
-            } catch {
-                fatalError()
+            offsets.map { viewModel.lyrics[$0] }.forEach {
+                if let x = CLyric.cLyrics(for: $0.id) {
+                    Persistence.shared.context.delete(x)
+                    Persistence.shared.save()
+                    viewModel.refresh()
+                }
             }
         }
     }

@@ -15,7 +15,7 @@ class LyricsViewerViewModel: ObservableObject {
     @Published var activityItem: ActivityItem?
     
     var attributedText: NSAttributedString {
-        AttributedString.displayText(for: song, with: displayMode, showTitle: true)
+        AttributedString.displayText(for: song, with: displayMode)
     }
     
     var isDinamicFontSizeEnabled: Bool {
@@ -38,8 +38,8 @@ class LyricsViewerViewModel: ObservableObject {
 
 extension LyricsViewerViewModel {
     
-    func configure(_ lyric: CreateLyrics) {
-        var song = ChordPro.parse(rawText: lyric.text)
+    func configure(_ lyric: Lyric) {
+        var song = SongConverter.parse(rawText: lyric.text)
         if song.title == nil {
             song.title = lyric.title
         }
@@ -51,7 +51,7 @@ extension LyricsViewerViewModel {
     
     func hideControlsIfNeeded() {
         if showControls {
-            withAnimation {
+            withAnimation(.interactiveSpring()) {
                 showControls = false
             }
         }

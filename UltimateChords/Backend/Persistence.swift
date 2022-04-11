@@ -18,7 +18,7 @@ class Persistence {
     
     var context: NSManagedObjectContext { container.viewContext }
     
-    init(inMemory: Bool = false) {
+    private init(inMemory: Bool = false) {
         container = NSPersistentCloudKitContainer(name: "UltimateChords")
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")

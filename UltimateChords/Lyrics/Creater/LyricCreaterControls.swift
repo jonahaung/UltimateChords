@@ -14,8 +14,8 @@ struct LyricCreaterControls: View {
     var body: some View {
         Form {
             Section {
-                TextField.init("Title", text: $viewModel.tempSong.title)
-                TextField.init("Artist", text: $viewModel.tempSong.artist)
+                TextField.init("Title", text: $viewModel.lyric.title)
+                TextField.init("Artist", text: $viewModel.lyric.artist)
             }
             
             Section {

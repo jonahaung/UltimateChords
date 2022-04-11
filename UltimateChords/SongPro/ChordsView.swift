@@ -8,9 +8,7 @@ import SwiftyChords
 struct ChordsView: View {
     var song: Song
     static let frame = CGRect(x: 0, y: 0, width: 100, height: 150)
-    /// Get all chord diagrams
     static let chordsDatabase = Chords.guitar
-    /// Sheet with chords
     @State var showChordSheet = false
     @State var selectedChord: Chord?
     
@@ -18,20 +16,17 @@ struct ChordsView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack {
                 ForEach(song.chords.sorted { $0.name < $1.name }) { chord in
-                    VStack(spacing: 0) {
-                        if let chordPosition = ChordsView.chordsDatabase.filter { $0.key == chord.key && $0.suffix == chord.suffix && $0.baseFret == chord.basefret}, let layer = chordPosition.first?.shapeLayer(rect: ChordsView.frame, showFingers: true, showChordName: true), let image = layer.image()?.withRenderingMode(.alwaysTemplate) {
-                            Image(uiImage: image)
-                                .resizable()
-                                .scaledToFit()
-                                .tapToPresent(ChordsSheet(chord: chord), .Sheet)
-                                .foregroundStyle(.secondary)
-                                .frame(width:ChordsView.frame.width, height: ChordsView.frame.height)
-                        }
+                    if let chordPosition = ChordsView.chordsDatabase.filter { $0.key == chord.key && $0.suffix == chord.suffix && $0.baseFret == chord.basefret}, let layer = chordPosition.first?.shapeLayer(rect: ChordsView.frame, showFingers: true, showChordName: true), let image = layer.image()?.withRenderingMode(.alwaysTemplate) {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFit()
+                            .tapToPresent(ChordsSheet(chord: chord), .Sheet)
+                            .foregroundStyle(.secondary)
+                            .frame(width:ChordsView.frame.width, height: ChordsView.frame.height)
                     }
                 }
             }
         }
-       
     }
 }
 
