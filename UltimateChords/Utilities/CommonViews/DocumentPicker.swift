@@ -13,7 +13,7 @@ import VisionKit
 
 struct DocumentPicker: UIViewControllerRepresentable {
     
-    @Binding var fileContent: String?
+    var onPick: (String) -> Void
     
     func makeCoordinator() -> DocumentPicker.Coordinator {
         return DocumentPicker.Coordinator(parent1: self)
@@ -50,7 +50,7 @@ struct DocumentPicker: UIViewControllerRepresentable {
             do {
                 let text = try String(contentsOf: url, encoding: .utf8)
                 DispatchQueue.main.async {
-                    self.parent.fileContent = text
+                    self.parent.onPick(text)
                 }
             } catch {
                     print(error)

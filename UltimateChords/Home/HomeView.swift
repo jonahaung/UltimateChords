@@ -32,12 +32,8 @@ struct HomeView: View {
     }
     
     private func navTrailing() -> some View {
-        HStack {
-            XIcon(.doc_text_viewfinder)
-                .tapToPresent(DocumentPicker(fileContent: $viewModel.documentString), .FullScreen)
-            XIcon(.square_and_pencil)
-                .tapToPush(LyricsCreaterView())
-        }
+        XIcon(.square_and_pencil)
+            .tapToPush(LyricsCreaterView())
     }
     
    

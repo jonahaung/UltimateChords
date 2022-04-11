@@ -34,8 +34,6 @@
 		4726965C27FF123D009FE548 /* Quadrilateral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726965B27FF123D009FE548 /* Quadrilateral.swift */; };
 		4726965E27FF1558009FE548 /* Transformable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726965D27FF1558009FE548 /* Transformable.swift */; };
 		4726966027FF1FB4009FE548 /* CGImagePropertyOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726965F27FF1FB4009FE548 /* CGImagePropertyOrientation.swift */; };
-		4726966327FF3F0B009FE548 /* ImageImporterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726966227FF3F0B009FE548 /* ImageImporterView.swift */; };
-		4726966627FF3F2E009FE548 /* ImageImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726966527FF3F2E009FE548 /* ImageImporter.swift */; };
 		472BE8BB27E9659B00A41D54 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472BE8BA27E9659B00A41D54 /* SearchViewModel.swift */; };
 		472BE8BE27E96E7000A41D54 /* SearchContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472BE8BD27E96E7000A41D54 /* SearchContent.swift */; };
 		472BE8C227E97F4400A41D54 /* MyanmarSansPro.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 472BE8C127E97F4400A41D54 /* MyanmarSansPro.ttf */; };
@@ -45,6 +43,7 @@
 		472BE8DC27EAB3A500A41D54 /* ChordTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472BE8DB27EAB3A500A41D54 /* ChordTag.swift */; };
 		4751BCDB2803CEC70000ACF7 /* ImportableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4751BCDA2803CEC70000ACF7 /* ImportableView.swift */; };
 		4751BCDD2803CEDA0000ACF7 /* ImportableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4751BCDC2803CEDA0000ACF7 /* ImportableViewModel.swift */; };
+		4751BCDF2803ECCC0000ACF7 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4751BCDE2803ECCC0000ACF7 /* ImagePicker.swift */; };
 		4761E7F727ED7A4300BBA301 /* PickerNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4761E7F627ED7A4300BBA301 /* PickerNavigationView.swift */; };
 		4761E7FC27EF789700BBA301 /* TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4761E7FB27EF789700BBA301 /* TextView.swift */; };
 		4761E7FE27EF7D7900BBA301 /* Html.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4761E7FD27EF7D7900BBA301 /* Html.swift */; };
@@ -141,8 +140,6 @@
 		4726965B27FF123D009FE548 /* Quadrilateral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Quadrilateral.swift; sourceTree = "<group>"; };
 		4726965D27FF1558009FE548 /* Transformable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transformable.swift; sourceTree = "<group>"; };
 		4726965F27FF1FB4009FE548 /* CGImagePropertyOrientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGImagePropertyOrientation.swift; sourceTree = "<group>"; };
-		4726966227FF3F0B009FE548 /* ImageImporterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageImporterView.swift; sourceTree = "<group>"; };
-		4726966527FF3F2E009FE548 /* ImageImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageImporter.swift; sourceTree = "<group>"; };
 		472BE8BA27E9659B00A41D54 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		472BE8BD27E96E7000A41D54 /* SearchContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchContent.swift; sourceTree = "<group>"; };
 		472BE8C127E97F4400A41D54 /* MyanmarSansPro.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MyanmarSansPro.ttf; sourceTree = "<group>"; };
@@ -152,6 +149,7 @@
 		472BE8DB27EAB3A500A41D54 /* ChordTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordTag.swift; sourceTree = "<group>"; };
 		4751BCDA2803CEC70000ACF7 /* ImportableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportableView.swift; sourceTree = "<group>"; };
 		4751BCDC2803CEDA0000ACF7 /* ImportableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportableViewModel.swift; sourceTree = "<group>"; };
+		4751BCDE2803ECCC0000ACF7 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		4761E7F627ED7A4300BBA301 /* PickerNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerNavigationView.swift; sourceTree = "<group>"; };
 		4761E7FB27EF789700BBA301 /* TextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextView.swift; sourceTree = "<group>"; };
 		4761E7FD27EF7D7900BBA301 /* Html.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Html.swift; sourceTree = "<group>"; };
@@ -284,7 +282,6 @@
 				4726964027FE9EE7009FE548 /* tessdata */,
 				4726966127FF204F009FE548 /* OcrImage */,
 				4726964227FEAD01009FE548 /* CameraKeyboard */,
-				4726966427FF3F16009FE548 /* ImageImporter */,
 			);
 			path = OCR;
 			sourceTree = "<group>";
@@ -312,15 +309,6 @@
 				4726965F27FF1FB4009FE548 /* CGImagePropertyOrientation.swift */,
 			);
 			path = OcrImage;
-			sourceTree = "<group>";
-		};
-		4726966427FF3F16009FE548 /* ImageImporter */ = {
-			isa = PBXGroup;
-			children = (
-				4726966227FF3F0B009FE548 /* ImageImporterView.swift */,
-				4726966527FF3F2E009FE548 /* ImageImporter.swift */,
-			);
-			path = ImageImporter;
 			sourceTree = "<group>";
 		};
 		472BE8BC27E96E5000A41D54 /* Search */ = {
@@ -546,6 +534,7 @@
 				47873D4627E2F94100417F89 /* PdfView.swift */,
 				4761E7F627ED7A4300BBA301 /* PickerNavigationView.swift */,
 				4708C46827ED2F6E00481172 /* DocumentPicker.swift */,
+				4751BCDE2803ECCC0000ACF7 /* ImagePicker.swift */,
 				4726964F27FF0AFA009FE548 /* DocumentScannerView.swift */,
 				476B42FF27FBDA3200C30BF3 /* ActivityView */,
 				47EB307F28017CF700913B6A /* NavBar.swift */,
@@ -719,8 +708,8 @@
 				4726965927FF11ED009FE548 /* CGPoint+Utils.swift in Sources */,
 				4782A49127E8E5C600FA0FC9 /* HomeCell.swift in Sources */,
 				4761E7FE27EF7D7900BBA301 /* Html.swift in Sources */,
+				4751BCDF2803ECCC0000ACF7 /* ImagePicker.swift in Sources */,
 				4761E7FC27EF789700BBA301 /* TextView.swift in Sources */,
-				4726966627FF3F2E009FE548 /* ImageImporter.swift in Sources */,
 				476B431927FC0F9900C30BF3 /* CameraService.swift in Sources */,
 				4782A49827E8E82F00FA0FC9 /* LyricsCreaterView.swift in Sources */,
 				477DA76E27E0E7C900C143C4 /* Persistence.swift in Sources */,
@@ -763,7 +752,6 @@
 				4782A49527E8E6ED00FA0FC9 /* HomeViewModel.swift in Sources */,
 				4726964E27FEE899009FE548 /* ObjectTracker.swift in Sources */,
 				477DA76527E0E7C800C143C4 /* UltimateChordsApp.swift in Sources */,
-				4726966327FF3F0B009FE548 /* ImageImporterView.swift in Sources */,
 				47A3E5FC27E4F8D400412B89 /* +ParagraphStyle.swift in Sources */,
 				4713243C27E39E1F000F67C8 /* RegularExpression.swift in Sources */,
 				4782A49327E8E62C00FA0FC9 /* MainNavigationView.swift in Sources */,

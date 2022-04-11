@@ -20,23 +20,35 @@ struct OcrImageView: View {
     }
     
     var body: some View {
-        Image(uiImage: recognizer.image)
-            .resizable()
-            .scaledToFit()
-            .overlay(loadingView)
-            .task {
-                recognizer.task()
+        GeometryReader { geo in
+            ZStack {
+                Color.black.edgesIgnoringSafeArea(.all)
+                Image(uiImage: recognizer.image)
+                    .resizable()
+                    .scaledToFit()
+                    .overlay(croppedImage(width: geo.size.width/3), alignment: .bottomTrailing)
+                    .task {
+                        recognizer.task()
+                    }
+                    .onChange(of: recognizer.text) { newValue in
+                        self.completionHandler(newValue)
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                
+                
             }
-            .onChange(of: recognizer.text) { newValue in
-                self.completionHandler(newValue)
-                presentationMode.wrappedValue.dismiss()
-            }
+        }
     }
-    
-    private var loadingView: some View {
+    private func croppedImage(width: CGFloat) -> some View {
         Group {
-            if recognizer.showLoading {
-                ProgressView()
+            if let image = recognizer.croppedImage {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: width)
+                    .transition(.move(edge: .trailing))
+                    .overlay(ProgressView())
+                    .shadow(radius: 2)
             }
         }
     }

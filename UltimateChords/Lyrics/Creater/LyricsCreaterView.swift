@@ -17,6 +17,9 @@ struct LyricsCreaterView: View {
             LyricsCreaterTextView()
         } onReceiveText: {
             viewModel.didImportText(text: $0)
+            let song = SongConverter.parse(rawText: $0)
+            viewModel.lyric.title = song.title.str
+            viewModel.lyric.artist = song.artist.str
         }
         .environmentObject(viewModel)
         .navigationBarTitle("Create")

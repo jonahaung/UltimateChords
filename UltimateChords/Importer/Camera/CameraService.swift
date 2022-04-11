@@ -114,7 +114,7 @@ public class CameraService {
         
         session.beginConfiguration()
         
-        session.sessionPreset = .photo
+        session.sessionPreset = .medium
         
         // Add video input.
         do {

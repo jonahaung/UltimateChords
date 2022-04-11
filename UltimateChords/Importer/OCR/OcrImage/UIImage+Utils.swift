@@ -12,7 +12,6 @@ extension UIImage: Identifiable {
     
 }
 
-
 extension UIImage {
     
     func pixelBuffer() -> CVPixelBuffer? {

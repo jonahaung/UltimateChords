@@ -16,8 +16,8 @@ import Combine
 class TextReconizerImage: ObservableObject {
     
     @Published var image: UIImage
-    @Published var text: String?
-    @Published var showLoading = false
+    @Published var croppedImage: UIImage?
+    var text: String?
     
     private let ocrQueue = DispatchQueue(label: "OCR")
     private var subscription: Set<AnyCancellable> = []
@@ -26,18 +26,25 @@ class TextReconizerImage: ObservableObject {
         self.image = image
         
     }
+    
+    deinit {
+        print("Deinit: TextRecognizerImage")
+    }
 }
 
 extension TextReconizerImage {
     func task() {
-        cropToTextBoxes(image: image)
+        ocrQueue.async { [weak self] in
+            guard let self = self else { return }
+            self.cropToTextBoxes(image: self.image)
+        }
     }
     
     private func cropToTextBoxes(image: UIImage) {
         guard let buffer = image.pixelBuffer() else { return }
         let request = VNRecognizeTextRequest(completionHandler: textRecognitionHandler)
         request.recognitionLevel = .accurate
-        request.usesLanguageCorrection = false
+        request.usesLanguageCorrection = true
         let handler = VNImageRequestHandler(cvPixelBuffer: buffer, orientation: .up)
         do {
             try handler.perform([request])
@@ -76,41 +83,35 @@ extension TextReconizerImage {
         ])
         
         if let uiImage = filteredImage.uiImage {
-            DispatchQueue.main.async {
-//                self.image = uiImage
-                self.detectTexts(forImage: uiImage)
+            ocrQueue.async {
+                DispatchQueue.main.async {
+                    withAnimation(.interactiveSpring()) {
+                        self.croppedImage = uiImage
+                    }
+                }
             }
-            
+            self.detectTexts(forImage: uiImage)
         }
     }
     
-    private func noiseReduced(image: UIImage) -> UIImage? {
-        let ciImage = CIImage(image: image)
-        let cgOrientation = CGImagePropertyOrientation(image.imageOrientation)
-        let orientedImage = ciImage?.oriented(forExifOrientation: Int32(cgOrientation.rawValue))
-        return orientedImage?.appalyingNoiseReduce()?.appalyingNoiseReduce()?.uiImage ?? image
-    }
+    
+    
     
     
     private func detectTexts(forImage image: UIImage) {
-        showLoading = true
-        let tesseract: Tesseract = {
-            $0.configure {
-                set(.preserveInterwordSpaces, value: .true)
-            }
-            return $0
-        }(Tesseract(languages: [RecognitionLanguage.burmese, RecognitionLanguage.english]))
+       
+        let tesseract: Tesseract = Tesseract(languages: [RecognitionLanguage.burmese, RecognitionLanguage.english])
+        tesseract.configure {
+            set(.preserveInterwordSpaces, value: .true)
+        }
         
         tesseract.performOCRPublisher(on: image)
             .subscribe(on: ocrQueue)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { comp in
-                self.subscription.forEach{ $0.cancel() }
-                self.showLoading = false
+                self.objectWillChange.send()
             }, receiveValue: { text in
-                withAnimation {
-                    self.text = text
-                }
+                self.text = text
             })
             .store(in: &subscription)
     }

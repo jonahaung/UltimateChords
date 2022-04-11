@@ -34,7 +34,18 @@ extension Photo {
         return UIImage(data: data)
     }
     public var image: UIImage? {
-        guard let data = compressedData else { return nil }
-        return UIImage(data: data)
+        guard let data = compressedData, let image = UIImage(data: data) else { return nil }
+        return blackAndWhite(image: image)
+    }
+    
+    private func blackAndWhite(image: UIImage) -> UIImage {
+        guard let currentCGImage = image.cgImage else { return image }
+        guard let currentCIImage = CIImage(cgImage: currentCGImage).appalyingNoiseReduce()?.appalyingNoiseReduce()?.appalyingNoiseReduce()?.appalyingNoiseReduce() else { return image }
+        let context = CIContext()
+
+        if let cgimg = context.createCGImage(currentCIImage, from: currentCIImage.extent) {
+            return UIImage(cgImage: cgimg)
+        }
+        return image
     }
 }

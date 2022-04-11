@@ -34,7 +34,7 @@ struct ImportableView<Content: View>: View {
             }
     }
     
-    private func fullScreenCover(for mode: ImageImporter.Mode) -> some View {
+    private func fullScreenCover(for mode: ImportableViewModel.Mode) -> some View {
         Group {
             switch mode {
             case .Camera:
@@ -46,8 +46,13 @@ struct ImportableView<Content: View>: View {
                     viewModel.importingImage = images?.last
                 }.edgesIgnoringSafeArea(.all)
             case .Photo_Library:
-                CameraView { image in
+                ImagePicker { image in
+                    print(image)
                     viewModel.importingImage = image
+                }
+            case .ChordPro_File:
+                DocumentPicker {
+                    onReceiveText($0)
                 }
             }
         }
@@ -55,7 +60,7 @@ struct ImportableView<Content: View>: View {
     
     private func shareButton() -> some View {
         Menu {
-            ForEach(ImageImporter.Mode.allCases) { mode in
+            ForEach(ImportableViewModel.Mode.allCases) { mode in
                 Button(mode.description) {
                     viewModel.importMode = mode
                 }
