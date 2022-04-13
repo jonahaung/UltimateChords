@@ -9,8 +9,13 @@ import Foundation
 import UIKit
 
 class ImportableViewModel: ObservableObject {
+    
     @Published var importMode: Mode?
     @Published var importingImage: UIImage?
+    
+    deinit {
+        print("DEINIT: ImportableViewModel")
+    }
 }
 
 extension ImportableViewModel {

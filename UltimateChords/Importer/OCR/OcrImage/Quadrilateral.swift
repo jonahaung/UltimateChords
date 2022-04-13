@@ -18,9 +18,8 @@ struct Quadrilateral: Transformable {
     var bottomLeft: CGPoint
     
     var boundingBox: CGRect = .zero
-    static var zero: Quadrilateral {
-        return .init()
-    }
+    
+    var isSelected = true
     
     init() {
         self.init(rect: .zero)
@@ -30,7 +29,6 @@ struct Quadrilateral: Transformable {
         topRight = CGPoint(x: rect.maxX, y: rect.minY)
         bottomLeft = CGPoint(x: rect.minX, y: rect.maxY)
         bottomRight = CGPoint(x: rect.maxX, y: rect.maxY)
-       
     }
     
     init(topLeft: CGPoint, topRight: CGPoint, bottomRight: CGPoint, bottomLeft: CGPoint) {
@@ -46,6 +44,7 @@ struct Quadrilateral: Transformable {
         self.bottomLeft = rectangleObservation.bottomLeft
         self.bottomRight = rectangleObservation.bottomRight
     }
+    
     var description: String {
         return "topLeft: \(topLeft), topRight: \(topRight), bottomRight: \(bottomRight), bottomLeft: \(bottomLeft)"
     }
@@ -70,9 +69,14 @@ struct Quadrilateral: Transformable {
             height: min(bottomLeft.y, bottomRight.y) - origin.y)
         return CGRect(origin: origin, size: size)
     }
-    
+
+    mutating func toggleSelect() {
+        self.isSelected.toggle()
+    }
     func applying(_ transform: CGAffineTransform) -> Quadrilateral {
-        return Quadrilateral(topLeft: topLeft.applying(transform), topRight: topRight.applying(transform), bottomRight: bottomRight.applying(transform), bottomLeft: bottomLeft.applying(transform))
+        var quad = Quadrilateral(topLeft: topLeft.applying(transform), topRight: topRight.applying(transform), bottomRight: bottomRight.applying(transform), bottomLeft: bottomLeft.applying(transform))
+        quad.isSelected = self.isSelected
+        return quad
     }
     
     /// Reorganizes the current quadrilateal, making sure that the points are at their appropriate positions. For example, it ensures that the top left point is actually the top and left point point of the quadrilateral.

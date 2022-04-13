@@ -133,7 +133,6 @@ struct CameraView: View {
                 }
             }.onChange(of: model.photo) { newValue in
                 completionHandler(newValue?.image)
-                presentationMode.wrappedValue.dismiss()
             }
             .accentColor(.white)
         }

@@ -11,44 +11,46 @@ struct OcrImageView: View {
     
     @StateObject private var recognizer: TextReconizerImage
     
-    @Environment(\.presentationMode) private var presentationMode
-    private let completionHandler: (String?) -> Void
+    private var onDismiss: ((String) -> Void)
     
-    init(image: UIImage, completion: @escaping (String?) -> Void) {
-        self.completionHandler = completion
+    init(image: UIImage, onDismiss: @escaping (String) -> Void) {
         _recognizer = .init(wrappedValue: .init(image: image))
+        self.onDismiss = onDismiss
     }
     
     var body: some View {
-        GeometryReader { geo in
+        PickerNavigationView {
             ZStack {
                 Color.black.edgesIgnoringSafeArea(.all)
-                Image(uiImage: recognizer.image)
-                    .resizable()
-                    .scaledToFit()
-                    .overlay(croppedImage(width: geo.size.width/3), alignment: .bottomTrailing)
-                    .task {
-                        recognizer.task()
-                    }
-                    .onChange(of: recognizer.text) { newValue in
-                        self.completionHandler(newValue)
-                        presentationMode.wrappedValue.dismiss()
-                    }
-                
-                
+                ShapeLayerImageView()
+                    .environmentObject(recognizer)
+                    .overlay(loadingView())
+            }
+            .overlay(bottomBar(), alignment: .bottom)
+            .task {
+                recognizer.task()
+            }
+            .onChange(of: recognizer.text) { newValue in
+                if let text = newValue {
+                    onDismiss(text)
+                }
             }
         }
     }
-    private func croppedImage(width: CGFloat) -> some View {
+    
+    private func bottomBar() -> some View {
+        HStack {
+            Button("DETECT") {
+                recognizer.detextTexts()
+            }
+            .buttonStyle(.borderedProminent)
+            .disabled(recognizer.recognizingText)
+        }.padding()
+    }
+    private func loadingView() -> some View {
         Group {
-            if let image = recognizer.croppedImage {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: width)
-                    .transition(.move(edge: .trailing))
-                    .overlay(ProgressView())
-                    .shadow(radius: 2)
+            if recognizer.recognizingText {
+                ProgressView().padding().background(Color(uiColor: .secondarySystemGroupedBackground).clipShape(Circle()))
             }
         }
     }

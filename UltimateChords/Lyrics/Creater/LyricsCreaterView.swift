@@ -10,18 +10,15 @@ import SwiftUI
 struct LyricsCreaterView: View {
     
     @StateObject private var viewModel = LyricsCreaterViewModel()
-    @Environment(\.presentationMode) private var presentationMode
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
-        ImportableView {
+        ImportableView { text in
+            viewModel.lyric.text = text
+        } content: {
             LyricsCreaterTextView()
-        } onReceiveText: {
-            viewModel.didImportText(text: $0)
-            let song = SongConverter.parse(rawText: $0)
-            viewModel.lyric.title = song.title.str
-            viewModel.lyric.artist = song.artist.str
+                .environmentObject(viewModel)
         }
-        .environmentObject(viewModel)
         .navigationBarTitle("Create")
         .navigationBarItems(trailing: navTrailing())
     }
@@ -32,9 +29,7 @@ struct LyricsCreaterView: View {
                 .tapToPresent(PickerNavigationView { LyricCreaterControls() }.environmentObject(viewModel))
             Button {
                 viewModel.save()
-                DispatchQueue.main.async {
-                    presentationMode.wrappedValue.dismiss()
-                }
+               dismiss()
             } label: {
                 Text("Save")
             }.disabled(viewModel.lyric.text.isWhitespace)

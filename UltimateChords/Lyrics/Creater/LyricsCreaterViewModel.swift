@@ -13,11 +13,6 @@ final class LyricsCreaterViewModel: NSObject, ObservableObject {
     @Published var lyric = Lyric(title: "ခွင့်မပြု", artist: "ထူးအိမ်သင်", text: "")
     @Published var isEditable = true
 
-    
-    var didCompleteChordBlk: ((Chord) -> Void)?
-    var didUpdateTextBlk: ((String) -> Void)?
-
-    
     func save() {
         _ = CLyric(title: lyric.title, artist: lyric.artist, text: lyric.text)
     }
@@ -27,13 +22,10 @@ final class LyricsCreaterViewModel: NSObject, ObservableObject {
         lyric.title = text.words().randomElement() ?? ""
         lyric.artist = text.words().randomElement() ?? ""
         lyric.text = text
-        
-        didUpdateTextBlk?(text)
     }
     
-    func didImportText(text: String) {
-        lyric.text = text
-        didUpdateTextBlk?(text)
+    deinit {
+        print("LyricsCreaterViewModel")
     }
 }
 
@@ -46,10 +38,10 @@ extension LyricsCreaterViewModel: EditableTextViewDelegate {
 extension LyricsCreaterViewModel: UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
-        lyric.text = textView.text
+//        lyric.text = textView.text
     }
     func textViewDidEndEditing(_ textView: UITextView) {
-        textView.text = ChordProConverter.convert(textView.text)
+        textView.text = SongParser.convert(textView.text)
     }
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         

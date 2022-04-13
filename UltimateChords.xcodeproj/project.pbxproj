@@ -44,6 +44,7 @@
 		4751BCDB2803CEC70000ACF7 /* ImportableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4751BCDA2803CEC70000ACF7 /* ImportableView.swift */; };
 		4751BCDD2803CEDA0000ACF7 /* ImportableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4751BCDC2803CEDA0000ACF7 /* ImportableViewModel.swift */; };
 		4751BCDF2803ECCC0000ACF7 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4751BCDE2803ECCC0000ACF7 /* ImagePicker.swift */; };
+		4751BCE12805B5990000ACF7 /* ShapeLayerImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4751BCE02805B5990000ACF7 /* ShapeLayerImageView.swift */; };
 		4761E7F727ED7A4300BBA301 /* PickerNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4761E7F627ED7A4300BBA301 /* PickerNavigationView.swift */; };
 		4761E7FC27EF789700BBA301 /* TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4761E7FB27EF789700BBA301 /* TextView.swift */; };
 		4761E7FE27EF7D7900BBA301 /* Html.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4761E7FD27EF7D7900BBA301 /* Html.swift */; };
@@ -107,7 +108,7 @@
 		47EB30962802611E00913B6A /* MusicNote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47EB30952802611E00913B6A /* MusicNote.swift */; };
 		47EB30982802615700913B6A /* Music.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47EB30972802615700913B6A /* Music.swift */; };
 		47EB309A280263D300913B6A /* PlainSong.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47EB3099280263D300913B6A /* PlainSong.swift */; };
-		47EB309C2802C29300913B6A /* ChordProConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47EB309B2802C29300913B6A /* ChordProConverter.swift */; };
+		47EB309C2802C29300913B6A /* SongParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47EB309B2802C29300913B6A /* SongParser.swift */; };
 		47FB8A3C27E2A72E006799FC /* XFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47FB8A3B27E2A72E006799FC /* XFont.swift */; };
 		47FB8A4527E2AC3F006799FC /* NotoSansMono_ExtraCondensed-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 47FB8A4327E2AC3F006799FC /* NotoSansMono_ExtraCondensed-Medium.ttf */; };
 		47FB8A4627E2AC3F006799FC /* NotoSansMono_ExtraCondensed-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 47FB8A4427E2AC3F006799FC /* NotoSansMono_ExtraCondensed-Regular.ttf */; };
@@ -150,6 +151,7 @@
 		4751BCDA2803CEC70000ACF7 /* ImportableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportableView.swift; sourceTree = "<group>"; };
 		4751BCDC2803CEDA0000ACF7 /* ImportableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportableViewModel.swift; sourceTree = "<group>"; };
 		4751BCDE2803ECCC0000ACF7 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		4751BCE02805B5990000ACF7 /* ShapeLayerImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapeLayerImageView.swift; sourceTree = "<group>"; };
 		4761E7F627ED7A4300BBA301 /* PickerNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerNavigationView.swift; sourceTree = "<group>"; };
 		4761E7FB27EF789700BBA301 /* TextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextView.swift; sourceTree = "<group>"; };
 		4761E7FD27EF7D7900BBA301 /* Html.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Html.swift; sourceTree = "<group>"; };
@@ -214,7 +216,7 @@
 		47EB30952802611E00913B6A /* MusicNote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicNote.swift; sourceTree = "<group>"; };
 		47EB30972802615700913B6A /* Music.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Music.swift; sourceTree = "<group>"; };
 		47EB3099280263D300913B6A /* PlainSong.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainSong.swift; sourceTree = "<group>"; };
-		47EB309B2802C29300913B6A /* ChordProConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordProConverter.swift; sourceTree = "<group>"; };
+		47EB309B2802C29300913B6A /* SongParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongParser.swift; sourceTree = "<group>"; };
 		47FB89E327E2A3E3006799FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		47FB8A3B27E2A72E006799FC /* XFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XFont.swift; sourceTree = "<group>"; };
 		47FB8A4327E2AC3F006799FC /* NotoSansMono_ExtraCondensed-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansMono_ExtraCondensed-Medium.ttf"; sourceTree = "<group>"; };
@@ -249,10 +251,8 @@
 		4708C46D27ED37B400481172 /* Parser */ = {
 			isa = PBXGroup;
 			children = (
+				47EB309B2802C29300913B6A /* SongParser.swift */,
 				4708C46F27ED37B400481172 /* SongConverter.swift */,
-				4708C46E27ED37B400481172 /* Song.swift */,
-				476B42F827FBAA2A00C30BF3 /* Song+Models.swift */,
-				4708C47127ED37B400481172 /* Chord.swift */,
 			);
 			path = Parser;
 			sourceTree = "<group>";
@@ -299,6 +299,7 @@
 			isa = PBXGroup;
 			children = (
 				476B431A27FC0FBF00C30BF3 /* OcrImageView.swift */,
+				4751BCE02805B5990000ACF7 /* ShapeLayerImageView.swift */,
 				4726963227FE98DF009FE548 /* OcrImage.swift */,
 				4726965327FF11EC009FE548 /* CGAffineTransform+Utils.swift */,
 				4726965427FF11ED009FE548 /* CGPoint+Utils.swift */,
@@ -545,6 +546,9 @@
 		47A3E5EC27E4F29C00412B89 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				4708C47127ED37B400481172 /* Chord.swift */,
+				4708C46E27ED37B400481172 /* Song.swift */,
+				476B42F827FBAA2A00C30BF3 /* Song+Models.swift */,
 				476B428D27F9E90F00C30BF3 /* Lyric.swift */,
 				472BE8DB27EAB3A500A41D54 /* ChordTag.swift */,
 			);
@@ -561,7 +565,6 @@
 				47EB3091280260BE00913B6A /* MusicKey.swift */,
 				47EB308D2802604100913B6A /* MusicText.swift */,
 				47EB308F2802607000913B6A /* MusicChord.swift */,
-				47EB309B2802C29300913B6A /* ChordProConverter.swift */,
 			);
 			path = Transposer;
 			sourceTree = "<group>";
@@ -739,7 +742,7 @@
 				4782A49E27E8EA6A00FA0FC9 /* LyricsCreaterTextView.swift in Sources */,
 				47EB308E2802604100913B6A /* MusicText.swift in Sources */,
 				476B42F927FBAA2A00C30BF3 /* Song+Models.swift in Sources */,
-				47EB309C2802C29300913B6A /* ChordProConverter.swift in Sources */,
+				47EB309C2802C29300913B6A /* SongParser.swift in Sources */,
 				477DA76727E0E7C800C143C4 /* HomeView.swift in Sources */,
 				4726963327FE98DF009FE548 /* OcrImage.swift in Sources */,
 				4782A48F27E8D6AA00FA0FC9 /* +UITextView.swift in Sources */,
@@ -751,6 +754,7 @@
 				4726965027FF0AFA009FE548 /* DocumentScannerView.swift in Sources */,
 				4782A49527E8E6ED00FA0FC9 /* HomeViewModel.swift in Sources */,
 				4726964E27FEE899009FE548 /* ObjectTracker.swift in Sources */,
+				4751BCE12805B5990000ACF7 /* ShapeLayerImageView.swift in Sources */,
 				477DA76527E0E7C800C143C4 /* UltimateChordsApp.swift in Sources */,
 				47A3E5FC27E4F8D400412B89 /* +ParagraphStyle.swift in Sources */,
 				4713243C27E39E1F000F67C8 /* RegularExpression.swift in Sources */,

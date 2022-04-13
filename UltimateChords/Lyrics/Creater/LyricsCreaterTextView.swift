@@ -18,21 +18,12 @@ struct LyricsCreaterTextView: UIViewRepresentable {
         uiView.delegate2 = context.coordinator
         uiView.delegate = context.coordinator
         uiView.setTupEditing()
-        context.coordinator.didCompleteChordBlk = { chord in
-            print(chord)
-        }
-        context.coordinator.didUpdateTextBlk = {
-            let font = XFont.body(for: $0)
-            uiView.font = font
-            uiView.text = ChordProConverter.convert($0)
-        }
-        uiView.text = context.coordinator.lyric.text
-        uiView.font = XFont.body(for: context.coordinator.lyric.text)
         return uiView
     }
     
     func updateUIView(_ uiView: EditableTextView, context: Context) {
-        uiView.isEditable = context.coordinator.isEditable
+        uiView.font = XFont.footnote(for: context.coordinator.lyric.text)
+        uiView.text = context.coordinator.lyric.text
     }
     
     func makeCoordinator() -> LyricsCreaterViewModel {

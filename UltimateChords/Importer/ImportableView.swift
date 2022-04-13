@@ -10,14 +10,13 @@ import SwiftUI
 struct ImportableView<Content: View>: View {
     
     private let content: () -> Content
-    private let onReceiveText: (String) -> Void
-    
-    init(@ViewBuilder content: @escaping () -> Content, onReceiveText: @escaping (String) -> Void) {
-        self.content = content
-        self.onReceiveText = onReceiveText
-    }
-    
+    private var onDismiss: ((String) -> Void)
     @StateObject private var viewModel = ImportableViewModel()
+    
+    init(onDismiss: @escaping (String) -> Void, @ViewBuilder content: @escaping () -> Content) {
+        self.content = content
+        self.onDismiss = onDismiss
+    }
     
     var body: some View {
         content()
@@ -25,10 +24,11 @@ struct ImportableView<Content: View>: View {
             .fullScreenCover(item: $viewModel.importMode) {
                 fullScreenCover(for: $0)
             }
-            .fullScreenCover(item: $viewModel.importingImage) { image in
-                OcrImageView(image: image) { string in
-                    if let string = string {
-                        self.onReceiveText(string)
+            .fullScreenCover(item: $viewModel.importingImage) {
+                OcrImageView(image: $0) { text in
+                    viewModel.importingImage = nil
+                    DispatchQueue.main.async {
+                        onDismiss(text)
                     }
                 }
             }
@@ -39,20 +39,23 @@ struct ImportableView<Content: View>: View {
             switch mode {
             case .Camera:
                 CameraView { image in
+                    viewModel.importMode = nil
                     viewModel.importingImage = image
                 }
             case .Document_Scanner:
                 DocumentScannerView { images in
+                    viewModel.importMode = nil
                     viewModel.importingImage = images?.last
                 }.edgesIgnoringSafeArea(.all)
             case .Photo_Library:
-                ImagePicker { image in
-                    print(image)
-                    viewModel.importingImage = image
+                ImagePickerMultiple(maxLimit: 1) { selectedImage in
+                    viewModel.importMode = nil
+                    viewModel.importingImage = selectedImage.first?.image
                 }
             case .ChordPro_File:
-                DocumentPicker {
-                    onReceiveText($0)
+                DocumentPicker { text in
+                    viewModel.importMode = nil
+                    onDismiss(text)
                 }
             }
         }

@@ -19,8 +19,19 @@ extension Optional where Wrapped == String {
         return self ?? "nil"
     }
 }
-extension String {
 
+extension CharacterSet {
+    
+    static let removingCharacters = CharacterSet(charactersIn: "|+*#%;:&^$@!~.,'`|_ၤ”“")
+    
+    static let myanmarAlphabets = CharacterSet(charactersIn: "ကခဂဃငစဆဇဈညတဒဍဓဎထဋဌနဏပဖဗဘမယရလ၀သဟဠအ").union(.whitespacesAndNewlines)
+    static let myanmarCharacters2 = CharacterSet(charactersIn: "ါာိီုူေဲဳဴဵံ့း္်ျြွှ")
+    static var englishAlphabets = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ")
+    static var lineEnding = CharacterSet(charactersIn: ".?!;:။…\t")
+}
+
+extension String {
+    
     var urlDecoded: String {
         return removingPercentEncoding ?? self
     }
