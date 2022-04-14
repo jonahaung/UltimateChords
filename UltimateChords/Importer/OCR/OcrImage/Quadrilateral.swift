@@ -8,7 +8,6 @@
 
 import UIKit
 import Vision
-//import CoreGraphics
 
 struct Quadrilateral: Transformable {
     
@@ -16,33 +15,29 @@ struct Quadrilateral: Transformable {
     var topRight: CGPoint
     var bottomRight: CGPoint
     var bottomLeft: CGPoint
+    var boundingBox: CGRect
+    var isSelected: Bool
     
-    var boundingBox: CGRect = .zero
-    
-    var isSelected = true
-    
-    init() {
-        self.init(rect: .zero)
-    }
-    init(rect: CGRect) {
-        topLeft = CGPoint(x: rect.minX, y: rect.minY)
-        topRight = CGPoint(x: rect.maxX, y: rect.minY)
-        bottomLeft = CGPoint(x: rect.minX, y: rect.maxY)
-        bottomRight = CGPoint(x: rect.maxX, y: rect.maxY)
-    }
-    
-    init(topLeft: CGPoint, topRight: CGPoint, bottomRight: CGPoint, bottomLeft: CGPoint) {
+    init(topLeft: CGPoint, topRight: CGPoint, bottomRight: CGPoint, bottomLeft: CGPoint, isSelected: Bool) {
         self.topLeft = topLeft
         self.topRight = topRight
         self.bottomRight = bottomRight
         self.bottomLeft = bottomLeft
+        self.isSelected = isSelected
         boundingBox = CGRect(x: topLeft.x, y: topLeft.y, width: topRight.x-topLeft.x, height: topRight.y-bottomRight.y)
     }
+    
+    init(rect: CGRect) {
+        let topLeft = CGPoint(x: rect.minX, y: rect.minY)
+        let topRight = CGPoint(x: rect.maxX, y: rect.minY)
+        let bottomLeft = CGPoint(x: rect.minX, y: rect.maxY)
+        let bottomRight = CGPoint(x: rect.maxX, y: rect.maxY)
+        self.init(topLeft: topLeft, topRight: topRight, bottomRight: bottomRight, bottomLeft: bottomLeft, isSelected: false)
+    }
+    
     init(rectangleObservation: VNRectangleObservation) {
-        self.topLeft = rectangleObservation.topLeft
-        self.topRight = rectangleObservation.topRight
-        self.bottomLeft = rectangleObservation.bottomLeft
-        self.bottomRight = rectangleObservation.bottomRight
+        self.init(topLeft: rectangleObservation.topLeft, topRight: rectangleObservation.topRight, bottomRight: rectangleObservation.bottomRight, bottomLeft: rectangleObservation.bottomLeft, isSelected: true)
+        boundingBox = rectangleObservation.boundingBox
     }
     
     var description: String {
@@ -61,22 +56,21 @@ struct Quadrilateral: Transformable {
     
     var regionRect: CGRect {
         let origin = CGPoint(
-            x: max(topLeft.x,bottomLeft.x),
+            x: max(topLeft.x, bottomLeft.x),
             y: max(topLeft.y, topRight.y))
-
+        
         let size = CGSize(
             width: min(topRight.x, bottomRight.x) - origin.x,
             height: min(bottomLeft.y, bottomRight.y) - origin.y)
         return CGRect(origin: origin, size: size)
     }
-
+    
     mutating func toggleSelect() {
         self.isSelected.toggle()
     }
+    
     func applying(_ transform: CGAffineTransform) -> Quadrilateral {
-        var quad = Quadrilateral(topLeft: topLeft.applying(transform), topRight: topRight.applying(transform), bottomRight: bottomRight.applying(transform), bottomLeft: bottomLeft.applying(transform))
-        quad.isSelected = self.isSelected
-        return quad
+        Quadrilateral(topLeft: topLeft.applying(transform), topRight: topRight.applying(transform), bottomRight: bottomRight.applying(transform), bottomLeft: bottomLeft.applying(transform), isSelected: isSelected)
     }
     
     /// Reorganizes the current quadrilateal, making sure that the points are at their appropriate positions. For example, it ensures that the top left point is actually the top and left point point of the quadrilateral.
@@ -93,8 +87,8 @@ struct Quadrilateral: Transformable {
         let xSortedBottomMostPoints = sortPointsByXValue(bottomMostPoints)
         
         guard xSortedTopMostPoints.count > 1,
-            xSortedBottomMostPoints.count > 1 else {
-                return
+              xSortedBottomMostPoints.count > 1 else {
+            return
         }
         
         topLeft = xSortedTopMostPoints[0]
@@ -175,7 +169,7 @@ extension Quadrilateral {
         let bottomRight = self.bottomRight.cartesian(withHeight: height)
         let bottomLeft = self.bottomLeft.cartesian(withHeight: height)
         
-        return Quadrilateral(topLeft: topLeft, topRight: topRight, bottomRight: bottomRight, bottomLeft: bottomLeft)
+        return Quadrilateral(topLeft: topLeft, topRight: topRight, bottomRight: bottomRight, bottomLeft: bottomLeft, isSelected: isSelected)
     }
     static let defaultQuad = Quadrilateral(rect: CGRect(x: 0.05, y: 0.05, width: 0.9, height: 0.9))
     static let fullQuad = Quadrilateral(rect: CGRect(x: 0, y: 0, width: 1, height: 1))

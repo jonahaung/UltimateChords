@@ -10,7 +10,7 @@ import SwiftyChords
 
 final class LyricsCreaterViewModel: NSObject, ObservableObject {
     
-    @Published var lyric = Lyric(title: "ခွင့်မပြု", artist: "ထူးအိမ်သင်", text: "")
+    @Published var lyric = Lyric(title: "ခွင့်မပြု", artist: "ထူးအိမ်သင်", text: instructionText)
     @Published var isEditable = true
 
     func save() {
@@ -29,68 +29,76 @@ final class LyricsCreaterViewModel: NSObject, ObservableObject {
     }
 }
 
-extension LyricsCreaterViewModel: EditableTextViewDelegate {
-    
-    func textView(textView: EditableTextView, didTap add: Bool) {
-        
-    }
-}
 extension LyricsCreaterViewModel: UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
-//        lyric.text = textView.text
+        if textView.isFirstResponder {
+            lyric.text = textView.text
+            (textView as? EditableTextView)?.textDidChange()
+        }
     }
     func textViewDidEndEditing(_ textView: UITextView) {
-        textView.text = SongParser.convert(textView.text)
+        textView.attributedText = AttributedString.displayText(for: SongConverter.parse(rawText: textView.text), with: .Default, showTitle: true)
+//        textView.text = SongParser.convert(textView.text)
+    }
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        textView.attributedText = AttributedString.displayText(for: SongConverter.parse(rawText: lyric.text), with: .Editing, showTitle: false)
+        (textView as? EditableTextView)?.textDidChange()
     }
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        
-        func pre() -> String {
-           
-            let xRange = NSRange(location: range.location - 1, length: 1)
-            return (textView.text as NSString).substring(with: xRange)
-        }
-        
-        func next() -> String {
-            let xRange = NSRange(location: range.location + 1, length: 1)
-            return (textView.text as NSString).substring(with: xRange)
-        }
-        
-        if range.length > 0 {
-            let new = NSRange(location: range.location, length: 1)
-            let deleted = (textView.text as NSString).substring(with: new)
-            if deleted == "[" {
-                textView.selectedRange.location += 1
-                textView.deleteBackward()
-            }
-            return true
-        }
-        
-        if text == " " {
-            if pre() == "[" || next() == "]" {
-                return false
-            } else {
-                textView.insertText("[]")
-                textView.selectedRange.location -= 1
-            }
-            return false
-        }
-        
-        var words = ["", " ", "\n"]
-    
-        Chords.Key.allCases.map{ $0.rawValue }.forEach { key in
-            Chords.Suffix.allCases.map{ $0.rawValue }.forEach { suff in
-                let x = key + suff
-                words.append(x)
-            }
-        }
-        
-        return words.contains { str in
-            str.contains(text)
-        }
+        return true
+//        func pre() -> String {
+//
+//            let xRange = NSRange(location: range.location - 1, length: 1)
+//            return (textView.text as NSString).substring(with: xRange)
+//        }
+//
+//        func next() -> String {
+//            let xRange = NSRange(location: range.location + 1, length: 1)
+//            return (textView.text as NSString).substring(with: xRange)
+//        }
+//
+//        if range.length > 0 {
+//            let new = NSRange(location: range.location, length: 1)
+//            let deleted = (textView.text as NSString).substring(with: new)
+//            if deleted == "[" {
+//                textView.selectedRange.location += 1
+//                textView.deleteBackward()
+//            }
+//            return true
+//        }
+//
+//        if text == " " {
+//            if pre() == "[" || next() == "]" {
+//                return false
+//            } else {
+//                textView.insertText("[]")
+//                textView.selectedRange.location -= 1
+//            }
+//            return false
+//        }
+//
+//        var words = ["", " ", "\n"]
+//
+//        Chords.Key.allCases.map{ $0.rawValue }.forEach { key in
+//            Chords.Suffix.allCases.map{ $0.rawValue }.forEach { suff in
+//                let x = key + suff
+//                words.append(x)
+//            }
+//        }
+//
+//        return words.contains { str in
+//            str.contains(text)
+//        }
     }
 }
 
+let instructionText = """
+{t: Song Title}
+{st: Singer}
+Intro: [Chord] [Chord] [Chord] [Chord]
+
+"""
 let withoutChords = """
  တရားမျှတ [G]လွတ်လပ်ခြင်းနဲ့မသွေ၊[Am]
  တို့ပြည်၊ [Am]တို့မြေ၊

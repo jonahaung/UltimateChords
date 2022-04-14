@@ -15,7 +15,6 @@ struct LyricsViewerTextView: UIViewRepresentable {
         let uiView = WidthFittingTextView()
         uiView.isEditable = false
         uiView.isScrollEnabled = false
-        uiView.textContainer.lineBreakMode = .byClipping
         return uiView
     }
     

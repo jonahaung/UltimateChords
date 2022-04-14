@@ -9,7 +9,7 @@ import SwiftUI
 
 struct OcrImageView: View {
     
-    @StateObject private var recognizer: TextReconizerImage
+    @StateObject private var recognizer: OCRImageViewModel
     
     private var onDismiss: ((String) -> Void)
     
@@ -22,7 +22,7 @@ struct OcrImageView: View {
         PickerNavigationView {
             ZStack {
                 Color.black.edgesIgnoringSafeArea(.all)
-                ShapeLayerImageView()
+                QuadrilateralImageView()
                     .environmentObject(recognizer)
                     .overlay(loadingView())
             }

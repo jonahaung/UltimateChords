@@ -12,9 +12,9 @@ import Vision
 import Combine
 import libtesseract
 
-struct ShapeLayerImageView: UIViewRepresentable {
+struct QuadrilateralImageView: UIViewRepresentable {
     
-    @EnvironmentObject private var recognizer: TextReconizerImage
+    @EnvironmentObject private var recognizer: OCRImageViewModel
     
     func makeUIView(context: Context) -> QuadImageView {
         let view = QuadImageView(image: recognizer.image)
@@ -23,16 +23,12 @@ struct ShapeLayerImageView: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: QuadImageView, context: Context) {
-        uiView.setNeedsLayout()
+//        uiView.setNeedsLayout()
     }
 }
 
-class ShaperLayerUIView: UIView {
-    override class var layerClass: AnyClass { CAShapeLayer.self }
-    var shapeLayer: CAShapeLayer { layer as! CAShapeLayer }
-}
 
-class QuadImageView: UIView {
+class QuadImageView: UIView, ImageFiltering {
     
     private var originalQuads = [Quadrilateral]()
     
@@ -45,25 +41,21 @@ class QuadImageView: UIView {
         return $0
     }(UIImageView())
     
-    private let shapeLayerView: ShaperLayerUIView = {
-        $0.shapeLayer.fillColor = UIColor.tintColor.withAlphaComponent(0.3).cgColor
+    private let quadView: QuadrilateralView = {
         return $0
-    }(ShaperLayerUIView())
+    }(QuadrilateralView())
     
-    private let regionLayer: CAShapeLayer = {
-        $0.fillColor = nil
-        $0.lineWidth = 1
-        $0.strokeColor = UIColor.systemOrange.cgColor
-        return $0
-    }(CAShapeLayer())
-    
+    private var previousPanPosition: CGPoint?
+    private var closestCorner: CornerPosition?
+
     init(image: UIImage) {
         super.init(frame: .zero)
         imageView.image = image
         addSubview(imageView)
-        addSubview(shapeLayerView)
-        shapeLayerView.shapeLayer.insertSublayer(regionLayer, at: 0)
-        
+        addSubview(quadView)
+        let panGesture = UILongPressGestureRecognizer(target: self, action: #selector(handle(gesture:)))
+        panGesture.minimumPressDuration = 0.0
+        quadView.addGestureRecognizer(panGesture)
     }
     
     required init?(coder: NSCoder) {
@@ -78,8 +70,7 @@ class QuadImageView: UIView {
             
             let imageViewFrame = AVMakeRect(aspectRatio: image.size, insideRect: self.bounds)
             imageView.frame = imageViewFrame
-            shapeLayerView.frame = imageViewFrame
-            regionLayer.frame = shapeLayerView.bounds
+            quadView.frame = imageViewFrame
             let scaleT = CGAffineTransform(scaleX: imageViewFrame.width, y: -imageViewFrame.height)
             let translateT = CGAffineTransform(translationX: 0, y: imageViewFrame.height)
             imageViewTransform = scaleT.concatenating(translateT)
@@ -117,16 +108,13 @@ extension QuadImageView {
         
         guard let image = imageView.image else { return nil }
         guard let ciImage = CIImage(image: image) else { return nil}
-        let viewQuads = originalQuads.filter{ $0.isSelected }.map{ $0.applying(imageViewTransform)}
-        
-        let boxes = viewQuads.map{$0.regionRect}
-        let rect = boxes.reduce(CGRect.null, {$0.union($1)}).surroundingSquare(with: CGSize(width: 10, height: 10))
-        
-        let quad = Quadrilateral(rect: rect)
+        guard let quad = quadView.viewQuad else { return nil }
         
         let imageViewFrame = imageView.frame
-        let imageQuad = quad.scale(imageViewFrame.size, image.size)
-        var cartesianScaledQuad = imageQuad.toCartesian(withHeight: image.size.height)
+        let imageSize = image.size
+        
+        let imageQuad = quad.scale(imageViewFrame.size, imageSize)
+        var cartesianScaledQuad = imageQuad.toCartesian(withHeight: imageSize.height)
         cartesianScaledQuad.reorganize()
         
         let cgOrientation = CGImagePropertyOrientation(image.imageOrientation)
@@ -138,7 +126,10 @@ extension QuadImageView {
             "inputBottomLeft": CIVector(cgPoint: cartesianScaledQuad.topLeft),
             "inputBottomRight": CIVector(cgPoint: cartesianScaledQuad.topRight)
         ])
-        return filteredImage.uiImage
+        if let image = filteredImage.cgImage?.uiImage {
+            return ImageResizer(targetWidth: imageViewFrame.width).resize(image: image)
+        }
+        return nil
     }
 }
 extension QuadImageView {
@@ -150,7 +141,7 @@ extension QuadImageView {
         let rect = boxes.reduce(CGRect.null, {$0.union($1)}).surroundingSquare(with: CGSize(width: 10, height: 10))
         
         let quad = Quadrilateral(rect: rect)
-        regionLayer.path = quad.path.cgPath
+        quadView.drawQuadrilateral(quad: quad)
         
         let path = UIBezierPath()
         
@@ -159,42 +150,62 @@ extension QuadImageView {
                 path.append(quad.path)
             }
         }
-        shapeLayerView.shapeLayer.path = path.cgPath
+        quadView.quadLayer.path = path.cgPath
     }
+}
+
+// Gesture
+
+extension QuadImageView {
     
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesMoved(touches, with: event)
-        if let last = Array(touches).last {
-            let location = last.location(in: shapeLayerView)
-            ontouch(with: location, width: 10)
+    @objc private func handle(gesture: UIGestureRecognizer) {
+        
+        guard
+            let drawnQuad = quadView.viewQuad,
+            let image = imageView.image
+        else {
+            return
         }
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesEnded(touches, with: event)
-        if let last = Array(touches).last {
-            let location = last.location(in: shapeLayerView)
+        
+        switch gesture.state {
+        case .began:
+            break
+//            delegate?.quadImageUIViewDelegate(self, gestureDidStart: true)
+        case .changed:
             
-            currentTouchedRect = .null
-            ontouch(with: location, width: 15)
-        }
-    }
-    
-    private func ontouch(with location: CGPoint, width: CGFloat) {
-        var viewQuads = originalQuads.map{ $0.applying(imageViewTransform)}
-        
-        let quads = viewQuads.filter{ $0.regionRect.surroundingSquare(with: .init(width: width, height: 10)).contains(location)}
-        let rect = quads.map{$0.regionRect}.reduce(CGRect.null, { $0.union($1)})
-        
-        if quads.isEmpty == false && currentTouchedRect.intersects(rect) == false {
-            currentTouchedRect = rect
-            for quad in quads {
-                if let index = viewQuads.firstIndex(of: quad) {
-                    viewQuads[index].toggleSelect()
-                    originalQuads[index].toggleSelect()
-                }
+            let position = gesture.location(in: quadView)
+            
+//            let isTouchingInside = quadView.quadLineLayer.path?.boundingBoxOfPath.contains(position) == true
+//
+//            guard isTouchingInside else {
+//                return
+//            }
+            let previousPanPosition = self.previousPanPosition ?? position
+            let closestCorner = self.closestCorner ?? position.closestCornerFrom(quad: drawnQuad)
+            
+            let offset = CGAffineTransform(translationX: position.x - previousPanPosition.x, y: position.y - previousPanPosition.y)
+            let cornerView = quadView.cornerViewForCornerPosition(position: closestCorner)
+            let draggedCornerViewCenter = cornerView.center.applying(offset)
+            
+            quadView.moveCorner(cornerView: cornerView, atPoint: draggedCornerViewCenter)
+            
+            self.previousPanPosition = position
+            self.closestCorner = closestCorner
+            
+            let scale = image.size.width / quadView.bounds.size.width
+            let scaledDraggedCornerViewCenter = CGPoint(x: draggedCornerViewCenter.x * scale, y: draggedCornerViewCenter.y * scale)
+            guard let zoomedImage = image.scaledImage(atPoint: scaledDraggedCornerViewCenter, scaleFactor: 5, targetSize: quadView.bounds.size) else {
+                return
             }
-            displayBoxes()
+            quadView.highlightCornerAtPosition(position: closestCorner, with: zoomedImage)
+        case .ended:
+            previousPanPosition = nil
+            closestCorner = nil
+            quadView.resetHighlightedCornerViews()
+//            delegate?.quadImageUIViewDelegate(self, quadDidUpdate: drawnQuad)
+//            delegate?.quadImageUIViewDelegate(self, gestureDidStart: false)
+        default:
+            break
         }
     }
 }

@@ -21,12 +21,12 @@ struct Chord: Identifiable, Equatable {
         
         if let match = RegularExpression.chordPattern3.firstMatch(in: chordString, options: [], range: chordString.range()) {
             if let keyRange = Range(match.range(at: 1), in: chordString) {
-                var valueKey = chordString[keyRange].trimmingCharacters(in: .newlines)
+                var valueKey = chordString[keyRange]
                 /// Dirty, some chords in the database are only in the flat version....
                 if valueKey == "G#" {
                     valueKey = "Ab"
                 }
-                key = Chords.Key(rawValue: valueKey) ?? Chords.Key.c
+                key = Chords.Key(rawValue: String(valueKey)) ?? Chords.Key.c
             }
             if let valueRange = Range(match.range(at: 2), in: chordString) {
                 /// ChordPro suffix are not always the suffixes in the database...
@@ -37,13 +37,13 @@ struct Chord: Identifiable, Equatable {
                 default:
                     suffixString = String(chordString[valueRange])
                 }
-                suffix = Chords.Suffix(rawValue: suffixString.trimmingCharacters(in: .newlines)) ?? Chords.Suffix.major
+                suffix = Chords.Suffix(rawValue: suffixString) ?? Chords.Suffix.major
             } else {
                 suffix = Chords.Suffix.major
             }
         }
         
-        let name = key.rawValue + suffix.rawValue
+        let name = key.rawValue + (suffix == .major ? String() : suffix == .minor ? "m" : suffix.rawValue)
         let chord = Chord(name: name, key: key, suffix: suffix, define: "")
         
         return chord

@@ -14,21 +14,20 @@ struct LyricsCreaterTextView: UIViewRepresentable {
     func makeUIView(context: Context) -> EditableTextView {
         let uiView = EditableTextView()
         
-        uiView.keyboardDismissMode = .interactive
-        uiView.delegate2 = context.coordinator
         uiView.delegate = context.coordinator
-        uiView.setTupEditing()
+        uiView.setupToolbar()
+        
         return uiView
     }
     
     func updateUIView(_ uiView: EditableTextView, context: Context) {
-        uiView.font = XFont.footnote(for: context.coordinator.lyric.text)
-        uiView.text = context.coordinator.lyric.text
+        if uiView.text != context.coordinator.lyric.text {
+            uiView.attributedText = NSAttributedString(context.coordinator.lyric.text)
+            uiView.textDidChange()
+        }
     }
     
     func makeCoordinator() -> LyricsCreaterViewModel {
         return viewModel
     }
 }
-
-

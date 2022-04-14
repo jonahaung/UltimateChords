@@ -11,7 +11,8 @@ struct ChordTag {
     var chord : String
     var range: NSRange
     var data : [String: Any] = [:]
-    var customTextAttributes: [NSAttributedString.Key: Any] = [.font: XFont.chord(), .foregroundColor: UIColor.systemPink, .baselineOffset: 10]
+    var chordAttributes: [NSAttributedString.Key: Any] = [.font: XFont.chord(), .foregroundColor: UIColor.systemPink]
+    var baselineAttributes: [NSAttributedString.Key: Any] = [.font: XFont.chord(), .foregroundColor: UIColor.systemPink, .baselineOffset: 10]
 }
 
 extension ChordTag: Equatable {

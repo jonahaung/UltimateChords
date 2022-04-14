@@ -16,23 +16,10 @@ enum RegularExpression {
             fatalError()
         }
     }()
-    static let chordPattern2: NSRegularExpression = {
-        do {
-            return try NSRegularExpression(pattern: "\\[\\w+?\\]", options: [])
-        }catch {
-            fatalError()
-        }
-    }()
+
     static let chordPattern3: NSRegularExpression = {
         do {
             return try NSRegularExpression(pattern: "([CDEFGABb#]+)(.*)", options: .caseInsensitive)
-        }catch {
-            fatalError()
-        }
-    }()
-    static let lyricsPattern: NSRegularExpression = {
-        do {
-            return try NSRegularExpression(pattern: "(\\[[\\w#b/]+])?([^\\[]*)", options: .caseInsensitive)
         }catch {
             fatalError()
         }
@@ -53,14 +40,7 @@ enum RegularExpression {
             fatalError()
         }
     }()
-    
-    static let lyricsRegex: NSRegularExpression = {
-        do {
-            return try NSRegularExpression(pattern: "(\\[[\\w#b/]+])?([^\\[]*)", options: .caseInsensitive)
-        }catch {
-            fatalError()
-        }
-    }()
+
     
     static let defineRegex = try! NSRegularExpression(pattern: "([a-z0-9#b/]+)(.*)", options: .caseInsensitive)
     static let measuresRegex = try! NSRegularExpression(pattern: "([\\[[\\w#b\\/]+\\]\\s]+)[|]*", options: .caseInsensitive)

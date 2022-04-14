@@ -15,11 +15,18 @@ struct LyricsCreaterView: View {
     var body: some View {
         ImportableView { text in
             viewModel.lyric.text = text
+            let song = SongConverter.parse(rawText: text)
+            if let title = song.title {
+                viewModel.lyric.title = title
+            }
+            if let artist = song.artist {
+                viewModel.lyric.artist = artist
+            }
         } content: {
             LyricsCreaterTextView()
                 .environmentObject(viewModel)
         }
-        .navigationBarTitle("Create")
+        .navigationBarTitleDisplayMode(.inline)
         .navigationBarItems(trailing: navTrailing())
     }
     

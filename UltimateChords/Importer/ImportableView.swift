@@ -69,7 +69,7 @@ struct ImportableView<Content: View>: View {
                 }
             }
         } label: {
-            XIcon(.square_and_arrow_up)
+            XIcon(.square_and_arrow_down)
                 .padding()
         }
     }

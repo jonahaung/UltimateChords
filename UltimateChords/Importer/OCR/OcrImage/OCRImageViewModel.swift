@@ -10,14 +10,14 @@ import UIKit
 import SwiftyTesseract
 import SwiftUI
 
-class TextReconizerImage: ObservableObject {
+class OCRImageViewModel: ObservableObject {
     
     weak var quadImageView: QuadImageView?
     let image: UIImage
     @Published var recognizingText = false
-    
     @Published var text: String?
     
+    private let ocrQueue = DispatchQueue(label: "OCR")
     init(image: UIImage) {
         self.image = image
     }
@@ -27,7 +27,7 @@ class TextReconizerImage: ObservableObject {
     }
 }
 
-extension TextReconizerImage {
+extension OCRImageViewModel {
     
     func task() {
         self.quadImageView?.detectTextBoxes()
@@ -41,6 +41,7 @@ extension TextReconizerImage {
     }
     
     private func detectTexts(forImage image: UIImage) {
+        weak var weakSelf = self
         let tesseract: Tesseract = {
             $0.configure {
                 set(.preserveInterwordSpaces, value: .true)
@@ -48,9 +49,7 @@ extension TextReconizerImage {
             return $0
         }(Tesseract(languages: [RecognitionLanguage.burmese, RecognitionLanguage.english]))
         
-        weak var weakSelf = self
-        
-        DispatchQueue.global().async {
+        ocrQueue.async {
             guard let self = weakSelf else { return }
             do {
                 let string = try tesseract.performOCR(on: image).get()

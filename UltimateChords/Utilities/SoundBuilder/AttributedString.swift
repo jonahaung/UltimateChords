@@ -120,7 +120,7 @@ extension AttributedString {
         let items = getChordTags(for: rawText)
         
         items.forEach { tag in
-            mutable.addAttributes(tag.customTextAttributes, range: tag.range)
+            mutable.addAttributes(tag.baselineAttributes, range: tag.range)
         }
         return mutable
     }
