@@ -32,16 +32,16 @@ class ToolbarInputAccessory {
     } (UIToolbar(frame: .init(x: 0, y: 0, width: 320, height: 44)))
     
     private var doneButton: UIBarButtonItem {
-        UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneDidTap))
+        UIBarButtonItem(image: UIImage(systemName: XIcon.Icon.power.systemName), style: .done, target: self, action: #selector(doneDidTap))
     }
     private var cameraButton: UIBarButtonItem {
-        UIBarButtonItem(image: UIImage(systemName: XIcon.Icon.doc_text_viewfinder.systemName), style: .plain, target: self, action: #selector(cameraDidTap))
+        UIBarButtonItem(image: UIImage(systemName: XIcon.Icon.camera_viewfinder.systemName), style: .done, target: self, action: #selector(cameraDidTap))
     }
     private var keyboardButton: UIBarButtonItem {
-        UIBarButtonItem(image: UIImage(systemName: XIcon.Icon.keyboard.systemName), style: .plain, target: self, action: #selector(keyboardDidTap))
+        UIBarButtonItem(image: UIImage(systemName: XIcon.Icon.textformat_alt.systemName), style: .done, target: self, action: #selector(keyboardDidTap))
     }
     private var guitarButton: UIBarButtonItem {
-        UIBarButtonItem(image: UIImage(systemName: XIcon.Icon.music_quarternote_3.systemName), style: .plain, target: self, action: #selector(guitarDidTap))
+        UIBarButtonItem(image: UIImage(systemName: XIcon.Icon.function.systemName), style: .done, target: self, action: #selector(guitarDidTap))
     }
     //
     weak var textView: UITextView?
@@ -95,6 +95,5 @@ extension UIToolbar {
     func clear() {
         setShadowImage(UIImage(), forToolbarPosition: .bottom)
         isTranslucent = false
-        tintColor = .label
     }
 }

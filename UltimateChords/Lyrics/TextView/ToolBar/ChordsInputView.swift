@@ -10,8 +10,6 @@ import SwiftyChords
 
 class ChordsInputView: UIView {
     
-    weak var textView: UITextView?
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -23,19 +21,17 @@ class ChordsInputView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    weak var textView: UITextView?
     
-    
-    var dataSource: UICollectionViewDiffableDataSource<Section, String>! = nil
-    var collectionView: UICollectionView! = nil
-    private let keys = Chords.Key.allCases
-    private let suffixs = Chords.Suffix.allCases
+    private var dataSource: UICollectionViewDiffableDataSource<Section, String>! = nil
+    private var collectionView: UICollectionView! = nil
+    private let keys = Instrument.guitar.keys
+    private let suffixs = Instrument.guitar.suffixes
     private let controls = ControlKind.allCases
-    
-    
-    
 }
 
 extension ChordsInputView {
+    
     private func configureHierarchy() {
         collectionView = UICollectionView(frame: self.bounds, collectionViewLayout: createLayout())
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -49,27 +45,21 @@ extension ChordsInputView {
     }
     /// - Tag: Grid
     private func createLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewCompositionalLayout { (sectionIndex: Int,
-                                                            layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
+        let layout = UICollectionViewCompositionalLayout { (sectionIndex: Int, layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
+            guard let sectionItem = Section(rawValue: sectionIndex) else { return nil }
+            let rows = sectionItem.rowsCount
             
-            guard let sectionLayoutKind = Section(rawValue: sectionIndex) else { return nil }
-            let rows = sectionLayoutKind.rowsCount
-            
-            // The group auto-calculates the actual item width to make
-            // the requested number of columns fit, so this widthDimension is ignored.
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                  heightDimension: .fractionalHeight(1.0))
+            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            item.contentInsets = NSDirectionalEdgeInsets(top: 1, leading: 1, bottom: 1, trailing: 1)
+            item.contentInsets = Constants.itemInsets
             
-            
-            let groupSize = NSCollectionLayoutSize(widthDimension: sectionLayoutKind == .control ? .estimated(UIScreen.main.bounds.width/CGFloat(self.controls.count) - 5) : sectionLayoutKind == .key ? .estimated(40) : .estimated(60),
-                                                   heightDimension: sectionLayoutKind == .suffix ? .fractionalWidth(0.4) : .estimated(40))
+            let groupSize = NSCollectionLayoutSize(widthDimension: sectionItem.widthDimention, heightDimension: sectionItem.heightDimention)
             let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitem: item, count: rows)
             
             let section = NSCollectionLayoutSection(group: group)
-            section.orthogonalScrollingBehavior = .continuous
-            section.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 0, trailing: 0)
+            section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
+            section.contentInsets = Constants.sectionInsets
+            
             return section
         }
         return layout
@@ -78,14 +68,12 @@ extension ChordsInputView {
     
     private func configureDataSource() {
         let cellRegistration = UICollectionView.CellRegistration<ChordInputCell, String> { [self] (cell, indexPath, identifier) in
-            let section = Section(rawValue: indexPath.section)
-            cell.configure(text: identifier, section: section ?? .key)
-            
+            guard let section = Section(rawValue: indexPath.section) else { return }
+            cell.configure(text: identifier, section: section)
         }
         
         dataSource = UICollectionViewDiffableDataSource<Section, String>(collectionView: collectionView) {
             (collectionView: UICollectionView, indexPath: IndexPath, identifier: String) -> UICollectionViewCell? in
-            // Return the cell.
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: identifier)
         }
         // initial data
@@ -94,25 +82,25 @@ extension ChordsInputView {
             snapshot.appendSections([section])
             switch section {
             case .key:
-                snapshot.appendItems(keys.map{$0.rawValue}, toSection: section)
+                snapshot.appendItems(keys.map{ $0 }, toSection: section)
             case .suffix:
-                snapshot.appendItems(suffixs.map{ $0.rawValue}, toSection: section)
+                snapshot.appendItems(suffixs.map{ $0.localisedSuffix }, toSection: section)
             case .control:
-                snapshot.appendItems(controls.map{$0.rawValue}, toSection: section)
+                snapshot.appendItems(controls.map{$0.rawValue }, toSection: section)
             }
         }
         dataSource.apply(snapshot, animatingDifferences: true)
     }
     
     
-    private func selectedKey() -> Chords.Key? {
+    private func selectedKey() -> String? {
         if let indexPath = collectionView.indexPathsForSelectedItems?.filter({ $0.section == Section.key.rawValue }).first {
             return keys[indexPath.item]
         }
         return nil
     }
     
-    private func selectedSuffix() -> Chords.Suffix? {
+    private func selectedSuffix() -> String? {
         if let indexPath = collectionView.indexPathsForSelectedItems?.filter({ $0.section == Section.suffix.rawValue }).first {
             return suffixs[indexPath.item]
         }
@@ -122,25 +110,25 @@ extension ChordsInputView {
     private func updateTextView() {
         guard let textView = textView else { return }
         if let key = selectedKey() {
-            let suffix = selectedSuffix()
-            let text = (key.rawValue + (suffix?.rawValue.replacingOccurrences(of: "minor", with: "m") ?? "")).bracked
+            let suffix = selectedSuffix()?.localisedSuffix ?? String()
+            let text = (key + suffix).bracked
             textView.setMarkedText(text, selectedRange: textView.selectedRange)
-            
         } else {
-            textView.selectedRange = textView.selectedRange
+            textView.removeMarkedText()
         }
     }
     
-    private func reloadControls() {
-        var snapshop = dataSource.snapshot()
-        snapshop.reloadSections([.control])
-        dataSource.apply(snapshop, animatingDifferences: true)
-    }
+//    private func reloadControls() {
+//        var snapshop = dataSource.snapshot()
+//        snapshop.reloadSections([.control])
+//        dataSource.apply(snapshop, animatingDifferences: true)
+//    }
+    
     private func deselectAll() {
-        collectionView.indexPathsForSelectedItems?.compactMap{ $0 }.forEach {
-            collectionView.deselectItem(at: $0, animated: true)
+        collectionView.indexPathsForSelectedItems?.forEach {
+            collectionView.deselectItem(at: $0, animated: false)
         }
-        reloadControls()
+        
     }
 }
 
@@ -148,67 +136,66 @@ extension ChordsInputView: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        let section = Section(rawValue: indexPath.section)
+        guard let section = Section(rawValue: indexPath.section) else { return }
         switch section {
         case .control:
             
             let control = controls[indexPath.item]
             switch control {
             case .Back:
-                textView?.deleteBackward()
-                deselectAll()
-            case .Add:
-                if let textView = self.textView, let range = textView.markedTextRange, let markedText = textView.text(in: range) {
-                    textView.insertText(markedText)
+                if textView?.markedTextRange != nil {
+                    textView?.removeMarkedText()
+                } else {
+                    textView?.deleteBackward()
                 }
-                deselectAll()
-            case .Done:
-                textView?.inputView = nil
-                textView?.reloadInputViews()
+            case .Space:
+                textView?.insertSpace()
+            case .Undo:
+                textView?.undo()
             }
-            
+            if textView?.markedTextRange == nil {
+                deselectAll()
+            } else {
+                collectionView.deselectItem(at: indexPath, animated: true)
+            }
         case .key:
-            collectionView.indexPathsForSelectedItems?.filter{ $0.section == section?.rawValue && $0.item != indexPath.item }.forEach {
+            collectionView.indexPathsForSelectedItems?.filter{ $0.section == section.rawValue && $0.item != indexPath.item }.forEach {
                 collectionView.deselectItem(at: $0, animated: false)
             }
         case .suffix:
-            collectionView.indexPathsForSelectedItems?.filter{ $0.section == section?.rawValue && $0.item != indexPath.item }.forEach {
+            collectionView.indexPathsForSelectedItems?.filter{ $0.section == section.rawValue && $0.item != indexPath.item }.forEach {
                 collectionView.deselectItem(at: $0, animated: false)
             }
-        case .none:
-            break
         }
         updateTextView()
     }
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        
+        guard let section = Section(rawValue: indexPath.section) else { return false }
         if collectionView.indexPathsForSelectedItems?.contains(indexPath) == true {
             collectionView.deselectItem(at: indexPath, animated: true)
             return false
         }
-        let section = Section(rawValue: indexPath.section)
-        switch section {
-        case .suffix:
-            let keyIndexPaths = collectionView.indexPathsForSelectedItems?.filter{ $0.section == Section.key.rawValue }
-            return keyIndexPaths.isNilOrEmpty ? false : true
-        default:
-            return true
+        
+        if section == .suffix {
+            return selectedKey() != nil
         }
+        return true
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         let section = Section(rawValue: indexPath.section)
-        switch section {
-        case .key:
+        
+        if section == .key {
             deselectAll()
-            updateTextView()
-        default:
-            break
         }
+        updateTextView()
     }
 }
 // Enums
 extension ChordsInputView {
+    
     enum Section: Int, CaseIterable {
         case key, suffix, control
         var rowsCount: Int {
@@ -221,6 +208,7 @@ extension ChordsInputView {
                 return 1
             }
         }
+        
         var labelFont: UIFont {
             switch self {
             case .control:
@@ -242,69 +230,51 @@ extension ChordsInputView {
                 return .label
             }
         }
+        
+        var widthDimention: NSCollectionLayoutDimension {
+            switch self {
+            case .key:
+                return .estimated(40)
+            case .suffix:
+                return .estimated(60)
+            case .control:
+                return .estimated((UIScreen.main.bounds.width / CGFloat(ControlKind.allCases.count)) - Constants.sectionInsets.leading + Constants.itemInsets.leading)
+            }
+        }
+        
+        var heightDimention: NSCollectionLayoutDimension {
+            switch self {
+            case .key:
+                return .estimated(40)
+            case .suffix:
+                return .fractionalWidth(0.4)
+            case .control:
+                return .estimated(40)
+            }
+        }
+        
     }
     
     enum ControlKind: String, CaseIterable {
-        case Back, Add, Done
-    }
-}
-extension String {
-    
-    var bracked: String {
-        "[\(self)]"
-    }
-}
-class ChordInputCell: UICollectionViewCell {
-    
-    private let label = UILabel()
-    static let reuseIdentifier = "text-cell-reuse-identifier"
-    
-    override var isSelected: Bool {
-        didSet {
-            contentView.backgroundColor = isSelected ? UIColor.tintColor : UIColor.systemBackground
-            label.textColor = isSelected ? .white : textColor
+        case Undo, Space, Back
+        
+        var iconName: XIcon.Icon {
+            switch self {
+            case .Back:
+                return .delete_left_fill
+            case .Undo:
+                return .gobackward
+            case .Space:
+                return .empty
+            
+            }
         }
     }
     
-    override var isHighlighted: Bool {
-        didSet {
-            label.isHidden = isHighlighted
-        }
-    }
-    
-    private var textColor = UIColor.label {
-        didSet {
-            label.textColor = textColor
-        }
-    }
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        commonInit()
-    }
-    required init?(coder: NSCoder) {
-        fatalError("not implemnted")
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        label.frame = bounds.insetBy(dx: 3, dy: 3)
+    struct Constants {
+        static let itemInsets = NSDirectionalEdgeInsets(top: 1, leading: 1, bottom: 1, trailing: 1)
+        static let sectionInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 0, trailing: 0)
     }
 }
 
-extension ChordInputCell {
-    private func commonInit() {
-        contentView.backgroundColor = UIColor.systemBackground
-        label.adjustsFontSizeToFitWidth = true
-        contentView.layer.cornerRadius = 10
-        label.textAlignment = .center
-        label.font = .init(name: "NotoSansMonoExtraCondensed-SemiBold", size: UIFont.labelFontSize - 1)!
-        contentView.addSubview(label)
-    }
-    
-    func configure(text: String, section: ChordsInputView.Section) {
-        label.text = text
-        label.font = section.labelFont
-        textColor = section.textColor
-    }
-}
+

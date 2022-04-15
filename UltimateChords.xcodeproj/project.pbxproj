@@ -40,6 +40,11 @@
 		472BE8C627E9817600A41D54 /* MyanmarSquare.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 472BE8C527E9817600A41D54 /* MyanmarSquare.ttf */; };
 		472BE8CA27E9EF5200A41D54 /* MasterpieceSpringRev.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 472BE8C927E9EF5200A41D54 /* MasterpieceSpringRev.ttf */; };
 		472BE8DC27EAB3A500A41D54 /* ChordTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472BE8DB27EAB3A500A41D54 /* ChordTag.swift */; };
+		4734A9CA28090C3300EA706D /* ChordInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4734A9C928090C3300EA706D /* ChordInputCell.swift */; };
+		4734A9CC28090DC400EA706D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4734A9CB28090DC400EA706D /* Extensions.swift */; };
+		4734A9D1280920F800EA706D /* guitar.json in Resources */ = {isa = PBXBuildFile; fileRef = 4734A9CF280920F800EA706D /* guitar.json */; };
+		4734A9D2280920F800EA706D /* ukulele.json in Resources */ = {isa = PBXBuildFile; fileRef = 4734A9D0280920F800EA706D /* ukulele.json */; };
+		4734A9D42809210000EA706D /* Instrument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4734A9D32809210000EA706D /* Instrument.swift */; };
 		4751BCDB2803CEC70000ACF7 /* ImportableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4751BCDA2803CEC70000ACF7 /* ImportableView.swift */; };
 		4751BCDD2803CEDA0000ACF7 /* ImportableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4751BCDC2803CEDA0000ACF7 /* ImportableViewModel.swift */; };
 		4751BCDF2803ECCC0000ACF7 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4751BCDE2803ECCC0000ACF7 /* ImagePicker.swift */; };
@@ -152,6 +157,11 @@
 		472BE8C527E9817600A41D54 /* MyanmarSquare.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MyanmarSquare.ttf; sourceTree = "<group>"; };
 		472BE8C927E9EF5200A41D54 /* MasterpieceSpringRev.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MasterpieceSpringRev.ttf; sourceTree = "<group>"; };
 		472BE8DB27EAB3A500A41D54 /* ChordTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordTag.swift; sourceTree = "<group>"; };
+		4734A9C928090C3300EA706D /* ChordInputCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordInputCell.swift; sourceTree = "<group>"; };
+		4734A9CB28090DC400EA706D /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		4734A9CF280920F800EA706D /* guitar.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = guitar.json; sourceTree = "<group>"; };
+		4734A9D0280920F800EA706D /* ukulele.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ukulele.json; sourceTree = "<group>"; };
+		4734A9D32809210000EA706D /* Instrument.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Instrument.swift; sourceTree = "<group>"; };
 		4751BCDA2803CEC70000ACF7 /* ImportableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportableView.swift; sourceTree = "<group>"; };
 		4751BCDC2803CEDA0000ACF7 /* ImportableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportableViewModel.swift; sourceTree = "<group>"; };
 		4751BCDE2803ECCC0000ACF7 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
@@ -250,6 +260,7 @@
 		4708C45C27ECA94F00481172 /* SongPro */ = {
 			isa = PBXGroup;
 			children = (
+				4734A9CD280920E000EA706D /* Instruments */,
 				47EB308A28025FFA00913B6A /* Transposer */,
 				4708C48527ED394E00481172 /* ChordsView.swift */,
 				4708C46D27ED37B400481172 /* Parser */,
@@ -332,9 +343,29 @@
 			isa = PBXGroup;
 			children = (
 				476D4A2A28088573007A45DB /* ChordsInputView.swift */,
+				4734A9CB28090DC400EA706D /* Extensions.swift */,
+				4734A9C928090C3300EA706D /* ChordInputCell.swift */,
 				476D4A282808767C007A45DB /* ToolbarInputAccessory.swift */,
 			);
 			path = ToolBar;
+			sourceTree = "<group>";
+		};
+		4734A9CD280920E000EA706D /* Instruments */ = {
+			isa = PBXGroup;
+			children = (
+				4734A9D32809210000EA706D /* Instrument.swift */,
+				4734A9CE280920EA00EA706D /* Resources */,
+			);
+			name = Instruments;
+			sourceTree = "<group>";
+		};
+		4734A9CE280920EA00EA706D /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4734A9CF280920F800EA706D /* guitar.json */,
+				4734A9D0280920F800EA706D /* ukulele.json */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 		4751BCD92803CEB10000ACF7 /* Importer */ = {
@@ -712,9 +743,11 @@
 				472BE8C227E97F4400A41D54 /* MyanmarSansPro.ttf in Resources */,
 				472BE8C427E980AF00A41D54 /* MyanmarAngoun.ttf in Resources */,
 				4726964127FE9EE7009FE548 /* tessdata in Resources */,
+				4734A9D2280920F800EA706D /* ukulele.json in Resources */,
 				477DA76927E0E7C900C143C4 /* Assets.xcassets in Resources */,
 				47FB8A4627E2AC3F006799FC /* NotoSansMono_ExtraCondensed-Regular.ttf in Resources */,
 				47A3E5F127E4F42800412B89 /* NotoSansMono_ExtraCondensed-SemiBold.ttf in Resources */,
+				4734A9D1280920F800EA706D /* guitar.json in Resources */,
 				47FB8A4527E2AC3F006799FC /* NotoSansMono_ExtraCondensed-Medium.ttf in Resources */,
 				472BE8C627E9817600A41D54 /* MyanmarSquare.ttf in Resources */,
 				47A3E5F427E4F42800412B89 /* NotoSansMono_ExtraCondensed-Black.ttf in Resources */,
@@ -769,9 +802,11 @@
 				476B429227FAFD9600C30BF3 /* LyricCreaterControls.swift in Sources */,
 				476B431227FC0F9900C30BF3 /* CameraPreview.swift in Sources */,
 				476B429027FA8F1100C30BF3 /* UserDefault.swift in Sources */,
+				4734A9D42809210000EA706D /* Instrument.swift in Sources */,
 				4708C45E27ECB36F00481172 /* AttributedString.swift in Sources */,
 				47FB8A3C27E2A72E006799FC /* XFont.swift in Sources */,
 				4708C48927ED394E00481172 /* ChordsView.swift in Sources */,
+				4734A9CC28090DC400EA706D /* Extensions.swift in Sources */,
 				476B431127FC0F9900C30BF3 /* CameraViewModel.swift in Sources */,
 				476B431027FC0F9900C30BF3 /* CameraService+Extensions.swift in Sources */,
 				47EB30982802615700913B6A /* Music.swift in Sources */,
@@ -803,6 +838,7 @@
 				47EB3092280260BE00913B6A /* MusicKey.swift in Sources */,
 				4726965027FF0AFA009FE548 /* DocumentScannerView.swift in Sources */,
 				4782A49527E8E6ED00FA0FC9 /* HomeViewModel.swift in Sources */,
+				4734A9CA28090C3300EA706D /* ChordInputCell.swift in Sources */,
 				4726964E27FEE899009FE548 /* ObjectTracker.swift in Sources */,
 				4751BCE12805B5990000ACF7 /* QuadrilateralImageView.swift in Sources */,
 				477DA76527E0E7C800C143C4 /* UltimateChordsApp.swift in Sources */,
