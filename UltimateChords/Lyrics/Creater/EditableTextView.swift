@@ -15,8 +15,6 @@ class EditableTextView: TextView {
         super.commonInit()
         keyboardDismissMode = .interactive
         typingAttributes = [.font: UIFont(name: "NotoSansMonoExtraCondensed-Medium", size: UIFont.systemFontSize)!, .foregroundColor: UIColor.label]
-        
-        
     }
     
     override func insertText(_ text: String) {

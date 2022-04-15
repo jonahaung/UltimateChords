@@ -50,7 +50,6 @@
 		476B428E27F9E90F00C30BF3 /* Lyric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476B428D27F9E90F00C30BF3 /* Lyric.swift */; };
 		476B429027FA8F1100C30BF3 /* UserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476B428F27FA8F1100C30BF3 /* UserDefault.swift */; };
 		476B429227FAFD9600C30BF3 /* LyricCreaterControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476B429127FAFD9600C30BF3 /* LyricCreaterControls.swift */; };
-		476B429427FB255200C30BF3 /* ChordPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476B429327FB255200C30BF3 /* ChordPicker.swift */; };
 		476B42F927FBAA2A00C30BF3 /* Song+Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476B42F827FBAA2A00C30BF3 /* Song+Models.swift */; };
 		476B42FE27FBDA0F00C30BF3 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476B42FD27FBDA0F00C30BF3 /* ActivityView.swift */; };
 		476B430127FBDA4300C30BF3 /* ActivityItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476B430027FBDA4300C30BF3 /* ActivityItem.swift */; };
@@ -163,7 +162,6 @@
 		476B428D27F9E90F00C30BF3 /* Lyric.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lyric.swift; sourceTree = "<group>"; };
 		476B428F27FA8F1100C30BF3 /* UserDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefault.swift; sourceTree = "<group>"; };
 		476B429127FAFD9600C30BF3 /* LyricCreaterControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricCreaterControls.swift; sourceTree = "<group>"; };
-		476B429327FB255200C30BF3 /* ChordPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordPicker.swift; sourceTree = "<group>"; };
 		476B42F827FBAA2A00C30BF3 /* Song+Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Song+Models.swift"; sourceTree = "<group>"; };
 		476B42FD27FBDA0F00C30BF3 /* ActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
 		476B430027FBDA4300C30BF3 /* ActivityItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityItem.swift; sourceTree = "<group>"; };
@@ -330,6 +328,15 @@
 			path = Search;
 			sourceTree = "<group>";
 		};
+		4734A9C82808E77200EA706D /* ToolBar */ = {
+			isa = PBXGroup;
+			children = (
+				476D4A2A28088573007A45DB /* ChordsInputView.swift */,
+				476D4A282808767C007A45DB /* ToolbarInputAccessory.swift */,
+			);
+			path = ToolBar;
+			sourceTree = "<group>";
+		};
 		4751BCD92803CEB10000ACF7 /* Importer */ = {
 			isa = PBXGroup;
 			children = (
@@ -356,12 +363,8 @@
 		476B42FC27FBD4D500C30BF3 /* TextView */ = {
 			isa = PBXGroup;
 			children = (
-				47A3E5DA27E4DEC900412B89 /* LyricsViewerTextView.swift */,
-				47BB283227F0CFDC00852C1D /* EditableTextView.swift */,
-				4782A49927E8E9CC00FA0FC9 /* WidthFittingTextView.swift */,
 				4761E7FB27EF789700BBA301 /* TextView.swift */,
-				476D4A2A28088573007A45DB /* ChordsInputView.swift */,
-				476D4A282808767C007A45DB /* ToolbarInputAccessory.swift */,
+				4734A9C82808E77200EA706D /* ToolBar */,
 			);
 			path = TextView;
 			sourceTree = "<group>";
@@ -494,8 +497,8 @@
 				4782A49727E8E82F00FA0FC9 /* LyricsCreaterView.swift */,
 				476B429127FAFD9600C30BF3 /* LyricCreaterControls.swift */,
 				4782A49B27E8EA5600FA0FC9 /* LyricsCreaterViewModel.swift */,
-				476B429327FB255200C30BF3 /* ChordPicker.swift */,
 				4782A49D27E8EA6A00FA0FC9 /* LyricsCreaterTextView.swift */,
+				47BB283227F0CFDC00852C1D /* EditableTextView.swift */,
 				47A1E3772806C164002F75A0 /* Form */,
 			);
 			path = Creater;
@@ -555,6 +558,8 @@
 				4726962827FC7B7A009FE548 /* LyricViewerControls.swift */,
 				47A3E5DD27E4DF3100412B89 /* LyricsViewerViewModel.swift */,
 				4726962C27FE4B38009FE548 /* SongKeyView.swift */,
+				47A3E5DA27E4DEC900412B89 /* LyricsViewerTextView.swift */,
+				4782A49927E8E9CC00FA0FC9 /* WidthFittingTextView.swift */,
 			);
 			path = Viewer;
 			sourceTree = "<group>";
@@ -748,7 +753,6 @@
 				476B431427FC0F9900C30BF3 /* PhotoCaptureProcessor.swift in Sources */,
 				47EB308028017CF700913B6A /* NavBar.swift in Sources */,
 				476B431727FC0F9900C30BF3 /* CameraView.swift in Sources */,
-				476B429427FB255200C30BF3 /* ChordPicker.swift in Sources */,
 				472BE8DC27EAB3A500A41D54 /* ChordTag.swift in Sources */,
 				4726965927FF11ED009FE548 /* CGPoint+Utils.swift in Sources */,
 				4782A49127E8E5C600FA0FC9 /* HomeCell.swift in Sources */,

@@ -96,7 +96,8 @@ extension LyricsCreaterViewModel: UITextViewDelegate {
 let instructionText = """
 {t: Song Title}
 {st: Singer}
-Intro: [Chord] [Chord] [Chord] [Chord]
+
+
 
 """
 let withoutChords = """
