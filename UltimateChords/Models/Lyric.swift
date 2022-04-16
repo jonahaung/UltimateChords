@@ -8,19 +8,16 @@
 import Foundation
 
 struct Lyric: Identifiable {
-    
-    let id: String
+    var id = UUID().uuidString
     var title: String
     var artist: String
     var text: String
     
-    init(id: String = UUID().uuidString, title: String, artist: String, text: String) {
-        self.id = id
+    init(title: String, artist: String, text: String) {
         self.title = title
         self.artist = artist
         self.text = text
     }
-
 }
 
 

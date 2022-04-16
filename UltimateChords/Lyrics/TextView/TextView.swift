@@ -23,7 +23,7 @@ class TextView: UITextView {
     
     func commonInit() {
 //        textContainerInset = .zero
-//        textContainer.lineFragmentPadding = XApp.TextView.lineFragmentPadding
+        textContainer.lineFragmentPadding = XApp.TextView.lineFragmentPadding
         showsVerticalScrollIndicator = false
         dataDetectorTypes = []
         backgroundColor = .clear
@@ -31,6 +31,7 @@ class TextView: UITextView {
         alwaysBounceVertical = true
         bounces = true
         textContainer.lineBreakMode = .byClipping
+        layoutManager.allowsNonContiguousLayout = false
     }
     
 //    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {

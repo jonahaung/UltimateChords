@@ -7,9 +7,7 @@
 
 import SwiftUI
 import AVFoundation
-import SwiftyTesseract
 import Vision
-import Combine
 import libtesseract
 
 struct QuadrilateralImageView: UIViewRepresentable {
@@ -23,7 +21,7 @@ struct QuadrilateralImageView: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: QuadImageView, context: Context) {
-//        uiView.setNeedsLayout()
+        //        uiView.setNeedsLayout()
     }
 }
 
@@ -47,7 +45,7 @@ class QuadImageView: UIView, ImageFiltering {
     
     private var previousPanPosition: CGPoint?
     private var closestCorner: CornerPosition?
-
+    
     init(image: UIImage) {
         super.init(frame: .zero)
         imageView.image = image
@@ -170,16 +168,10 @@ extension QuadImageView {
         switch gesture.state {
         case .began:
             break
-//            delegate?.quadImageUIViewDelegate(self, gestureDidStart: true)
         case .changed:
             
             let position = gesture.location(in: quadView)
-            
-//            let isTouchingInside = quadView.quadLineLayer.path?.boundingBoxOfPath.contains(position) == true
-//
-//            guard isTouchingInside else {
-//                return
-//            }
+
             let previousPanPosition = self.previousPanPosition ?? position
             let closestCorner = self.closestCorner ?? position.closestCornerFrom(quad: drawnQuad)
             
@@ -202,8 +194,8 @@ extension QuadImageView {
             previousPanPosition = nil
             closestCorner = nil
             quadView.resetHighlightedCornerViews()
-//            delegate?.quadImageUIViewDelegate(self, quadDidUpdate: drawnQuad)
-//            delegate?.quadImageUIViewDelegate(self, gestureDidStart: false)
+            //            delegate?.quadImageUIViewDelegate(self, quadDidUpdate: drawnQuad)
+            //            delegate?.quadImageUIViewDelegate(self, gestureDidStart: false)
         default:
             break
         }

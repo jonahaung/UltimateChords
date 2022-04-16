@@ -11,9 +11,9 @@ struct OcrImageView: View {
     
     @StateObject private var recognizer: OCRImageViewModel
     
-    private var onDismiss: ((String) -> Void)
+    private var onDismiss: ((ResultType) -> Void)
     
-    init(image: UIImage, onDismiss: @escaping (String) -> Void) {
+    init(image: UIImage, onDismiss: @escaping (ResultType) -> Void) {
         _recognizer = .init(wrappedValue: .init(image: image))
         self.onDismiss = onDismiss
     }
@@ -32,7 +32,7 @@ struct OcrImageView: View {
             }
             .onChange(of: recognizer.text) { newValue in
                 if let text = newValue {
-                    onDismiss(text)
+                    onDismiss(.Success(text: text))
                 }
             }
         }
@@ -40,6 +40,10 @@ struct OcrImageView: View {
     
     private func bottomBar() -> some View {
         HStack {
+            Button("Retake") {
+                onDismiss(.Redo)
+            }
+            Spacer()
             Button("DETECT") {
                 recognizer.detextTexts()
             }
@@ -53,5 +57,14 @@ struct OcrImageView: View {
                 ProgressView().padding().background(Color(uiColor: .secondarySystemGroupedBackground).clipShape(Circle()))
             }
         }
+    }
+}
+
+extension OcrImageView {
+    
+    enum ResultType {
+        case Success(text: String)
+        case Redo
+        case Cancel
     }
 }

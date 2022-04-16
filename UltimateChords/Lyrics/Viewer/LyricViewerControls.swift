@@ -17,17 +17,15 @@ struct LyricViewerControls: View {
         Form{
             Section{
                 Button {
-                    guard let song = viewModel.song else { return }
+                    guard var song = viewModel.song else { return }
                     
                     let key = song.key ?? "C"
-                    print(key)
+                    let chord = Chord.chord(for: key)
                     
-                    let mSong = PlainSong(AttributedString.defaultText(from: song).string)
-                    if let newSong = mSong.transposed(fromString: key, toString: "B") {
-                        let newText = newSong.lines.joined(separator: "\n")
-                        viewModel.song?.rawText = newText
-                        
-                        
+                    let mSong = PlainSong(AttributedString.displayText(for: song, with: .Copyable).string)
+                    if let newSong = mSong.transposed(fromString: chord.key.rawValue, toString: "B") {
+                        song.rawText = song.rawText.prepending(newSong.text.newLine)
+                        viewModel.song = song
                     }
                     
                 } label: {

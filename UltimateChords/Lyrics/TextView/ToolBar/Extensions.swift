@@ -26,23 +26,22 @@ extension String {
 }
 
 extension UITextView {
+
     
-    func insertMarkedText() {
-        if let range = self.markedTextRange, let markedText = self.text(in: range)?.localisedSuffix {
-            self.insertText(markedText)
-        }
-    }
     func insertSpace() {
         if markedTextRange != nil {
-            insertMarkedText()
+            unmarkText()
             return
         }
         insertText(" ")
     }
-    func removeMarkedText() {
-        setMarkedText(nil, selectedRange: selectedRange)
-    }
     
+    func setMarkedText(_ string: String?) {
+        setMarkedText(string, selectedRange: selectedRange)
+    }
+    func removeMarkedText() {
+        setMarkedText(nil)
+    }
     func undo() {
         if undoManager?.canRedo == true {
             undoManager?.undo()
@@ -51,6 +50,14 @@ extension UITextView {
     func redo() {
         if undoManager?.canRedo == true {
             undoManager?.redo()
+        }
+    }
+}
+
+extension UICollectionView {
+    func deselectAll() {
+        indexPathsForSelectedItems?.forEach {
+            deselectItem(at: $0, animated: true)
         }
     }
 }

@@ -11,10 +11,19 @@ import UIKit
 class ImportableViewModel: ObservableObject {
     
     @Published var importMode: Mode?
+    private var previousImportMode: Mode?
     @Published var importingImage: UIImage?
     
     deinit {
         print("DEINIT: ImportableViewModel")
+    }
+    
+    func setImportMode(mode: Mode?) {
+        importMode = mode
+        previousImportMode = mode
+    }
+    func redoImportMode() {
+        setImportMode(mode: previousImportMode)
     }
 }
 

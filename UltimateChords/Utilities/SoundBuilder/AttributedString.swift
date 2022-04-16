@@ -120,19 +120,19 @@ extension AttributedString {
         let items = getChordTags(for: rawText)
         
         items.forEach { tag in
-            mutable.addAttributes(tag.baselineAttributes, range: tag.range)
+            mutable.addAttributes(tag.attributes, range: tag.range)
         }
         return mutable
     }
     
-    static func getChordTags(for rawText: String) -> [ChordTag] {
-        var items = [ChordTag]()
+    static func getChordTags(for rawText: String) -> [XTag] {
+        var items = [XTag]()
         RegularExpression.chordPattern.matches(in: rawText, range: rawText.range()).forEach { match in
             let nsString = rawText as NSString
             let tagRange = match.range // (location: 20, length: 3]
             let subString = nsString.substring(with: tagRange) // [G]
             let chord = subString
-            let item = ChordTag.init(chord: chord, range: tagRange)
+            let item = XTag.init(string: chord, range: tagRange)
             items.append(item)
         }
         return items

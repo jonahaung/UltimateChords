@@ -6,54 +6,84 @@
 //
 
 import UIKit
+import NaturalLanguage
 
 class EditableTextView: TextView {
     
-    private let toolBar = ToolbarInputAccessory()
+    private lazy var toolBar = ToolbarInputAccessory()
     
     override func commonInit() {
         super.commonInit()
         keyboardDismissMode = .interactive
-        typingAttributes = [.font: UIFont(name: "NotoSansMonoExtraCondensed-Medium", size: UIFont.systemFontSize)!, .foregroundColor: UIColor.label]
+        markedTextStyle = [.backgroundColor: UIColor.systemYellow.withAlphaComponent(0.5)]
+        delegate = self
     }
     
-    override func insertText(_ text: String) {
-        super.insertText(text)
-        textDidChange()
-    }
-    
-    override func paste(_ sender: Any?) {
-        super.paste(sender)
-        textDidChange()
-    }
-    
-    override func cut(_ sender: Any?) {
-        super.cut(sender)
-        textDidChange()
-    }
-    
-    func setupToolbar() {
+    func configureToolbar() {
         toolBar.configure(textView: self)
     }
 }
 
+extension EditableTextView: UITextViewDelegate {
+    
+    func textViewDidChange(_ textView: UITextView) {
+        updateFont()
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if text == " " && markedTextRange != nil {
+            unmarkText()
+            return false
+        }
+        
+        return true
+    }
+}
 extension EditableTextView {
     
-    func textDidChange() {
+    func updateFont() {
         guard hasText else { return }
-        var tags = [ChordTag]()
         
-        RegularExpression.chordPattern.enumerateMatches(in: text, range: text.range()) { result, flag, point in
+        print("didChange")
+        var tags = [XTag]()
+        text.enumerateSubstrings(in: text.startIndex..<text.endIndex, options: .byLines) {
+            (substring, substringRange, _, _) in
+            if let substring = substring {
+                let nsRange = NSRange(substringRange, in: self.text)
+                let string = String(substring)
+                tags.append(.init(string: string, range: nsRange, font: XFont.body(for: string)))
+            }
+        }
+        RegularExpression.chordPattern.enumerateMatches(in: text, range: text.range()) { result, _, _ in
             if let result = result {
                 let range = result.range
                 let str = (text as NSString).substring(with: range)
-                let tag = ChordTag(chord: String(str), range: range)
+                let tag = XTag(string: String(str), range: range, foregroundColor: .systemBlue)
                 tags.append(tag)
             }
         }
-        
-        tags.forEach { tag in
-            textStorage.addAttributes(tag.chordAttributes, range: tag.range)
+        tags.forEach {
+            textStorage.addAttributes($0.attributes, range: $0.range)
         }
+    }
+    
+}
+
+extension EditableTextView {
+    
+    override func setMarkedText(_ markedText: String?, selectedRange: NSRange) {
+        super.setMarkedText(markedText, selectedRange: selectedRange)
+    }
+    
+    func insert(text: String) {
+        insertText(text.newLine)
+        scrollToBottom()
+    }
+    
+    func scrollToBottom() {
+        let length = attributedText.string.utf16.count
+        let range = NSMakeRange(length-1, 0)
+        scrollRangeToVisible(range)
+        selectedTextRange = self.textRange(from: endOfDocument, to: endOfDocument)
     }
 }

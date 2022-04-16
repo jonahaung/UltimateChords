@@ -11,7 +11,7 @@ struct MusicText {
         case defNot = 0, probNot, maybe, probably, definitely
     }
     
-    static let probSymbols = ["|", "%", "...", "…", "||:", ":||", "||"]
+    static let probSymbols = ["|", "%", "...", "…", "||:", ":||", "||", "[", "]"]
     static let maybeContainsSymbols = [","]
     static let probContainsSymbols = ["...", "…", "#"]
     static let formTitles = ["Verse", "Chorus", "Intro", "Bridge", "Interlude"]

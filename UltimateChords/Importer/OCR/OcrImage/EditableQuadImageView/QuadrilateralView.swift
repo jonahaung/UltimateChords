@@ -10,14 +10,14 @@ import UIKit
 import AVFoundation
 
 final class QuadrilateralView: UIView {
-
+    
     let quadLayer: CAShapeLayer = {
         $0.fillColor = nil
         $0.lineWidth = 1
         $0.strokeColor = UIColor.tintColor.cgColor
         return $0
     }(CAShapeLayer())
-
+    
     let quadLineLayer: CAShapeLayer = {
         $0.fillColor = nil
         $0.lineWidth = 1
@@ -69,7 +69,7 @@ final class QuadrilateralView: UIView {
         addSubview(topRightCornerView)
         addSubview(bottomRightCornerView)
         addSubview(bottomLeftCornerView)
-       
+        
         layer.addSublayer(quadLayer)
         layer.addSublayer(quadLineLayer)
     }
@@ -114,7 +114,7 @@ extension QuadrilateralView {
             rectPath.usesEvenOddFillRule = true
             path.append(rectPath)
         }
-    
+        
         if animated == true {
             let pathAnimation = CABasicAnimation(keyPath: "path")
             pathAnimation.duration = 0.2
@@ -147,9 +147,6 @@ extension QuadrilateralView {
         cornerView.center = validPoint
         let updatedQuad = update(quad, withPosition: validPoint, forCorner: cornerView.position)
         drawQuadrilateral(quad: updatedQuad)
-//        self.quad = updatedQuad
-//        drawQuad(updatedQuad, animated: false)
-//        delegate?.quadrilateralView(self, quadrilateralDidUpdate: updatedQuad)
     }
     
     func highlightCornerAtPosition(position: CornerPosition, with image: UIImage) {

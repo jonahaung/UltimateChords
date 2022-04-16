@@ -118,16 +118,15 @@ struct CameraView: View {
                         )
                     
                     HStack {
-                        
-//                        capturedPhotoThumbnail
-//
+                        flipCameraButton
+
                         Spacer()
                         
                         captureButton
                         
                         Spacer()
                         
-//                        flipCameraButton
+                        flipCameraButton
                     }
                     .padding(.horizontal, 20)
                 }

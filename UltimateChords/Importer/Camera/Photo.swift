@@ -12,9 +12,8 @@ import UIKit
 
 //  MARK: Class Camera Service, handles setup of AVFoundation needed for a basic camera app.
 public struct Photo: Identifiable, Equatable {
-//    The ID of the captured photo
     public var id: String
-//    Data representation of the captured photo
+    //    Data representation of the captured photo
     public var originalData: Data
     
     public init(id: String = UUID().uuidString, originalData: Data) {
@@ -42,7 +41,7 @@ extension Photo {
         guard let currentCGImage = image.cgImage else { return image }
         guard let currentCIImage = CIImage(cgImage: currentCGImage).appalyingNoiseReduce()?.appalyingNoiseReduce()?.appalyingNoiseReduce()?.appalyingNoiseReduce() else { return image }
         let context = CIContext()
-
+        
         if let cgimg = context.createCGImage(currentCIImage, from: currentCIImage.extent) {
             return UIImage(cgImage: cgimg)
         }

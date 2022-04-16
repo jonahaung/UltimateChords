@@ -8,90 +8,65 @@
 import UIKit
 import SwiftyChords
 
-final class LyricsCreaterViewModel: NSObject, ObservableObject {
+final class LyricsCreaterViewModel: ObservableObject {
     
-    @Published var lyric = Lyric(title: "ခွင့်မပြု", artist: "ထူးအိမ်သင်", text: instructionText)
-    @Published var isEditable = true
-
+    @Published var lyric = Lyric(title: "ခွင့်မပြု", artist: "ထူးအိမ်သင်", text: "")
+    weak var textView: EditableTextView?
+    
+    var isEditable: Bool {
+        get { textView?.isEditable == true }
+        set { textView?.isEditable = newValue; isPreviewMode = !newValue }
+    }
+    var isPreviewMode: Bool = false {
+        didSet {
+            if oldValue == false {
+                lyric.text = textView?.text ?? ""
+                var song = SongConverter.parse(rawText: textView?.text ?? "")
+                song.title = lyric.title
+                song.artist = lyric.artist
+                textView?.attributedText = AttributedString.displayText(for: song, with: .Default, showTitle: true)
+            } else {
+                textView?.text = lyric.text
+                textView?.updateFont()
+            }
+            objectWillChange.send()
+        }
+    }
+    deinit {
+        print("LyricsCreaterViewModel")
+    }
+    
     func save() {
         _ = CLyric(title: lyric.title, artist: lyric.artist, text: lyric.text)
     }
     
     func fillDemoData() {
-        let text = withChords
-        lyric.title = text.words().randomElement() ?? ""
-        lyric.artist = text.words().randomElement() ?? ""
-        lyric.text = text
+        textView?.text = nil
+        lyric.title = "Hotel California"
+        lyric.artist = "Eagles"
+        insertText(SongParser.convert(hotelCalifornia))
     }
-    
-    deinit {
-        print("LyricsCreaterViewModel")
+
+    func task() {
+        insertText(withoutChords)
+    }
+    func insertText(_ string: String) {
+        guard let textView = textView else {
+            return
+        }
+        textView.insert(text: string)
+        let song = SongConverter.parse(rawText: lyric.text)
+        if let title = song.title {
+            lyric.title = title
+        }
+        if let artist = song.artist {
+            lyric.artist = artist
+        }
+        lyric.text = textView.text
+        
     }
 }
 
-extension LyricsCreaterViewModel: UITextViewDelegate {
-    
-    func textViewDidChange(_ textView: UITextView) {
-        if textView.isFirstResponder {
-            lyric.text = textView.text
-            (textView as? EditableTextView)?.textDidChange()
-        }
-    }
-    func textViewDidEndEditing(_ textView: UITextView) {
-        textView.attributedText = AttributedString.displayText(for: SongConverter.parse(rawText: textView.text), with: .Default, showTitle: true)
-//        textView.text = SongParser.convert(textView.text)
-    }
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        textView.attributedText = AttributedString.displayText(for: SongConverter.parse(rawText: lyric.text), with: .Editing, showTitle: false)
-        (textView as? EditableTextView)?.textDidChange()
-    }
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        return true
-//        func pre() -> String {
-//
-//            let xRange = NSRange(location: range.location - 1, length: 1)
-//            return (textView.text as NSString).substring(with: xRange)
-//        }
-//
-//        func next() -> String {
-//            let xRange = NSRange(location: range.location + 1, length: 1)
-//            return (textView.text as NSString).substring(with: xRange)
-//        }
-//
-//        if range.length > 0 {
-//            let new = NSRange(location: range.location, length: 1)
-//            let deleted = (textView.text as NSString).substring(with: new)
-//            if deleted == "[" {
-//                textView.selectedRange.location += 1
-//                textView.deleteBackward()
-//            }
-//            return true
-//        }
-//
-//        if text == " " {
-//            if pre() == "[" || next() == "]" {
-//                return false
-//            } else {
-//                textView.insertText("[]")
-//                textView.selectedRange.location -= 1
-//            }
-//            return false
-//        }
-//
-//        var words = ["", " ", "\n"]
-//
-//        Chords.Key.allCases.map{ $0.rawValue }.forEach { key in
-//            Chords.Suffix.allCases.map{ $0.rawValue }.forEach { suff in
-//                let x = key + suff
-//                words.append(x)
-//            }
-//        }
-//
-//        return words.contains { str in
-//            str.contains(text)
-//        }
-    }
-}
 
 let instructionText = """
 {t: Song Title}

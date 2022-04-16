@@ -25,10 +25,17 @@ struct ImportableView<Content: View>: View {
                 fullScreenCover(for: $0)
             }
             .fullScreenCover(item: $viewModel.importingImage) {
-                OcrImageView(image: $0) { text in
+                OcrImageView(image: $0) { result in
                     viewModel.importingImage = nil
                     DispatchQueue.main.async {
-                        onDismiss(text)
+                        switch result {
+                        case .Success(let text):
+                            onDismiss(text)
+                        case .Redo:
+                            viewModel.redoImportMode()
+                        case .Cancel:
+                            break
+                        }
                     }
                 }
             }
@@ -65,7 +72,7 @@ struct ImportableView<Content: View>: View {
         Menu {
             ForEach(ImportableViewModel.Mode.allCases) { mode in
                 Button(mode.description) {
-                    viewModel.importMode = mode
+                    viewModel.setImportMode(mode: mode)
                 }
             }
         } label: {

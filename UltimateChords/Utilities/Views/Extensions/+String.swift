@@ -29,7 +29,23 @@ extension CharacterSet {
     static var englishAlphabets = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ")
     static var lineEnding = CharacterSet(charactersIn: ".?!;:။…\t")
 }
+extension String {
+    func nsRange(from range: Range<String.Index>) -> NSRange {
+        NSRange(range, in: self)
+    }
+}
 
+extension String {
+    func range(from nsRange: NSRange) -> Range<String.Index>? {
+        guard
+            let from16 = utf16.index(utf16.startIndex, offsetBy: nsRange.location, limitedBy: utf16.endIndex),
+            let to16 = utf16.index(utf16.startIndex, offsetBy: nsRange.location + nsRange.length, limitedBy: utf16.endIndex),
+            let from = from16.samePosition(in: self),
+            let to = to16.samePosition(in: self)
+            else { return nil }
+        return from ..< to
+    }
+}
 extension String {
     
     var urlDecoded: String {
@@ -51,7 +67,7 @@ extension String {
         s + self
     }
     var newLine: String {
-        self.appending("\n")
+        self.appending("\r")
     }
     
     var nonLineBreak: String {
@@ -94,6 +110,17 @@ extension String {
         let comps = components(separatedBy: CharacterSet.whitespacesAndNewlines)
         return comps.filter { !$0.isWhitespace }
     }
+    func wordTags() -> [(string: String, range: NSRange)] {
+        var ranges = [(String, NSRange)]()
+        self.enumerateSubstrings(in: self.startIndex..<self.endIndex, options: [.byWords]) {
+            (word, textRange, _, _) in
+            if let word = word {
+                let wordRange = self.nsRange(from: textRange)
+                ranges.append((String(word), wordRange))
+            }
+        }
+        return ranges
+    }
     
     func trimmed() -> String {
         trimmingCharacters(in: .whitespacesAndNewlines)
@@ -101,11 +128,5 @@ extension String {
     
     func range() -> NSRange {
         NSRange.init(self.startIndex..<self.endIndex, in: self)
-    }
-}
-
-extension NSString {
-    func range() -> NSRange {
-        NSRange(location: 0, length: length)
     }
 }

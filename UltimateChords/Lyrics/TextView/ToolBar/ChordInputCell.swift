@@ -21,12 +21,6 @@ class ChordInputCell: UICollectionViewCell {
         }
     }
     
-    override var isHighlighted: Bool {
-        didSet {
-            label.isHidden = isHighlighted
-        }
-    }
-    
     private var textColor = UIColor.label {
         didSet {
             isSelected = isSelected

@@ -11,7 +11,7 @@ import AVFoundation
 import Photos
 import UIKit
 
-public class CameraService {
+public class CameraService: NSObject {
     
     typealias PhotoCaptureSessionID = String
     
@@ -30,9 +30,10 @@ public class CameraService {
     var isSessionRunning = false
     var isConfigured = false
     var setupResult: SessionSetupResult = .success
-   
+    
     // Communicate with the session and other session objects on this queue.
     private let sessionQueue = DispatchQueue(label: "session queue")
+    private let videoOutputQueue = DispatchQueue(label: "VideoOutput")
     
     @objc dynamic var videoDeviceInput: AVCaptureDeviceInput!
     
@@ -51,16 +52,6 @@ public class CameraService {
     
     
     public func configure() {
-        /*
-         Setup the capture session.
-         In general, it's not safe to mutate an AVCaptureSession or any of its
-         inputs, outputs, or connections from multiple threads at the same time.
-         
-         Don't perform these tasks on the main queue because
-         AVCaptureSession.startRunning() is a blocking call, which can
-         take a long time. Dispatch session setup to the sessionQueue, so
-         that the main queue isn't blocked, which keeps the UI responsive.
-         */
         sessionQueue.async {
             self.configureSession()
         }
@@ -147,12 +138,16 @@ public class CameraService {
                 session.commitConfiguration()
                 return
             }
+            
+            
         } catch {
             print("Couldn't create video device input: \(error)")
             setupResult = .configurationFailed
             session.commitConfiguration()
             return
         }
+        
+        
         
         // Add the photo output.
         if session.canAddOutput(photoOutput) {
@@ -167,6 +162,7 @@ public class CameraService {
             session.commitConfiguration()
             return
         }
+//        setupOutput(captureSession: session)
         
         session.commitConfiguration()
         
@@ -253,7 +249,20 @@ public class CameraService {
             }
         }
     }
-    
+    private func setupOutput(captureSession: AVCaptureSession) {
+        let videoOutput = AVCaptureVideoDataOutput()
+        videoOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32BGRA)]
+        
+        videoOutput.setSampleBufferDelegate(self, queue: videoOutputQueue)
+        
+        if captureSession.canAddOutput(videoOutput) == true {
+            captureSession.addOutput(videoOutput)
+        } else {
+            fatalError("could not add video output")
+        }
+        
+        videoOutput.connections.first?.videoOrientation = .portrait
+    }
     public func focus(at focusPoint: CGPoint){
         //        let focusPoint = self.videoPreviewLayer.captureDevicePointConverted(fromLayerPoint: point)
         
@@ -410,5 +419,12 @@ public class CameraService {
                 self.photoOutput.capturePhoto(with: photoSettings, delegate: photoCaptureProcessor)
             }
         }
+    }
+}
+
+
+extension CameraService: AVCaptureVideoDataOutputSampleBufferDelegate {
+    public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        print(sampleBuffer)
     }
 }

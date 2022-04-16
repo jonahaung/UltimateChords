@@ -21,11 +21,9 @@
 		4726962727FC7205009FE548 /* TapToShowComfirmationDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726962627FC7205009FE548 /* TapToShowComfirmationDialog.swift */; };
 		4726962927FC7B7A009FE548 /* LyricViewerControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726962827FC7B7A009FE548 /* LyricViewerControls.swift */; };
 		4726962D27FE4B38009FE548 /* SongKeyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726962C27FE4B38009FE548 /* SongKeyView.swift */; };
-		4726963127FE7929009FE548 /* CameraKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726963027FE7929009FE548 /* CameraKeyboard.swift */; };
 		4726963327FE98DF009FE548 /* OCRImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726963227FE98DF009FE548 /* OCRImageViewModel.swift */; };
 		4726963C27FE9C9D009FE548 /* SwiftyTesseract in Frameworks */ = {isa = PBXBuildFile; productRef = 4726963B27FE9C9D009FE548 /* SwiftyTesseract */; };
 		4726964127FE9EE7009FE548 /* tessdata in Resources */ = {isa = PBXBuildFile; fileRef = 4726964027FE9EE7009FE548 /* tessdata */; };
-		4726964E27FEE899009FE548 /* ObjectTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726964D27FEE899009FE548 /* ObjectTracker.swift */; };
 		4726965027FF0AFA009FE548 /* DocumentScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726964F27FF0AFA009FE548 /* DocumentScannerView.swift */; };
 		4726965627FF11ED009FE548 /* UIImage+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726965127FF11EC009FE548 /* UIImage+Utils.swift */; };
 		4726965827FF11ED009FE548 /* CGAffineTransform+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726965327FF11EC009FE548 /* CGAffineTransform+Utils.swift */; };
@@ -39,7 +37,7 @@
 		472BE8C427E980AF00A41D54 /* MyanmarAngoun.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 472BE8C327E980AF00A41D54 /* MyanmarAngoun.ttf */; };
 		472BE8C627E9817600A41D54 /* MyanmarSquare.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 472BE8C527E9817600A41D54 /* MyanmarSquare.ttf */; };
 		472BE8CA27E9EF5200A41D54 /* MasterpieceSpringRev.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 472BE8C927E9EF5200A41D54 /* MasterpieceSpringRev.ttf */; };
-		472BE8DC27EAB3A500A41D54 /* ChordTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472BE8DB27EAB3A500A41D54 /* ChordTag.swift */; };
+		472BE8DC27EAB3A500A41D54 /* XTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472BE8DB27EAB3A500A41D54 /* XTag.swift */; };
 		4734A9CA28090C3300EA706D /* ChordInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4734A9C928090C3300EA706D /* ChordInputCell.swift */; };
 		4734A9CC28090DC400EA706D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4734A9CB28090DC400EA706D /* Extensions.swift */; };
 		4734A9D1280920F800EA706D /* guitar.json in Resources */ = {isa = PBXBuildFile; fileRef = 4734A9CF280920F800EA706D /* guitar.json */; };
@@ -108,6 +106,7 @@
 		47A3E5F927E4F43200412B89 /* NotoSansMono_ExtraCondensed-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 47A3E5F627E4F43100412B89 /* NotoSansMono_ExtraCondensed-Light.ttf */; };
 		47A3E5FA27E4F43200412B89 /* NotoSansMono_ExtraCondensed-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 47A3E5F727E4F43200412B89 /* NotoSansMono_ExtraCondensed-Thin.ttf */; };
 		47A3E5FC27E4F8D400412B89 /* +ParagraphStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47A3E5FB27E4F8D400412B89 /* +ParagraphStyle.swift */; };
+		47A668B92809EFF9007C46AC /* OCRCameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47A668B82809EFF9007C46AC /* OCRCameraService.swift */; };
 		47BB283327F0CFDC00852C1D /* EditableTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BB283227F0CFDC00852C1D /* EditableTextView.swift */; };
 		47EB308028017CF700913B6A /* NavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47EB307F28017CF700913B6A /* NavBar.swift */; };
 		47EB3084280191C100913B6A /* Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47EB3083280191C100913B6A /* Size.swift */; };
@@ -139,10 +138,8 @@
 		4726962627FC7205009FE548 /* TapToShowComfirmationDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TapToShowComfirmationDialog.swift; sourceTree = "<group>"; };
 		4726962827FC7B7A009FE548 /* LyricViewerControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricViewerControls.swift; sourceTree = "<group>"; };
 		4726962C27FE4B38009FE548 /* SongKeyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongKeyView.swift; sourceTree = "<group>"; };
-		4726963027FE7929009FE548 /* CameraKeyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraKeyboard.swift; sourceTree = "<group>"; };
 		4726963227FE98DF009FE548 /* OCRImageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRImageViewModel.swift; sourceTree = "<group>"; };
 		4726964027FE9EE7009FE548 /* tessdata */ = {isa = PBXFileReference; lastKnownFileType = folder; path = tessdata; sourceTree = "<group>"; };
-		4726964D27FEE899009FE548 /* ObjectTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectTracker.swift; sourceTree = "<group>"; };
 		4726964F27FF0AFA009FE548 /* DocumentScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentScannerView.swift; sourceTree = "<group>"; };
 		4726965127FF11EC009FE548 /* UIImage+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Utils.swift"; sourceTree = "<group>"; };
 		4726965327FF11EC009FE548 /* CGAffineTransform+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGAffineTransform+Utils.swift"; sourceTree = "<group>"; };
@@ -156,7 +153,7 @@
 		472BE8C327E980AF00A41D54 /* MyanmarAngoun.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MyanmarAngoun.ttf; sourceTree = "<group>"; };
 		472BE8C527E9817600A41D54 /* MyanmarSquare.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MyanmarSquare.ttf; sourceTree = "<group>"; };
 		472BE8C927E9EF5200A41D54 /* MasterpieceSpringRev.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MasterpieceSpringRev.ttf; sourceTree = "<group>"; };
-		472BE8DB27EAB3A500A41D54 /* ChordTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordTag.swift; sourceTree = "<group>"; };
+		472BE8DB27EAB3A500A41D54 /* XTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XTag.swift; sourceTree = "<group>"; };
 		4734A9C928090C3300EA706D /* ChordInputCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordInputCell.swift; sourceTree = "<group>"; };
 		4734A9CB28090DC400EA706D /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		4734A9CF280920F800EA706D /* guitar.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = guitar.json; sourceTree = "<group>"; };
@@ -226,6 +223,7 @@
 		47A3E5F627E4F43100412B89 /* NotoSansMono_ExtraCondensed-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansMono_ExtraCondensed-Light.ttf"; sourceTree = "<group>"; };
 		47A3E5F727E4F43200412B89 /* NotoSansMono_ExtraCondensed-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansMono_ExtraCondensed-Thin.ttf"; sourceTree = "<group>"; };
 		47A3E5FB27E4F8D400412B89 /* +ParagraphStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+ParagraphStyle.swift"; sourceTree = "<group>"; };
+		47A668B82809EFF9007C46AC /* OCRCameraService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRCameraService.swift; sourceTree = "<group>"; };
 		47BB283227F0CFDC00852C1D /* EditableTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableTextView.swift; sourceTree = "<group>"; };
 		47EB307F28017CF700913B6A /* NavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavBar.swift; sourceTree = "<group>"; };
 		47EB3083280191C100913B6A /* Size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Size.swift; sourceTree = "<group>"; };
@@ -302,18 +300,8 @@
 			children = (
 				4726964027FE9EE7009FE548 /* tessdata */,
 				4726966127FF204F009FE548 /* OcrImage */,
-				4726964227FEAD01009FE548 /* CameraKeyboard */,
 			);
 			path = OCR;
-			sourceTree = "<group>";
-		};
-		4726964227FEAD01009FE548 /* CameraKeyboard */ = {
-			isa = PBXGroup;
-			children = (
-				4726963027FE7929009FE548 /* CameraKeyboard.swift */,
-				4726964D27FEE899009FE548 /* ObjectTracker.swift */,
-			);
-			path = CameraKeyboard;
 			sourceTree = "<group>";
 		};
 		4726966127FF204F009FE548 /* OcrImage */ = {
@@ -342,10 +330,10 @@
 		4734A9C82808E77200EA706D /* ToolBar */ = {
 			isa = PBXGroup;
 			children = (
-				476D4A2A28088573007A45DB /* ChordsInputView.swift */,
-				4734A9CB28090DC400EA706D /* Extensions.swift */,
-				4734A9C928090C3300EA706D /* ChordInputCell.swift */,
 				476D4A282808767C007A45DB /* ToolbarInputAccessory.swift */,
+				476D4A2A28088573007A45DB /* ChordsInputView.swift */,
+				4734A9C928090C3300EA706D /* ChordInputCell.swift */,
+				4734A9CB28090DC400EA706D /* Extensions.swift */,
 			);
 			path = ToolBar;
 			sourceTree = "<group>";
@@ -422,6 +410,7 @@
 				476B430D27FC0F9900C30BF3 /* CameraView.swift */,
 				476B430E27FC0F9900C30BF3 /* ImageResizer.swift */,
 				476B430F27FC0F9900C30BF3 /* CameraService.swift */,
+				47A668B82809EFF9007C46AC /* OCRCameraService.swift */,
 			);
 			path = Camera;
 			sourceTree = "<group>";
@@ -628,7 +617,7 @@
 				4708C46E27ED37B400481172 /* Song.swift */,
 				476B42F827FBAA2A00C30BF3 /* Song+Models.swift */,
 				476B428D27F9E90F00C30BF3 /* Lyric.swift */,
-				472BE8DB27EAB3A500A41D54 /* ChordTag.swift */,
+				472BE8DB27EAB3A500A41D54 /* XTag.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -770,7 +759,6 @@
 				476B431827FC0F9900C30BF3 /* ImageResizer.swift in Sources */,
 				472BE8BE27E96E7000A41D54 /* SearchContent.swift in Sources */,
 				4708C47C27ED37B400481172 /* Chord.swift in Sources */,
-				4726963127FE7929009FE548 /* CameraKeyboard.swift in Sources */,
 				476D4A292808767C007A45DB /* ToolbarInputAccessory.swift in Sources */,
 				47A3E5DB27E4DEC900412B89 /* LyricsViewerTextView.swift in Sources */,
 				4726965E27FF1558009FE548 /* Transformable.swift in Sources */,
@@ -786,7 +774,7 @@
 				476B431427FC0F9900C30BF3 /* PhotoCaptureProcessor.swift in Sources */,
 				47EB308028017CF700913B6A /* NavBar.swift in Sources */,
 				476B431727FC0F9900C30BF3 /* CameraView.swift in Sources */,
-				472BE8DC27EAB3A500A41D54 /* ChordTag.swift in Sources */,
+				472BE8DC27EAB3A500A41D54 /* XTag.swift in Sources */,
 				4726965927FF11ED009FE548 /* CGPoint+Utils.swift in Sources */,
 				4782A49127E8E5C600FA0FC9 /* HomeCell.swift in Sources */,
 				4761E7FE27EF7D7900BBA301 /* Html.swift in Sources */,
@@ -818,6 +806,7 @@
 				4726965827FF11ED009FE548 /* CGAffineTransform+Utils.swift in Sources */,
 				476D4A2B28088573007A45DB /* ChordsInputView.swift in Sources */,
 				477DA77E27E0E88800C143C4 /* TapToPresentStyle.swift in Sources */,
+				47A668B92809EFF9007C46AC /* OCRCameraService.swift in Sources */,
 				477DA77F27E0E88800C143C4 /* TapToPushStyle.swift in Sources */,
 				47A1E3762806C148002F75A0 /* LyricCreaterForm.swift in Sources */,
 				476B430127FBDA4300C30BF3 /* ActivityItem.swift in Sources */,
@@ -839,7 +828,6 @@
 				4726965027FF0AFA009FE548 /* DocumentScannerView.swift in Sources */,
 				4782A49527E8E6ED00FA0FC9 /* HomeViewModel.swift in Sources */,
 				4734A9CA28090C3300EA706D /* ChordInputCell.swift in Sources */,
-				4726964E27FEE899009FE548 /* ObjectTracker.swift in Sources */,
 				4751BCE12805B5990000ACF7 /* QuadrilateralImageView.swift in Sources */,
 				477DA76527E0E7C800C143C4 /* UltimateChordsApp.swift in Sources */,
 				47A3E5FC27E4F8D400412B89 /* +ParagraphStyle.swift in Sources */,

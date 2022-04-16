@@ -11,7 +11,7 @@ import Photos
 class PhotoCaptureProcessor: NSObject {
     
     lazy var context = CIContext()
-
+    
     private(set) var requestedPhotoSettings: AVCapturePhotoSettings
     
     private let willCapturePhotoAnimation: () -> Void
@@ -20,13 +20,13 @@ class PhotoCaptureProcessor: NSObject {
     
     private let photoProcessingHandler: (Bool) -> Void
     
-//    The actual captured photo's data
+    //    The actual captured photo's data
     var photoData: Data?
     
-//    The maximum time lapse before telling UI to show a spinner
+    //    The maximum time lapse before telling UI to show a spinner
     private var maxPhotoProcessingTime: CMTime?
-        
-//    Init takes multiple closures to be called in each step of the photco capture process
+    
+    //    Init takes multiple closures to be called in each step of the photco capture process
     init(with requestedPhotoSettings: AVCapturePhotoSettings, willCapturePhotoAnimation: @escaping () -> Void, completionHandler: @escaping (PhotoCaptureProcessor) -> Void, photoProcessingHandler: @escaping (Bool) -> Void) {
         
         self.requestedPhotoSettings = requestedPhotoSettings
@@ -83,31 +83,31 @@ extension PhotoCaptureProcessor: AVCapturePhotoCaptureDelegate {
         DispatchQueue.main.async {
             self.completionHandler(self)
         }
-//        PHPhotoLibrary.requestAuthorization { status in
-//            if status == .authorized {
-//                PHPhotoLibrary.shared().performChanges({
-//                    let options = PHAssetResourceCreationOptions()
-//                    let creationRequest = PHAssetCreationRequest.forAsset()
-//                    options.uniformTypeIdentifier = self.requestedPhotoSettings.processedFileType.map { $0.rawValue }
-//                    creationRequest.addResource(with: .photo, data: photoData, options: options)
-//
-//
-//                }, completionHandler: { _, error in
-//                    if let error = error {
-//                        print("Error occurred while saving photo to photo library: \(error)")
-//                    }
-//
-//                    DispatchQueue.main.async {
-//                        self.completionHandler(self)
-//                    }
-//                }
-//                )
-//            } else {
-//                DispatchQueue.main.async {
-//                    self.completionHandler(self)
-//                }
-//            }
-//        }
+        //        PHPhotoLibrary.requestAuthorization { status in
+        //            if status == .authorized {
+        //                PHPhotoLibrary.shared().performChanges({
+        //                    let options = PHAssetResourceCreationOptions()
+        //                    let creationRequest = PHAssetCreationRequest.forAsset()
+        //                    options.uniformTypeIdentifier = self.requestedPhotoSettings.processedFileType.map { $0.rawValue }
+        //                    creationRequest.addResource(with: .photo, data: photoData, options: options)
+        //
+        //
+        //                }, completionHandler: { _, error in
+        //                    if let error = error {
+        //                        print("Error occurred while saving photo to photo library: \(error)")
+        //                    }
+        //
+        //                    DispatchQueue.main.async {
+        //                        self.completionHandler(self)
+        //                    }
+        //                }
+        //                )
+        //            } else {
+        //                DispatchQueue.main.async {
+        //                    self.completionHandler(self)
+        //                }
+        //            }
+        //        }
     }
     
     /// - Tag: DidFinishCapture

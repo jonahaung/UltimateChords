@@ -9,8 +9,9 @@ import Foundation
 
 struct SongParser {
     
-    private static func isChordLine(line: String) -> Bool {
-        RegularExpression.chordsRegexForPlainText.matches(in: line, range: line.range()).count > 0
+    private static func isChordLine(for line: String) -> Bool {
+        if line.words().count == 1 { return true }
+        return RegularExpression.chordsRegexForPlainText.matches(in: line, range: line.range()).isEmpty == false
     }
     
     private static func nextLine(from index: Int, lines: [String]) -> String? {
@@ -18,24 +19,23 @@ struct SongParser {
         return lines[index+1]
     }
     
-    static func getCLTags(from text: String) -> [ChordTag] {
-        var results = [ChordTag]()
-        RegularExpression.chordsRegexForPlainText.matches(in: text, range: text.range()).forEach { match in
-            let subRange = match.range
-            let subStr = (text as NSString).substring(with: subRange)
-            let chordTag = ChordTag(chord: String(subStr), range: subRange)
-            results.append(chordTag)
+    private static func getWordsRanges(from string: String) -> [NSRange] {
+        var ranges = [NSRange]()
+        string.enumerateSubstrings(in: string.startIndex..<string.endIndex, options: [.byWords, .substringNotRequired]) {
+            (_, textRange, _, _) in
+            let wordRange = string.nsRange(from: textRange)
+            ranges.append(wordRange)
         }
-        return results
+        return ranges
     }
     
     private static func concentrate(chordLine: inout String, lyricLine: inout String) -> String {
         
-        func firstMatch(of string: String) -> ChordTag? {
+        func firstMatch(of string: String) -> XTag? {
             if let match = RegularExpression.chordsRegexForPlainText.firstMatch(in: string, range: string.range()) {
                 let subRange = match.range
                 let subStr = (string as NSString).substring(with: subRange)
-                return ChordTag(chord: String(subStr), range: subRange)
+                return XTag(string: String(subStr), range: subRange)
             }
             return nil
         }
@@ -51,9 +51,16 @@ struct SongParser {
         let mutableLyricLine = NSMutableString(string: lyricLine)
         
         while let tag = firstMatch(of: String(mutableChordLine)) {
-            let chord = "[\(tag.chord.trimmed())]"
-            mutableChordLine.replaceCharacters(in: tag.range, with: makeEmptyString(for: tag.range.length + 2))
-            let location = tag.range.location - (tag.range.location == 0 ? 0 : 1)
+            let chord = tag.string.bracked
+            
+            mutableChordLine.replaceCharacters(in: tag.range, with: makeEmptyString(for: chord.utf16.count))
+            var location = tag.range.location
+            let wordRanges = getWordsRanges(from: String(mutableLyricLine))
+            wordRanges.forEach { range in
+                if range.contains(location) {
+                    location = range.location
+                }
+            }
             mutableLyricLine.replaceCharacters(in: .init(location: location, length: 0), with: chord)
         }
         return String(mutableLyricLine)
@@ -61,8 +68,9 @@ struct SongParser {
     
     private static func makeEmptyString(for i: Int) -> String {
         var str = String()
-        (0...i).forEach { _ in
+        (0..<i).forEach { _ in
             str += "-"
+
         }
         return str
     }
@@ -72,76 +80,32 @@ struct SongParser {
         let textLines = text.components(separatedBy: "\n")
         
         var newLines = [String]()
+        
         var canSkip = false
-        for (i, textLine) in textLines.enumerated() {
-            guard !canSkip else {
-                canSkip = false
+        
+        for (i, var line) in textLines.enumerated() {
+            guard !canSkip else { canSkip = false; continue }
+            
+            guard isChordLine(for: line) else {
+                newLines.append(line)
                 continue
             }
             
-            if isChordLine(line: textLine) {
-                var chordLine = textLine
-                
-                if let nextLine = nextLine(from: i, lines: textLines)  {
-                    
-                    if isChordLine(line: nextLine) {
-                        newLines.append(textLine)
-                    } else {
-                        var lyricLine = nextLine
-                        
-                        let concenerated = concentrate(chordLine: &chordLine, lyricLine: &lyricLine)
-                        newLines.append(concenerated)
-                        canSkip = true
-                    }
-                    
-                } else {
-                    newLines.append(textLine)
-                }
-            } else {
-                if newLines.last != textLine {
-                    newLines.append(textLine)
-                }
-                
+            guard var nextLine = nextLine(from: i, lines: textLines) else {
+                newLines.append(line)
+                continue
             }
+            
+            guard isChordLine(for: nextLine) == false else {
+                newLines.append(line)
+                continue
+            }
+            let concenerated = concentrate(chordLine: &line, lyricLine: &nextLine)
+            newLines.append(concenerated)
+            canSkip = true
         }
         return newLines.joined(separator: "\n")
     }
 }
-struct Resegment {
-    
-    private static let RESEGMENT_REGULAR_EX = "(?:(?<!္)([က-ဪဿ၊-၏]|[၀-၉]+|[^က-၏]+)(?![ှျ]?[့္်]))"
-    
-    static func segment(_ text : String) -> [String] {
-        
-        var outputs  = text.replacingOccurrences(of: RESEGMENT_REGULAR_EX, with: "𝕊$1", options: [.regularExpression, .caseInsensitive])
-    
-        
-        var ouputArray = outputs.components(separatedBy: "𝕊")
-        
-        if (ouputArray.count > 0) {
-            ouputArray.remove(at: 0)
-        }
-        
-        return ouputArray
-    }
-}
-extension String {
-    func nsRange(from range: Range<String.Index>) -> NSRange {
-        let from = range.lowerBound.samePosition(in: utf16)!
-        let to = range.upperBound.samePosition(in: utf16)!
-        return NSRange(location: utf16.distance(from: utf16.startIndex, to: from),
-                       length: utf16.distance(from: from, to: to))
-    }
-}
 
-extension String {
-    func range(from nsRange: NSRange) -> Range<String.Index>? {
-        guard
-            let from16 = utf16.index(utf16.startIndex, offsetBy: nsRange.location, limitedBy: utf16.endIndex),
-            let to16 = utf16.index(utf16.startIndex, offsetBy: nsRange.location + nsRange.length, limitedBy: utf16.endIndex),
-            let from = from16.samePosition(in: self),
-            let to = to16.samePosition(in: self)
-            else { return nil }
-        return from ..< to
-    }
-}
+

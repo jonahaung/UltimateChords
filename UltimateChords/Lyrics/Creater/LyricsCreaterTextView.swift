@@ -9,25 +9,16 @@ import SwiftUI
 
 struct LyricsCreaterTextView: UIViewRepresentable {
     
-    @EnvironmentObject var viewModel: LyricsCreaterViewModel
+    let viewModel: LyricsCreaterViewModel
     
     func makeUIView(context: Context) -> EditableTextView {
         let uiView = EditableTextView()
-        
-        uiView.delegate = context.coordinator
-        uiView.setupToolbar()
-        
+        uiView.configureToolbar()
+        viewModel.textView = uiView
         return uiView
     }
     
     func updateUIView(_ uiView: EditableTextView, context: Context) {
-        if uiView.text != context.coordinator.lyric.text {
-            uiView.attributedText = NSAttributedString(context.coordinator.lyric.text)
-            uiView.textDidChange()
-        }
-    }
-    
-    func makeCoordinator() -> LyricsCreaterViewModel {
-        return viewModel
+        
     }
 }

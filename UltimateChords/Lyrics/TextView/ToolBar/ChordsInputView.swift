@@ -33,7 +33,7 @@ class ChordsInputView: UIView {
 extension ChordsInputView {
     
     private func configureHierarchy() {
-        collectionView = UICollectionView(frame: self.bounds, collectionViewLayout: createLayout())
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.backgroundColor = .clear
         collectionView.showsHorizontalScrollIndicator = false
@@ -65,7 +65,6 @@ extension ChordsInputView {
         return layout
     }
     
-    
     private func configureDataSource() {
         let cellRegistration = UICollectionView.CellRegistration<ChordInputCell, String> { [self] (cell, indexPath, identifier) in
             guard let section = Section(rawValue: indexPath.section) else { return }
@@ -91,45 +90,6 @@ extension ChordsInputView {
         }
         dataSource.apply(snapshot, animatingDifferences: true)
     }
-    
-    
-    private func selectedKey() -> String? {
-        if let indexPath = collectionView.indexPathsForSelectedItems?.filter({ $0.section == Section.key.rawValue }).first {
-            return keys[indexPath.item]
-        }
-        return nil
-    }
-    
-    private func selectedSuffix() -> String? {
-        if let indexPath = collectionView.indexPathsForSelectedItems?.filter({ $0.section == Section.suffix.rawValue }).first {
-            return suffixs[indexPath.item]
-        }
-        return nil
-    }
-    
-    private func updateTextView() {
-        guard let textView = textView else { return }
-        if let key = selectedKey() {
-            let suffix = selectedSuffix()?.localisedSuffix ?? String()
-            let text = (key + suffix).bracked
-            textView.setMarkedText(text, selectedRange: textView.selectedRange)
-        } else {
-            textView.removeMarkedText()
-        }
-    }
-    
-//    private func reloadControls() {
-//        var snapshop = dataSource.snapshot()
-//        snapshop.reloadSections([.control])
-//        dataSource.apply(snapshop, animatingDifferences: true)
-//    }
-    
-    private func deselectAll() {
-        collectionView.indexPathsForSelectedItems?.forEach {
-            collectionView.deselectItem(at: $0, animated: false)
-        }
-        
-    }
 }
 
 extension ChordsInputView: UICollectionViewDelegate {
@@ -154,7 +114,7 @@ extension ChordsInputView: UICollectionViewDelegate {
                 textView?.undo()
             }
             if textView?.markedTextRange == nil {
-                deselectAll()
+                collectionView.deselectAll()
             } else {
                 collectionView.deselectItem(at: indexPath, animated: true)
             }
@@ -173,10 +133,6 @@ extension ChordsInputView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         
         guard let section = Section(rawValue: indexPath.section) else { return false }
-        if collectionView.indexPathsForSelectedItems?.contains(indexPath) == true {
-            collectionView.deselectItem(at: indexPath, animated: true)
-            return false
-        }
         
         if section == .suffix {
             return selectedKey() != nil
@@ -186,11 +142,34 @@ extension ChordsInputView: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         let section = Section(rawValue: indexPath.section)
-        
         if section == .key {
-            deselectAll()
+            collectionView.deselectAll()
         }
         updateTextView()
+    }
+    
+    private func selectedKey() -> String? {
+        if let indexPath = collectionView.indexPathsForSelectedItems?.filter({ $0.section == Section.key.rawValue }).first {
+            return keys[indexPath.item]
+        }
+        return nil
+    }
+    
+    private func selectedSuffix() -> String? {
+        if let indexPath = collectionView.indexPathsForSelectedItems?.filter({ $0.section == Section.suffix.rawValue }).first {
+            return suffixs[indexPath.item]
+        }
+        return nil
+    }
+    
+    private func updateTextView() {
+        if let key = selectedKey() {
+            let suffix = selectedSuffix()?.localisedSuffix ?? String()
+            let text = (key + suffix).bracked
+            textView?.setMarkedText(text)
+        } else {
+            textView?.removeMarkedText()
+        }
     }
 }
 // Enums

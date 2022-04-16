@@ -49,7 +49,7 @@ extension CGPoint {
         var smallestDistance = distanceTo(point: quad.topLeft)
         var closestCorner = CornerPosition.topLeft
         
-
+        
         if distanceTo(point: quad.topRight) < smallestDistance {
             
             if except != .topRight {

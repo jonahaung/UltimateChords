@@ -13,17 +13,12 @@ final class CameraViewModel: ObservableObject {
     private let service = CameraService()
     
     @Published var photo: Photo!
-    
     @Published var showAlertError = false
-    
     @Published var isFlashOn = false
-    
     @Published var willCapturePhoto = false
     
     var alertError: AlertError!
-    
     var session: AVCaptureSession
-    
     private var subscriptions = Set<AnyCancellable>()
     
     init() {
