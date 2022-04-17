@@ -26,8 +26,6 @@ extension String {
 }
 
 extension UITextView {
-
-    
     func insertSpace() {
         if markedTextRange != nil {
             unmarkText()
@@ -42,6 +40,7 @@ extension UITextView {
     func removeMarkedText() {
         setMarkedText(nil)
     }
+    
     func undo() {
         if undoManager?.canRedo == true {
             undoManager?.undo()

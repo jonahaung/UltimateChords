@@ -13,10 +13,8 @@ struct LyricCreaterForm: View {
     var body: some View {
         Form {
             Section {
-                
                 TextField("Title", text: $viewModel.title)
                 TextField("Artist", text: $viewModel.artist)
-                
             }
         }
     }

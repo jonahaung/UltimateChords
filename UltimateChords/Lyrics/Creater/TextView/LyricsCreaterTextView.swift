@@ -18,7 +18,5 @@ struct LyricsCreaterTextView: UIViewRepresentable {
         return uiView
     }
     
-    func updateUIView(_ uiView: EditableTextView, context: Context) {
-        
-    }
+    func updateUIView(_ uiView: EditableTextView, context: Context) {}
 }

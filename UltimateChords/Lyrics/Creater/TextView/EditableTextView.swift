@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import NaturalLanguage
 
 class EditableTextView: TextView {
     
@@ -25,26 +24,14 @@ class EditableTextView: TextView {
 }
 
 extension EditableTextView: UITextViewDelegate {
-    
     func textViewDidChange(_ textView: UITextView) {
         updateFont()
     }
-    
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        if text == " " && markedTextRange != nil {
-            unmarkText()
-            return false
-        }
-        
-        return true
-    }
 }
+
 extension EditableTextView {
     
     func updateFont() {
-        guard hasText else { return }
-        
-        print("didChange")
         var tags = [XTag]()
         text.enumerateSubstrings(in: text.startIndex..<text.endIndex, options: .byLines) {
             (substring, substringRange, _, _) in
@@ -62,19 +49,15 @@ extension EditableTextView {
                 tags.append(tag)
             }
         }
+        
         tags.forEach {
             textStorage.addAttributes($0.attributes, range: $0.range)
         }
     }
-    
 }
 
 extension EditableTextView {
-    
-    override func setMarkedText(_ markedText: String?, selectedRange: NSRange) {
-        super.setMarkedText(markedText, selectedRange: selectedRange)
-    }
-    
+
     func insert(text: String) {
         insertText(text.newLine)
         scrollToBottom()

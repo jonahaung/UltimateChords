@@ -12,7 +12,7 @@ import libtesseract
 
 struct QuadrilateralImageView: UIViewRepresentable {
     
-    @EnvironmentObject private var recognizer: OCRImageViewModel
+    let recognizer: OCRImageViewModel
     
     func makeUIView(context: Context) -> QuadImageView {
         let view = QuadImageView(image: recognizer.image)

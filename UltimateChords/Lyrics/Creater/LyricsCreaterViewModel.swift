@@ -17,6 +17,7 @@ final class LyricsCreaterViewModel: ObservableObject {
         get { textView?.isEditable == true }
         set { textView?.isEditable = newValue; isPreviewMode = !newValue }
     }
+    
     var isPreviewMode: Bool = false {
         didSet {
             if oldValue == false {
@@ -32,12 +33,9 @@ final class LyricsCreaterViewModel: ObservableObject {
             objectWillChange.send()
         }
     }
-    deinit {
-        print("LyricsCreaterViewModel")
-    }
     
     func save() {
-        _ = CLyric(title: lyric.title, artist: lyric.artist, text: lyric.text)
+        _ = CLyric(title: lyric.title, artist: lyric.artist, text: textView?.text ?? lyric.text)
     }
     
     func fillDemoData() {
@@ -48,8 +46,9 @@ final class LyricsCreaterViewModel: ObservableObject {
     }
 
     func task() {
-        insertText(withoutChords)
+        
     }
+    
     func insertText(_ string: String) {
         guard let textView = textView else {
             return
@@ -63,7 +62,10 @@ final class LyricsCreaterViewModel: ObservableObject {
             lyric.artist = artist
         }
         lyric.text = textView.text
-        
+    }
+    
+    deinit {
+        print("LyricsCreaterViewModel")
     }
 }
 

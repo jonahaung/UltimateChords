@@ -22,8 +22,7 @@ struct OcrImageView: View {
         PickerNavigationView {
             ZStack {
                 Color.black.edgesIgnoringSafeArea(.all)
-                QuadrilateralImageView()
-                    .environmentObject(recognizer)
+                QuadrilateralImageView(recognizer: recognizer)
                     .overlay(loadingView())
             }
             .overlay(bottomBar(), alignment: .bottom)
@@ -31,8 +30,10 @@ struct OcrImageView: View {
                 recognizer.task()
             }
             .onChange(of: recognizer.text) { newValue in
-                if let text = newValue {
-                    onDismiss(.Success(text: text))
+                DispatchQueue.main.async {
+                    if let text = newValue {
+                        onDismiss(.Success(text: text))
+                    }
                 }
             }
         }

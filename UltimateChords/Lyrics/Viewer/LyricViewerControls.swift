@@ -17,17 +17,7 @@ struct LyricViewerControls: View {
         Form{
             Section{
                 Button {
-                    guard var song = viewModel.song else { return }
-                    
-                    let key = song.key ?? "C"
-                    let chord = Chord.chord(for: key)
-                    
-                    let mSong = PlainSong(AttributedString.displayText(for: song, with: .Copyable).string)
-                    if let newSong = mSong.transposed(fromString: chord.key.rawValue, toString: "B") {
-                        song.rawText = song.rawText.prepending(newSong.text.newLine)
-                        viewModel.song = song
-                    }
-                    
+                    print("TO DO")
                 } label: {
                     Text("Transpose")
                 }
