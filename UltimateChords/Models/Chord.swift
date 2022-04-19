@@ -14,9 +14,9 @@ struct Chord: Identifiable, Equatable {
         return Int(define.prefix(1)) ?? 1
     }
     
-    static func chord(for chordString: String) -> Chord {
+    static func chord(for chordString: String) -> Chord? {
         
-        var key: Chords.Key = .c
+        var key: Chords.Key?
         var suffix: Chords.Suffix = .major
         
         if let match = RegularExpression.chordPattern3.firstMatch(in: chordString, options: [], range: chordString.range()) {
@@ -42,10 +42,30 @@ struct Chord: Identifiable, Equatable {
                 suffix = Chords.Suffix.major
             }
         }
-        
+        guard let key = key else {
+            return nil
+        }
+
         let name = key.rawValue + (suffix == .major ? String() : suffix == .minor ? "m" : suffix.rawValue)
         let chord = Chord(name: name, key: key, suffix: suffix, define: "")
         
         return chord
+    }
+    
+    static func allChords() -> [Chord] {
+        var chords = [Chord]()
+        let guitar = Instrument.guitar
+        
+       guitar.keys.forEach { key in
+           guitar.suffixes.forEach { suff in
+               if let chord = Chord.chord(for: key+suff) {
+                   if chords.contains(chord) == false {
+                       chords.append(chord)
+                   }
+               }
+               
+           }
+        }
+        return chords
     }
 }

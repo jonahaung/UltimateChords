@@ -17,7 +17,7 @@ struct LyricViewerControls: View {
         Form{
             Section{
                 Button {
-                    print("TO DO")
+                    viewModel.song?.transport(to: "E")
                 } label: {
                     Text("Transpose")
                 }

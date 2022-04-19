@@ -10,31 +10,35 @@ import SwiftUI
 struct ImportableView<Content: View>: View {
     
     private let content: () -> Content
-    private var onDismiss: ((String) -> Void)
     @StateObject private var viewModel = ImportableViewModel()
+    @EnvironmentObject private var creater: LyricsCreaterViewModel
+    @State private var pickedItem = PickedItem.None
     
-    init(onDismiss: @escaping (String) -> Void, @ViewBuilder content: @escaping () -> Content) {
+    init(@ViewBuilder content: @escaping () -> Content) {
         self.content = content
-        self.onDismiss = onDismiss
     }
     
     var body: some View {
         content()
+            .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: shareButton())
             .fullScreenCover(item: $viewModel.importMode) {
                 fullScreenCover(for: $0)
             }
             .fullScreenCover(item: $viewModel.importingImage) {
                 OcrImageView(image: $0) { result in
-                    viewModel.importingImage = nil
                     DispatchQueue.main.async {
-                        switch result {
-                        case .Success(let text):
-                            onDismiss(text)
-                        case .Redo:
-                            viewModel.redoImportMode()
-                        case .Cancel:
-                            break
+                        viewModel.importingImage = nil
+                        DispatchQueue.main.async {
+                            switch result {
+                            case .Success(let text):
+                                print(text)
+                                creater.insertText(SongParser.convert(text))
+                            case .Redo:
+                                viewModel.redoImportMode()
+                            case .Cancel:
+                                break
+                            }
                         }
                     }
                 }
@@ -46,23 +50,34 @@ struct ImportableView<Content: View>: View {
             switch mode {
             case .Camera:
                 CameraView { image in
-                    viewModel.importMode = nil
-                    viewModel.importingImage = image
+                    DispatchQueue.main.async {
+                        viewModel.importMode = nil
+                        viewModel.importingImage = image
+                    }
                 }
             case .Document_Scanner:
                 DocumentScannerView { images in
-                    viewModel.importMode = nil
-                    viewModel.importingImage = images?.last
+                    DispatchQueue.main.async {
+                        viewModel.importMode = nil
+                        viewModel.importingImage = images?.last
+                    }
                 }.edgesIgnoringSafeArea(.all)
             case .Photo_Library:
-                ImagePickerMultiple(maxLimit: 1) { selectedImage in
+                ImagePicker { selectedImage in
                     viewModel.importMode = nil
-                    viewModel.importingImage = selectedImage.first?.image
+                    viewModel.importingImage = selectedImage
                 }
             case .ChordPro_File:
-                DocumentPicker { text in
+                DocumentPicker { item in
                     viewModel.importMode = nil
-                    onDismiss(text)
+                    switch item {
+                    case .Text(let string):
+                        creater.insertText(string)
+                    case .Image(let uIImage):
+                        viewModel.importingImage = uIImage
+                    case .None:
+                        break
+                    }
                 }
             }
         }
@@ -72,7 +87,9 @@ struct ImportableView<Content: View>: View {
         Menu {
             ForEach(ImportableViewModel.Mode.allCases) { mode in
                 Button(mode.description) {
-                    viewModel.setImportMode(mode: mode)
+                    DispatchQueue.main.async {
+                        viewModel.setImportMode(mode: mode)
+                    }
                 }
             }
         } label: {

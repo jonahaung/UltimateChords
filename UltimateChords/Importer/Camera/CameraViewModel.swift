@@ -12,7 +12,7 @@ final class CameraViewModel: ObservableObject {
     
     private let service = CameraService()
     
-    @Published var photo: Photo!
+    @Published var photo: Photo?
     @Published var showAlertError = false
     @Published var isFlashOn = false
     @Published var willCapturePhoto = false
@@ -66,6 +66,10 @@ final class CameraViewModel: ObservableObject {
     
     func switchFlash() {
         service.flashMode = service.flashMode == .on ? .off : .on
+    }
+
+    deinit {
+        print("CameraViewModel")
     }
 }
 

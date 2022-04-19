@@ -103,28 +103,27 @@ extension ChordsInputView: UICollectionViewDelegate {
             let control = controls[indexPath.item]
             switch control {
             case .Back:
-                if textView?.markedTextRange != nil {
-                    textView?.removeMarkedText()
-                } else {
-                    textView?.deleteBackward()
-                }
+                textView?.deleteBackward()
             case .Space:
                 textView?.insertSpace()
             case .Undo:
-                textView?.undo()
+                if textView?.undoManager?.canUndo == true {
+                    textView?.undoManager?.undo()
+                }
+                
+            case .Redo:
+                if textView?.undoManager?.canRedo == true {
+                    textView?.undoManager?.redo()
+                }
             }
-            if textView?.markedTextRange == nil {
-                collectionView.deselectAll()
-            } else {
-                collectionView.deselectItem(at: indexPath, animated: true)
-            }
+            collectionView.deselectAll()
         case .key:
             collectionView.indexPathsForSelectedItems?.filter{ $0.section == section.rawValue && $0.item != indexPath.item }.forEach {
-                collectionView.deselectItem(at: $0, animated: false)
+                collectionView.deselectItem(at: $0, animated: true)
             }
         case .suffix:
             collectionView.indexPathsForSelectedItems?.filter{ $0.section == section.rawValue && $0.item != indexPath.item }.forEach {
-                collectionView.deselectItem(at: $0, animated: false)
+                collectionView.deselectItem(at: $0, animated: true)
             }
         }
         updateTextView()
@@ -235,7 +234,7 @@ extension ChordsInputView {
     }
     
     enum ControlKind: String, CaseIterable {
-        case Undo, Space, Back
+        case Undo, Redo, Space, Back
         
         var iconName: XIcon.Icon {
             switch self {
@@ -243,9 +242,11 @@ extension ChordsInputView {
                 return .delete_left_fill
             case .Undo:
                 return .gobackward
+            case .Redo:
+                return .goforward
             case .Space:
                 return .empty
-            
+                
             }
         }
     }

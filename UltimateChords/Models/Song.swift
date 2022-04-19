@@ -27,3 +27,29 @@ struct Song: Identifiable {
     }
 }
 
+
+extension Song {
+    
+    mutating func transport(to toStr: String) {
+        
+        guard
+            let fromChord = Chord.chord(for: self.key.str),
+            let toChord = Chord.chord(for: toStr),
+            let from = Key(fromChord.key.rawValue),
+            let to = Key(toChord.key.rawValue) else { return }
+        
+        sections.forEach { section in
+            section.lines.forEach { line in
+                if var chordline = line.chordLine {
+                    chordline.words().forEach { word in
+                        if let transport = Note(word)?.transpose(from: from, to: to) {
+                            chordline = chordline.replacingOccurrences(of: word, with: transport.name)
+                        }
+                    }
+                    line.chordLine = chordline
+                }
+            }
+        }
+        self.key = toStr
+    }
+}

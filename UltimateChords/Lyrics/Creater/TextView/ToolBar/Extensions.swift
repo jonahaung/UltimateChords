@@ -40,17 +40,6 @@ extension UITextView {
     func removeMarkedText() {
         setMarkedText(nil)
     }
-    
-    func undo() {
-        if undoManager?.canRedo == true {
-            undoManager?.undo()
-        }
-    }
-    func redo() {
-        if undoManager?.canRedo == true {
-            undoManager?.redo()
-        }
-    }
 }
 
 extension UICollectionView {

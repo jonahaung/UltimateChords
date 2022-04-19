@@ -9,12 +9,12 @@ import SwiftUI
 
 struct OcrImageView: View {
     
-    @StateObject private var recognizer: OCRImageViewModel
+    @StateObject private var viewModel: OCRImageViewModel
     
     private var onDismiss: ((ResultType) -> Void)
     
     init(image: UIImage, onDismiss: @escaping (ResultType) -> Void) {
-        _recognizer = .init(wrappedValue: .init(image: image))
+        _viewModel = .init(wrappedValue: .init(image: image))
         self.onDismiss = onDismiss
     }
     
@@ -22,40 +22,66 @@ struct OcrImageView: View {
         PickerNavigationView {
             ZStack {
                 Color.black.edgesIgnoringSafeArea(.all)
-                QuadrilateralImageView(recognizer: recognizer)
-                    .overlay(loadingView())
+                VStack(spacing: 0) {
+                    Spacer()
+                    QuadrilateralImageView(viewModel: viewModel)
+                        .overlay(loadingView())
+                    Spacer()
+                    bottomBar()
+                }
             }
-            .overlay(bottomBar(), alignment: .bottom)
+            .navigationBarItems(trailing: retakeButton())
             .task {
-                recognizer.task()
+                viewModel.task()
             }
-            .onChange(of: recognizer.text) { newValue in
+            .onChange(of: viewModel.text) { newValue in
                 DispatchQueue.main.async {
                     if let text = newValue {
                         onDismiss(.Success(text: text))
+                    } else {
+                        onDismiss(.Cancel)
                     }
                 }
             }
         }
+        .accentColor(.white)
     }
     
+    private func retakeButton() -> some View {
+        Button("Retake") {
+            onDismiss(.Redo)
+        }
+    }
     private func bottomBar() -> some View {
         HStack {
-            Button("Retake") {
-                onDismiss(.Redo)
+            Button("Reset", role: .cancel) {
+                viewModel.reset()
+            }
+            .disabled(!viewModel.hasChanges)
+            Spacer()
+            Menu {
+                ForEach(ImageFilterMode.allCases) { mode in
+                    Button(mode.description) {
+                        viewModel.filter(mode)
+                    }
+                }
+            } label: {
+                XIcon(.camera_filters)
             }
             Spacer()
             Button("DETECT") {
-                recognizer.detextTexts()
+                viewModel.detextTexts()
             }
-            .buttonStyle(.borderedProminent)
-            .disabled(recognizer.recognizingText)
-        }.padding()
+            .buttonStyle(.bordered)
+            .disabled(viewModel.recognizingText)
+        }
+        .padding(.horizontal)
+        
     }
     private func loadingView() -> some View {
         Group {
-            if recognizer.recognizingText {
-                ProgressView().padding().background(Color(uiColor: .secondarySystemGroupedBackground).clipShape(Circle()))
+            if viewModel.recognizingText {
+                ProgressView()
             }
         }
     }

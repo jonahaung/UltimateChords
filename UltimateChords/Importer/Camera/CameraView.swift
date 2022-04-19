@@ -35,23 +35,6 @@ struct CameraView: View {
         })
     }
     
-//    private var capturedPhotoThumbnail: some View {
-//        Group {
-//            if model.photo != nil {
-//                Image(uiImage: model.photo.image!)
-//                    .resizable()
-//                    .aspectRatio(contentMode: .fill)
-//                    .frame(width: 60, height: 60)
-//                    .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-//                    .tapToPresent(OcrImageView(image: model.photo.image!), .FullScreen)
-//            } else {
-//                RoundedRectangle(cornerRadius: 10)
-//                    .frame(width: 60, height: 60, alignment: .center)
-//                    .foregroundColor(.black)
-//            }
-//        }
-//    }
-    
     private var flipCameraButton: some View {
         Button(action: {
             model.flipCamera()
@@ -118,7 +101,7 @@ struct CameraView: View {
                         )
                     
                     HStack {
-                        flipCameraButton
+//                        flipCameraButton
 
                         Spacer()
                         
@@ -126,12 +109,14 @@ struct CameraView: View {
                         
                         Spacer()
                         
-                        flipCameraButton
+//                        flipCameraButton
                     }
                     .padding(.horizontal, 20)
                 }
             }.onChange(of: model.photo) { newValue in
-                completionHandler(newValue?.image)
+                DispatchQueue.main.async {
+                    completionHandler(newValue?.image)
+                }
             }
             .accentColor(.white)
         }

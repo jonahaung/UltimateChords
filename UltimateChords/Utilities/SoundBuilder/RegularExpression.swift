@@ -8,7 +8,14 @@
 import Foundation
 
 enum RegularExpression {
-   
+    
+    static let myanmarPattern: NSRegularExpression = {
+        do {
+            return try NSRegularExpression(pattern: "(?:(?<!္)([က-ဪဿ၊-၏]|[၀-၉]+|[^က-၏]+)(?![ှျ]?[့္်]))", options: [.caseInsensitive])
+        }catch {
+            fatalError()
+        }
+    }()
     static let chordPattern: NSRegularExpression = {
         do {
             return try NSRegularExpression(pattern: "\\[(.*?)\\]", options: [])

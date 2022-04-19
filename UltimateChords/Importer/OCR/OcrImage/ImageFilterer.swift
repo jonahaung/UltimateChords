@@ -7,17 +7,35 @@
 
 import UIKit
 
-protocol ImageFiltering {
+enum ImageFilterMode: String, CustomStringConvertible, CaseIterable, Identifiable {
     
-    func imageFiltering_applyNoirFilter(image: UIImage) -> UIImage?
-    func imageFiltering_applyBlackAndWhiteFilter(image: UIImage) -> UIImage?
-    func imageFiltering_cropImageToSelectedArea(image: UIImage, quad: Quadrilateral, canvasSize: CGSize) -> UIImage?
+    case Black_and_White, Gray_Scaled, Noise_Reduced, Adjust_Color
+    
+    var description: String {
+        return rawValue.replacingOccurrences(of: "_", with: " ")
+    }
+    
+    var id: String { rawValue }
 }
 
 
-extension ImageFiltering {
+final class ImageFilterer {
     
-    func imageFiltering_applyNoirFilter(image: UIImage) -> UIImage? {
+    class func filter(for image: UIImage, with mode: ImageFilterMode) -> UIImage {
+        
+        switch mode {
+        case .Black_and_White:
+            return self.blackNWhite(image) ?? image
+        case .Gray_Scaled:
+            return self.noir(image) ?? image
+        case .Noise_Reduced:
+            return self.noiseReduced(image) ?? image
+        case .Adjust_Color:
+            return self.adjustColor(image) ?? image
+        }
+    }
+    
+    class func noir(_ image: UIImage) -> UIImage? {
         guard let openGLContext = EAGLContext(api: .openGLES2), let currentFilter = CIFilter(name: "CIPhotoEffectNoir") else { return nil }
         
         let ciContext = CIContext(eaglContext: openGLContext)
@@ -29,23 +47,29 @@ extension ImageFiltering {
         return nil
     }
     
-    func imageFiltering_applyBlackAndWhiteFilter(image: UIImage) -> UIImage? {
+    
+    class func blackNWhite(_ image: UIImage) -> UIImage? {
         let ciImage = CIImage(image: image)
         let cgOrientation = CGImagePropertyOrientation(image.imageOrientation)
         let orientedImage = ciImage?.oriented(forExifOrientation: Int32(cgOrientation.rawValue))
-        return orientedImage?.applyingAdaptiveThreshold()?.uiImage ?? image
+        return orientedImage?.applyingAdaptiveThreshold()?.uiImage
     }
     
-    func imageFiltering_applyNoiceReduce(image: UIImage) -> UIImage? {
+    class func noiseReduced(_ image: UIImage) -> UIImage? {
         let ciImage = CIImage(image: image)
         let cgOrientation = CGImagePropertyOrientation(image.imageOrientation)
         let orientedImage = ciImage?.oriented(forExifOrientation: Int32(cgOrientation.rawValue))
-        return orientedImage?.appalyingNoiseReduce()?.uiImage ?? image
+        return orientedImage?.appalyingNoiseReduce()?.uiImage
+    }
+    class func adjustColor(_ image: UIImage) -> UIImage? {
+        let ciImage = CIImage(image: image)
+        let cgOrientation = CGImagePropertyOrientation(image.imageOrientation)
+        let orientedImage = ciImage?.oriented(forExifOrientation: Int32(cgOrientation.rawValue))
+        return orientedImage?.adjustColors()?.uiImage
     }
     
-    func imageFiltering_cropImageToSelectedArea(image: UIImage, quad: Quadrilateral, canvasSize: CGSize) -> UIImage? {
+    class func crop(image: UIImage, quad: Quadrilateral, canvasSize: CGSize) -> UIImage? {
         let imageSize = image.size
-        
         let scaleT = CGAffineTransform.scaleTransform(forSize: canvasSize, aspectFillInSize: imageSize)
         
         var newQuad = quad.applying(scaleT).toCartesian(withHeight: imageSize.height)
@@ -64,6 +88,7 @@ extension ImageFiltering {
         return filteredImage.uiImage
     }
 }
+
 extension CIImage {
     /// Applies an AdaptiveThresholding filter to the image, which enhances the image and makes it completely gray scale
     func applyingAdaptiveThreshold() -> CIImage? {
@@ -82,42 +107,13 @@ extension CIImage {
         let secondInputEdge = 0.4
         
         let arguments: [Any] = [self, firstInputEdge, secondInputEdge]
-        
         return colorKernel.apply(extent: self.extent, arguments: arguments)
-        
     }
     
     func adjustColors() -> CIImage? {
-        let filter = CIFilter(name: "CIColorControls",
-                              parameters: [kCIInputImageKey: self,
-                                      kCIInputSaturationKey: 0,
-                                        kCIInputContrastKey: 1.45])
+        let filter = CIFilter(name: "CIColorControls", parameters: [kCIInputImageKey: self, kCIInputSaturationKey: 0, kCIInputContrastKey: 1.45])
         return filter?.outputImage
     }
-}
-
-extension CGImage {
-    
-    func grayscaled() -> CGImage? {
-        let colorSpace = CGColorSpaceCreateDeviceGray()
-        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.none.rawValue)
-        let cgContext = CGContext(data: nil,
-                                  width: self.width,
-                                  height: self.height,
-                                  bitsPerComponent: 8,
-                                  bytesPerRow: 0,
-                                  space: colorSpace,
-                                  bitmapInfo: bitmapInfo.rawValue)
-        cgContext?.draw(self,
-                        in: CGRect(x: 0, y: 0, width: self.width, height: self.height))
-        
-        return cgContext?.makeImage()
-    }
-    
-    var uiImage: UIImage { return UIImage(cgImage: self)}
-}
-
-extension CIImage {
     
     func appalyingNoiseReduce() -> CIImage? {
         guard let noiseReduction = CIFilter(name: "CINoiseReduction") else { return nil}

@@ -10,7 +10,7 @@ import SwiftyChords
 
 final class LyricsCreaterViewModel: ObservableObject {
     
-    @Published var lyric = Lyric(title: "ခွင့်မပြု", artist: "ထူးအိမ်သင်", text: "")
+    @Published var lyric = Lyric(id: nil, title: "", artist: "", text: "")
     weak var textView: EditableTextView?
     
     var isEditable: Bool {
@@ -35,7 +35,7 @@ final class LyricsCreaterViewModel: ObservableObject {
     }
     
     func save() {
-        _ = CLyric(title: lyric.title, artist: lyric.artist, text: textView?.text ?? lyric.text)
+        CLyric.create(lyric: lyric)
     }
     
     func fillDemoData() {
@@ -54,14 +54,14 @@ final class LyricsCreaterViewModel: ObservableObject {
             return
         }
         textView.insert(text: string)
-        let song = SongConverter.parse(rawText: lyric.text)
+        let song = SongConverter.parse(rawText: string)
         if let title = song.title {
             lyric.title = title
         }
         if let artist = song.artist {
             lyric.artist = artist
         }
-        lyric.text = textView.text
+        lyric.text = string
     }
     
     deinit {

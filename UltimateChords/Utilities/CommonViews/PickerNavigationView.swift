@@ -30,6 +30,5 @@ struct PickerNavigationView<Content: View>: View {
         } label: {
             Text("Cancel")
         }
-
     }
 }

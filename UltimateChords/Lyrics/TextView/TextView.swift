@@ -8,8 +8,8 @@
 import UIKit
 
 enum wordType{
-    case hashtag   // #标示文本类型
-    case mention   // @标示文本类型
+    case hashtag
+    case mention
 }
 
 class TextView: UITextView {
@@ -22,7 +22,7 @@ class TextView: UITextView {
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     
     func commonInit() {
-//        textContainerInset = .zero
+        textContainerInset = .zero
         textContainer.lineFragmentPadding = XApp.TextView.lineFragmentPadding
         showsVerticalScrollIndicator = false
         dataDetectorTypes = []

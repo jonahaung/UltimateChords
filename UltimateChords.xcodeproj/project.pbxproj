@@ -29,7 +29,6 @@
 		4726965827FF11ED009FE548 /* CGAffineTransform+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726965327FF11EC009FE548 /* CGAffineTransform+Utils.swift */; };
 		4726965927FF11ED009FE548 /* CGPoint+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726965427FF11ED009FE548 /* CGPoint+Utils.swift */; };
 		4726965C27FF123D009FE548 /* Quadrilateral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726965B27FF123D009FE548 /* Quadrilateral.swift */; };
-		4726965E27FF1558009FE548 /* Transformable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726965D27FF1558009FE548 /* Transformable.swift */; };
 		4726966027FF1FB4009FE548 /* CGImagePropertyOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726965F27FF1FB4009FE548 /* CGImagePropertyOrientation.swift */; };
 		472BE8BB27E9659B00A41D54 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472BE8BA27E9659B00A41D54 /* SearchViewModel.swift */; };
 		472BE8BE27E96E7000A41D54 /* SearchContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472BE8BD27E96E7000A41D54 /* SearchContent.swift */; };
@@ -67,7 +66,7 @@
 		476B431827FC0F9900C30BF3 /* ImageResizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476B430E27FC0F9900C30BF3 /* ImageResizer.swift */; };
 		476B431927FC0F9900C30BF3 /* CameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476B430F27FC0F9900C30BF3 /* CameraService.swift */; };
 		476B431B27FC0FBF00C30BF3 /* OcrImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476B431A27FC0FBF00C30BF3 /* OcrImageView.swift */; };
-		476D4A1F2807D25C007A45DB /* ImageFiltering.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476D4A1E2807D25C007A45DB /* ImageFiltering.swift */; };
+		476D4A1F2807D25C007A45DB /* ImageFilterer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476D4A1E2807D25C007A45DB /* ImageFilterer.swift */; };
 		476D4A252807D5EB007A45DB /* EditScanCornerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476D4A222807D5EA007A45DB /* EditScanCornerView.swift */; };
 		476D4A262807D5EB007A45DB /* QuadrilateralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476D4A232807D5EA007A45DB /* QuadrilateralView.swift */; };
 		476D4A292808767C007A45DB /* ToolbarInputAccessory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476D4A282808767C007A45DB /* ToolbarInputAccessory.swift */; };
@@ -93,6 +92,12 @@
 		47873D4427E2F92600417F89 /* Pdf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47873D4327E2F92600417F89 /* Pdf.swift */; };
 		47873D4727E2F94100417F89 /* PdfView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47873D4627E2F94100417F89 /* PdfView.swift */; };
 		47873D5227E3659E00417F89 /* +View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47873D5127E3659E00417F89 /* +View.swift */; };
+		47970F02280DD79F004B91CF /* TextRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47970F01280DD79F004B91CF /* TextRecognizer.swift */; };
+		47970F07280E21D5004B91CF /* Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47970F06280E21D5004B91CF /* Key.swift */; };
+		47970F0C280E21E6004B91CF /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47970F09280E21E5004B91CF /* Note.swift */; };
+		47970F11280E6467004B91CF /* PickedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47970F10280E6467004B91CF /* PickedItem.swift */; };
+		47970F15280EB385004B91CF /* syllables.txt in Resources */ = {isa = PBXBuildFile; fileRef = 47970F14280EB385004B91CF /* syllables.txt */; };
+		47970F17280EB3AF004B91CF /* Syllables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47970F16280EB3AF004B91CF /* Syllables.swift */; };
 		47A1E3762806C148002F75A0 /* LyricCreaterForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47A1E3752806C148002F75A0 /* LyricCreaterForm.swift */; };
 		47A1E3792806C181002F75A0 /* LyricCreaterFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47A1E3782806C181002F75A0 /* LyricCreaterFormViewModel.swift */; };
 		47A3E5D827E4DE3300412B89 /* LyricsViewerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47A3E5D727E4DE3300412B89 /* LyricsViewerView.swift */; };
@@ -106,7 +111,6 @@
 		47A3E5F927E4F43200412B89 /* NotoSansMono_ExtraCondensed-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 47A3E5F627E4F43100412B89 /* NotoSansMono_ExtraCondensed-Light.ttf */; };
 		47A3E5FA27E4F43200412B89 /* NotoSansMono_ExtraCondensed-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 47A3E5F727E4F43200412B89 /* NotoSansMono_ExtraCondensed-Thin.ttf */; };
 		47A3E5FC27E4F8D400412B89 /* +ParagraphStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47A3E5FB27E4F8D400412B89 /* +ParagraphStyle.swift */; };
-		47A668B92809EFF9007C46AC /* OCRCameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47A668B82809EFF9007C46AC /* OCRCameraService.swift */; };
 		47BB283327F0CFDC00852C1D /* EditableTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BB283227F0CFDC00852C1D /* EditableTextView.swift */; };
 		47EB308028017CF700913B6A /* NavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47EB307F28017CF700913B6A /* NavBar.swift */; };
 		47EB3084280191C100913B6A /* Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47EB3083280191C100913B6A /* Size.swift */; };
@@ -138,7 +142,6 @@
 		4726965327FF11EC009FE548 /* CGAffineTransform+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGAffineTransform+Utils.swift"; sourceTree = "<group>"; };
 		4726965427FF11ED009FE548 /* CGPoint+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Utils.swift"; sourceTree = "<group>"; };
 		4726965B27FF123D009FE548 /* Quadrilateral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Quadrilateral.swift; sourceTree = "<group>"; };
-		4726965D27FF1558009FE548 /* Transformable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transformable.swift; sourceTree = "<group>"; };
 		4726965F27FF1FB4009FE548 /* CGImagePropertyOrientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGImagePropertyOrientation.swift; sourceTree = "<group>"; };
 		472BE8BA27E9659B00A41D54 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		472BE8BD27E96E7000A41D54 /* SearchContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchContent.swift; sourceTree = "<group>"; };
@@ -176,7 +179,7 @@
 		476B430E27FC0F9900C30BF3 /* ImageResizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageResizer.swift; sourceTree = "<group>"; };
 		476B430F27FC0F9900C30BF3 /* CameraService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraService.swift; sourceTree = "<group>"; };
 		476B431A27FC0FBF00C30BF3 /* OcrImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OcrImageView.swift; sourceTree = "<group>"; };
-		476D4A1E2807D25C007A45DB /* ImageFiltering.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageFiltering.swift; sourceTree = "<group>"; };
+		476D4A1E2807D25C007A45DB /* ImageFilterer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageFilterer.swift; sourceTree = "<group>"; };
 		476D4A222807D5EA007A45DB /* EditScanCornerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditScanCornerView.swift; sourceTree = "<group>"; };
 		476D4A232807D5EA007A45DB /* QuadrilateralView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuadrilateralView.swift; sourceTree = "<group>"; };
 		476D4A282808767C007A45DB /* ToolbarInputAccessory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarInputAccessory.swift; sourceTree = "<group>"; };
@@ -203,6 +206,12 @@
 		47873D4327E2F92600417F89 /* Pdf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pdf.swift; sourceTree = "<group>"; };
 		47873D4627E2F94100417F89 /* PdfView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfView.swift; sourceTree = "<group>"; };
 		47873D5127E3659E00417F89 /* +View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+View.swift"; sourceTree = "<group>"; };
+		47970F01280DD79F004B91CF /* TextRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextRecognizer.swift; sourceTree = "<group>"; };
+		47970F06280E21D5004B91CF /* Key.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Key.swift; sourceTree = "<group>"; };
+		47970F09280E21E5004B91CF /* Note.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
+		47970F10280E6467004B91CF /* PickedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickedItem.swift; sourceTree = "<group>"; };
+		47970F14280EB385004B91CF /* syllables.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = syllables.txt; sourceTree = "<group>"; };
+		47970F16280EB3AF004B91CF /* Syllables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Syllables.swift; sourceTree = "<group>"; };
 		47A1E3752806C148002F75A0 /* LyricCreaterForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricCreaterForm.swift; sourceTree = "<group>"; };
 		47A1E3782806C181002F75A0 /* LyricCreaterFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricCreaterFormViewModel.swift; sourceTree = "<group>"; };
 		47A3E5D727E4DE3300412B89 /* LyricsViewerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsViewerView.swift; sourceTree = "<group>"; };
@@ -216,7 +225,6 @@
 		47A3E5F627E4F43100412B89 /* NotoSansMono_ExtraCondensed-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansMono_ExtraCondensed-Light.ttf"; sourceTree = "<group>"; };
 		47A3E5F727E4F43200412B89 /* NotoSansMono_ExtraCondensed-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansMono_ExtraCondensed-Thin.ttf"; sourceTree = "<group>"; };
 		47A3E5FB27E4F8D400412B89 /* +ParagraphStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+ParagraphStyle.swift"; sourceTree = "<group>"; };
-		47A668B82809EFF9007C46AC /* OCRCameraService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRCameraService.swift; sourceTree = "<group>"; };
 		47BB283227F0CFDC00852C1D /* EditableTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableTextView.swift; sourceTree = "<group>"; };
 		47EB307F28017CF700913B6A /* NavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavBar.swift; sourceTree = "<group>"; };
 		47EB3083280191C100913B6A /* Size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Size.swift; sourceTree = "<group>"; };
@@ -244,6 +252,7 @@
 		4708C45C27ECA94F00481172 /* SongPro */ = {
 			isa = PBXGroup;
 			children = (
+				47970F03280E2195004B91CF /* Transporter */,
 				4734A9CD280920E000EA706D /* Instruments */,
 				4708C48527ED394E00481172 /* ChordsView.swift */,
 				4708C46D27ED37B400481172 /* Parser */,
@@ -292,13 +301,15 @@
 		4726966127FF204F009FE548 /* OcrImage */ = {
 			isa = PBXGroup;
 			children = (
+				47970F14280EB385004B91CF /* syllables.txt */,
+				47970F16280EB3AF004B91CF /* Syllables.swift */,
 				476B431A27FC0FBF00C30BF3 /* OcrImageView.swift */,
 				4726963227FE98DF009FE548 /* OCRImageViewModel.swift */,
 				476D4A212807D5D5007A45DB /* EditableQuadImageView */,
 				476D4A202807D281007A45DB /* Extensions */,
 				4726965B27FF123D009FE548 /* Quadrilateral.swift */,
-				4726965D27FF1558009FE548 /* Transformable.swift */,
-				476D4A1E2807D25C007A45DB /* ImageFiltering.swift */,
+				47970F01280DD79F004B91CF /* TextRecognizer.swift */,
+				476D4A1E2807D25C007A45DB /* ImageFilterer.swift */,
 			);
 			path = OcrImage;
 			sourceTree = "<group>";
@@ -384,17 +395,16 @@
 		476B430527FC0F9900C30BF3 /* Camera */ = {
 			isa = PBXGroup;
 			children = (
+				476B430D27FC0F9900C30BF3 /* CameraView.swift */,
+				476B430827FC0F9900C30BF3 /* CameraPreview.swift */,
+				476B430F27FC0F9900C30BF3 /* CameraService.swift */,
 				476B430627FC0F9900C30BF3 /* CameraService+Extensions.swift */,
 				476B430727FC0F9900C30BF3 /* CameraViewModel.swift */,
-				476B430827FC0F9900C30BF3 /* CameraPreview.swift */,
 				476B430927FC0F9900C30BF3 /* CameraService+Enums.swift */,
 				476B430A27FC0F9900C30BF3 /* PhotoCaptureProcessor.swift */,
 				476B430B27FC0F9900C30BF3 /* Photo.swift */,
 				476B430C27FC0F9900C30BF3 /* AlertError.swift */,
-				476B430D27FC0F9900C30BF3 /* CameraView.swift */,
 				476B430E27FC0F9900C30BF3 /* ImageResizer.swift */,
-				476B430F27FC0F9900C30BF3 /* CameraService.swift */,
-				47A668B82809EFF9007C46AC /* OCRCameraService.swift */,
 			);
 			path = Camera;
 			sourceTree = "<group>";
@@ -439,9 +449,9 @@
 		477DA76327E0E7C800C143C4 /* UltimateChords */ = {
 			isa = PBXGroup;
 			children = (
+				479BAC8927E242AB00CA5D14 /* App */,
 				4751BCD92803CEB10000ACF7 /* Importer */,
 				4708C45C27ECA94F00481172 /* SongPro */,
-				479BAC8927E242AB00CA5D14 /* App */,
 				47A3E5DF27E4E57800412B89 /* Home */,
 				479BAC8A27E242CD00CA5D14 /* Lyrics */,
 				47A3E5EC27E4F29C00412B89 /* Models */,
@@ -515,6 +525,15 @@
 				4734A9C82808E77200EA706D /* ToolBar */,
 			);
 			path = TextView;
+			sourceTree = "<group>";
+		};
+		47970F03280E2195004B91CF /* Transporter */ = {
+			isa = PBXGroup;
+			children = (
+				47970F09280E21E5004B91CF /* Note.swift */,
+				47970F06280E21D5004B91CF /* Key.swift */,
+			);
+			name = Transporter;
 			sourceTree = "<group>";
 		};
 		479BAC8927E242AB00CA5D14 /* App */ = {
@@ -611,6 +630,7 @@
 				476B42F827FBAA2A00C30BF3 /* Song+Models.swift */,
 				476B428D27F9E90F00C30BF3 /* Lyric.swift */,
 				472BE8DB27EAB3A500A41D54 /* XTag.swift */,
+				47970F10280E6467004B91CF /* PickedItem.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -711,6 +731,7 @@
 				472BE8C227E97F4400A41D54 /* MyanmarSansPro.ttf in Resources */,
 				472BE8C427E980AF00A41D54 /* MyanmarAngoun.ttf in Resources */,
 				4726964127FE9EE7009FE548 /* tessdata in Resources */,
+				47970F15280EB385004B91CF /* syllables.txt in Resources */,
 				4734A9D2280920F800EA706D /* ukulele.json in Resources */,
 				477DA76927E0E7C900C143C4 /* Assets.xcassets in Resources */,
 				47FB8A4627E2AC3F006799FC /* NotoSansMono_ExtraCondensed-Regular.ttf in Resources */,
@@ -735,15 +756,16 @@
 				4708C46927ED2F6E00481172 /* DocumentPicker.swift in Sources */,
 				4782A49C27E8EA5600FA0FC9 /* LyricsCreaterViewModel.swift in Sources */,
 				47873D4427E2F92600417F89 /* Pdf.swift in Sources */,
+				47970F0C280E21E6004B91CF /* Note.swift in Sources */,
 				476B431827FC0F9900C30BF3 /* ImageResizer.swift in Sources */,
 				472BE8BE27E96E7000A41D54 /* SearchContent.swift in Sources */,
 				4708C47C27ED37B400481172 /* Chord.swift in Sources */,
 				476D4A292808767C007A45DB /* ToolbarInputAccessory.swift in Sources */,
 				47A3E5DB27E4DEC900412B89 /* LyricsViewerTextView.swift in Sources */,
-				4726965E27FF1558009FE548 /* Transformable.swift in Sources */,
 				4751BCDB2803CEC70000ACF7 /* ImportableView.swift in Sources */,
 				47A3E5DE27E4DF3100412B89 /* LyricsViewerViewModel.swift in Sources */,
 				4751BCDD2803CEDA0000ACF7 /* ImportableViewModel.swift in Sources */,
+				47970F07280E21D5004B91CF /* Key.swift in Sources */,
 				47BB283327F0CFDC00852C1D /* EditableTextView.swift in Sources */,
 				4726965627FF11ED009FE548 /* UIImage+Utils.swift in Sources */,
 				472BE8BB27E9659B00A41D54 /* SearchViewModel.swift in Sources */,
@@ -763,6 +785,7 @@
 				4782A49827E8E82F00FA0FC9 /* LyricsCreaterView.swift in Sources */,
 				477DA76E27E0E7C900C143C4 /* Persistence.swift in Sources */,
 				4713244227E3A0E2000F67C8 /* +String.swift in Sources */,
+				47970F11280E6467004B91CF /* PickedItem.swift in Sources */,
 				4726962D27FE4B38009FE548 /* SongKeyView.swift in Sources */,
 				4761E7F727ED7A4300BBA301 /* PickerNavigationView.swift in Sources */,
 				476B429227FAFD9600C30BF3 /* LyricCreaterControls.swift in Sources */,
@@ -782,14 +805,14 @@
 				4726965827FF11ED009FE548 /* CGAffineTransform+Utils.swift in Sources */,
 				476D4A2B28088573007A45DB /* ChordsInputView.swift in Sources */,
 				477DA77E27E0E88800C143C4 /* TapToPresentStyle.swift in Sources */,
-				47A668B92809EFF9007C46AC /* OCRCameraService.swift in Sources */,
 				477DA77F27E0E88800C143C4 /* TapToPushStyle.swift in Sources */,
 				47A1E3762806C148002F75A0 /* LyricCreaterForm.swift in Sources */,
 				476B430127FBDA4300C30BF3 /* ActivityItem.swift in Sources */,
+				47970F17280EB3AF004B91CF /* Syllables.swift in Sources */,
 				476B431327FC0F9900C30BF3 /* CameraService+Enums.swift in Sources */,
 				4708C47927ED37B400481172 /* Song.swift in Sources */,
 				4782A49E27E8EA6A00FA0FC9 /* LyricsCreaterTextView.swift in Sources */,
-				476D4A1F2807D25C007A45DB /* ImageFiltering.swift in Sources */,
+				476D4A1F2807D25C007A45DB /* ImageFilterer.swift in Sources */,
 				476B42F927FBAA2A00C30BF3 /* Song+Models.swift in Sources */,
 				47EB309C2802C29300913B6A /* SongParser.swift in Sources */,
 				477DA76727E0E7C800C143C4 /* HomeView.swift in Sources */,
@@ -814,6 +837,7 @@
 				4726965C27FF123D009FE548 /* Quadrilateral.swift in Sources */,
 				476B428E27F9E90F00C30BF3 /* Lyric.swift in Sources */,
 				4726962927FC7B7A009FE548 /* LyricViewerControls.swift in Sources */,
+				47970F02280DD79F004B91CF /* TextRecognizer.swift in Sources */,
 				476D4A252807D5EB007A45DB /* EditScanCornerView.swift in Sources */,
 				47EB3084280191C100913B6A /* Size.swift in Sources */,
 				47FB8A4A27E2F3A4006799FC /* HtmlView.swift in Sources */,

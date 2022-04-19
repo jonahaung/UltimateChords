@@ -14,7 +14,8 @@ class EditableTextView: TextView {
     override func commonInit() {
         super.commonInit()
         keyboardDismissMode = .interactive
-        markedTextStyle = [.backgroundColor: UIColor.systemYellow.withAlphaComponent(0.5)]
+//        markedTextStyle = [.backgroundColor: UIColor.systemYellow.withAlphaComponent(0.5)]
+        typingAttributes = [.paragraphStyle: NSParagraphStyle.nonLineBreak]
         delegate = self
     }
     

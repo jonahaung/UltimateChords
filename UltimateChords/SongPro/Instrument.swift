@@ -50,6 +50,8 @@ extension Instrument {
         let data = try! Data(contentsOf: url!)
         return try! JSONDecoder().decode(Instrument.self, from: data)
     }
+    
+    
 }
 
 private class BundleToken {}

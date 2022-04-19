@@ -20,7 +20,7 @@ struct LyricCreaterControls: View {
             
             Section {
                 Toggle("Editable", isOn: $viewModel.isEditable)
-                Toggle("Preview", isOn: $viewModel.isPreviewMode)
+//                Toggle("Preview", isOn: $viewModel.isPreviewMode)
                 Button("Fill Demo Data") {
                     viewModel.fillDemoData()
                 }

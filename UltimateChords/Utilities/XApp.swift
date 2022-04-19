@@ -20,4 +20,8 @@ struct XApp {
     struct TextView {
         static let lineFragmentPadding = CGFloat(8)
     }
+    
+    struct Image {
+        static let resizeWidth:CGFloat = 1000
+    }
 }

@@ -48,7 +48,7 @@ struct XFont {
     
     static func body(for text: String) -> UIFont {
         let fontName = text.isMyanar ? MyanmarFont.MyanmarAngoun.rawValue : "NotoSansMonoExtraCondensed-Medium"
-        return UIFont(name: fontName, size: UIFont.labelFontSize - 1)!
+        return UIFont(name: fontName, size: UIFont.labelFontSize)!
     }
     
     static func footnote(for text: String) -> UIFont {
@@ -57,7 +57,7 @@ struct XFont {
     }
     
     static func chord() -> UIFont {
-        .init(name: "NotoSansMonoExtraCondensed-Medium", size: UIFont.labelFontSize - 1)!
+        .init(name: "NotoSansMonoExtraCondensed-Medium", size: UIFont.labelFontSize)!
     }
     
     static func universal(for style: UIFont.TextStyle) -> UIFont {

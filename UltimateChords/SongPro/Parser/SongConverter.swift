@@ -158,7 +158,7 @@ class SongConverter {
             }
         }
         let chord = Chord.chord(for: key)
-        if let index = song.chords.firstIndex(where: { $0.name == chord.key.rawValue }) {
+        if let index = song.chords.firstIndex(where: { $0.name == chord?.key.rawValue }) {
             song.chords[index].define = value
         }
     }
@@ -212,9 +212,11 @@ class SongConverter {
         }
         line.parts.forEach { part in
             if !song.chords.contains(where: { $0.name == part.chord! }) {
-                var chord = Chord.chord(for: part.chord!)
-                chord.name = part.chord!
-                song.chords.append(chord)
+                if var chord = Chord.chord(for: part.chord!) {
+                    chord.name = part.chord!
+                    song.chords.append(chord)
+                }
+                
             }
         }
         currentSection.lines.append(line)

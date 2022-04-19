@@ -44,8 +44,10 @@ struct ImagePicker: UIViewControllerRepresentable {
             
             DispatchQueue.main.async {
                 self.parent.onPick(image)
-                picker.dismiss(animated: true)
             }
+        }
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            picker.dismiss(animated: true, completion: nil)
         }
     }
 }
@@ -101,8 +103,7 @@ public struct ImagePickerMultiple: UIViewControllerRepresentable {
                     group.leave()
                 }
             }
-            group.notify(queue: .main) { [weak self] in
-                guard let self = self else { return }
+            group.notify(queue: .main) {
                 self.parent.completion?(images)
             }
         }

@@ -66,19 +66,18 @@ struct SongParser {
         return String(mutableLyricLine)
     }
     
-    private static func makeEmptyString(for i: Int) -> String {
+    private static func makeEmptyString(for i: Int, with item: String = " ") -> String {
         var str = String()
         (0..<i).forEach { _ in
-            str += "-"
+            str += item
 
         }
         return str
     }
     
     static func convert(_ text: String) -> String {
-        
+        let text = resegment(text)
         let textLines = text.components(separatedBy: "\n")
-        
         var newLines = [String]()
         
         var canSkip = false
@@ -104,7 +103,33 @@ struct SongParser {
             newLines.append(concenerated)
             canSkip = true
         }
+        
         return newLines.joined(separator: "\n")
+    }
+    
+    static func resegment(_ text: String) -> String {
+        var lines = [String]()
+        text.lines().forEach { line in
+            if line.isMyanar {
+                let filtered = Resegment.myanmar(line)
+                lines.append(filtered)
+            } else if isChordLine(for: line) {
+                var clean = makeEmptyString(for: line.count)
+                line.wordTags().forEach { element in
+                    let text = element.string
+                    let range = element.range
+                    if let strRange = line.range(from: range) {
+                        if Syllables.guitarChords.contains(text) {
+                            clean = clean.replacingCharacters(in: strRange, with: text)
+                        } else {
+                            clean = clean.replacingCharacters(in: strRange, with: makeEmptyString(for: text.count))
+                        }
+                    }
+                }
+                lines.append(clean)
+            }
+        }
+        return lines.joined(separator: "\n")
     }
 }
 

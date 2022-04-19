@@ -8,78 +8,77 @@
 import SwiftUI
 import AVFoundation
 import Vision
-import libtesseract
 
 struct QuadrilateralImageView: UIViewRepresentable {
     
-    let recognizer: OCRImageViewModel
+    let viewModel: OCRImageViewModel
     
     func makeUIView(context: Context) -> QuadImageView {
-        let view = QuadImageView(image: recognizer.image)
-        recognizer.quadImageView = view
+        let view = QuadImageView()
+        viewModel.quadImageView = view
         return view
     }
     
     func updateUIView(_ uiView: QuadImageView, context: Context) {
-        //        uiView.setNeedsLayout()
+        
     }
 }
 
 
-class QuadImageView: UIView, ImageFiltering {
+class QuadImageView: UIView {
     
     private var originalQuads = [Quadrilateral]()
+    private var chords = [Chord]()
     
     var imageViewTransform = CGAffineTransform.identity
     private var currentTouchedRect = CGRect.null
     
     
-    private let imageView: UIImageView = {
+    let imageView: UIImageView = {
         $0.contentMode = .scaleAspectFit
         return $0
     }(UIImageView())
     
-    private let quadView: QuadrilateralView = {
+    let quadView: QuadrilateralView = {
         return $0
     }(QuadrilateralView())
     
     private var previousPanPosition: CGPoint?
     private var closestCorner: CornerPosition?
     
-    init(image: UIImage) {
+    init() {
         super.init(frame: .zero)
-        imageView.image = image
         addSubview(imageView)
         addSubview(quadView)
         let panGesture = UILongPressGestureRecognizer(target: self, action: #selector(handle(gesture:)))
         panGesture.minimumPressDuration = 0.0
-        quadView.addGestureRecognizer(panGesture)
+        self.addGestureRecognizer(panGesture)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
+    private func calculateTransform() {
+        guard let image = imageView.image else { return }
         
-        if originalQuads.isEmpty {
-            guard let image = imageView.image else { return }
-            
-            let imageViewFrame = AVMakeRect(aspectRatio: image.size, insideRect: self.bounds)
-            imageView.frame = imageViewFrame
-            quadView.frame = imageViewFrame
-            let scaleT = CGAffineTransform(scaleX: imageViewFrame.width, y: -imageViewFrame.height)
-            let translateT = CGAffineTransform(translationX: 0, y: imageViewFrame.height)
-            imageViewTransform = scaleT.concatenating(translateT)
-        }
+        let imageViewFrame = AVMakeRect(aspectRatio: image.size, insideRect: self.bounds)
+        imageView.frame = imageViewFrame
+        quadView.frame = imageViewFrame
+        let scaleT = CGAffineTransform(scaleX: imageViewFrame.width, y: -imageViewFrame.height)
+        let translateT = CGAffineTransform(translationX: 0, y: imageViewFrame.height)
+        imageViewTransform = scaleT.concatenating(translateT)
+    }
+    
+    func updateImage(_ image: UIImage) {
+        self.imageView.image = image
+        detectTextBoxes()
     }
 }
 
 extension QuadImageView {
-    
-    func detectTextBoxes() {
-        
+    private func detectTextBoxes() {
+        calculateTransform()
         guard let buffer = imageView.image?.pixelBuffer() else { return }
         let request = VNRecognizeTextRequest()
         request.recognitionLevel = .accurate
@@ -94,49 +93,32 @@ extension QuadImageView {
                     guard let results = request.results, !results.isEmpty else { return }
                     strongSelf.originalQuads = results.map{ Quadrilateral(rectangleObservation: $0)}
                     strongSelf.displayBoxes()
+                    var chords = [Chord]()
+                    results.filter{ $0.confidence > 0.4}.forEach { observation in
+                        if let top = observation.topCandidates(1).first {
+                            let string = top.string
+                            if let chord = Chord.chord(for: string) {
+                                if chords.contains(chord) == false {
+                                    chords.append(chord)
+                                }
+                            }
+                        }
+                    }
+                    strongSelf.chords = chords
                 }
             } catch {
                 print(error)
             }
         }
     }
-    
-    
-    func cropImage() -> UIImage? {
-        
-        guard let image = imageView.image else { return nil }
-        guard let ciImage = CIImage(image: image) else { return nil}
-        guard let quad = quadView.viewQuad else { return nil }
-        
-        let imageViewFrame = imageView.frame
-        let imageSize = image.size
-        
-        let imageQuad = quad.scale(imageViewFrame.size, imageSize)
-        var cartesianScaledQuad = imageQuad.toCartesian(withHeight: imageSize.height)
-        cartesianScaledQuad.reorganize()
-        
-        let cgOrientation = CGImagePropertyOrientation(image.imageOrientation)
-        let orientedImage = ciImage.oriented(forExifOrientation: Int32(cgOrientation.rawValue))
-        
-        let filteredImage = orientedImage.applyingFilter("CIPerspectiveCorrection", parameters: [
-            "inputTopLeft": CIVector(cgPoint: cartesianScaledQuad.bottomLeft),
-            "inputTopRight": CIVector(cgPoint: cartesianScaledQuad.bottomRight),
-            "inputBottomLeft": CIVector(cgPoint: cartesianScaledQuad.topLeft),
-            "inputBottomRight": CIVector(cgPoint: cartesianScaledQuad.topRight)
-        ])
-        if let image = filteredImage.cgImage?.uiImage {
-            return ImageResizer(targetWidth: imageViewFrame.width).resize(image: image)
-        }
-        return nil
+    func getChords() -> [Chord] {
+        self.chords
     }
-}
-extension QuadImageView {
-    
     private func displayBoxes() {
-        let viewQuads = originalQuads.filter{ $0.isSelected }.map{ $0.applying(imageViewTransform)}
+        let viewQuads = originalQuads.map{ $0.applying(imageViewTransform)}
         
         let boxes = viewQuads.map{$0.regionRect}
-        let rect = boxes.reduce(CGRect.null, {$0.union($1)}).surroundingSquare(with: CGSize(width: 10, height: 10))
+        let rect = boxes.reduce(CGRect.null, {$0.union($1)})
         
         let quad = Quadrilateral(rect: rect)
         quadView.drawQuadrilateral(quad: quad)
@@ -171,7 +153,7 @@ extension QuadImageView {
         case .changed:
             
             let position = gesture.location(in: quadView)
-
+            
             let previousPanPosition = self.previousPanPosition ?? position
             let closestCorner = self.closestCorner ?? position.closestCornerFrom(quad: drawnQuad)
             
@@ -194,8 +176,6 @@ extension QuadImageView {
             previousPanPosition = nil
             closestCorner = nil
             quadView.resetHighlightedCornerViews()
-            //            delegate?.quadImageUIViewDelegate(self, quadDidUpdate: drawnQuad)
-            //            delegate?.quadImageUIViewDelegate(self, gestureDidStart: false)
         default:
             break
         }

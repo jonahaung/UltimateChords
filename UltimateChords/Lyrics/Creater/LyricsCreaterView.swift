@@ -13,22 +13,17 @@ struct LyricsCreaterView: View {
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
-        ImportableView { text in
-            viewModel.insertText(SongParser.convert(text))
-        } content: {
+        ImportableView {
             LyricsCreaterTextView(viewModel: viewModel)
         }
-        .navigationBarTitleDisplayMode(.inline)
         .navigationBarItems(trailing: navTrailing())
-        .task {
-            viewModel.task()
-        }
+        .environmentObject(viewModel)
     }
     
     private func navTrailing() -> some View {
         HStack(spacing: 0) {
             XIcon(.music_note)
-                .tapToPresent(PickerNavigationView { LyricCreaterControls() }.environmentObject(viewModel))
+                .tapToPresent(PickerNavigationView { LyricCreaterControls() })
             Button {
                 viewModel.save()
                dismiss()

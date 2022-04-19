@@ -23,7 +23,7 @@ public struct Photo: Identifiable, Equatable {
 }
 extension Photo {
     public var compressedData: Data? {
-        ImageResizer(targetWidth: UIScreen.main.bounds.width).resize(data: originalData)?.jpegData(compressionQuality: 0.8)
+        ImageResizer(targetWidth: XApp.Image.resizeWidth).resize(data: originalData)?.jpegData(compressionQuality: 0.8)
     }
     public var thumbnailData: Data? {
         ImageResizer(targetWidth: 100).resize(data: originalData)?.jpegData(compressionQuality: 0.5)
@@ -34,17 +34,6 @@ extension Photo {
     }
     public var image: UIImage? {
         guard let data = compressedData, let image = UIImage(data: data) else { return nil }
-        return image
-    }
-    
-    private func blackAndWhite(image: UIImage) -> UIImage {
-        guard let currentCGImage = image.cgImage else { return image }
-        guard let currentCIImage = CIImage(cgImage: currentCGImage).appalyingNoiseReduce()?.appalyingNoiseReduce()?.appalyingNoiseReduce()?.appalyingNoiseReduce() else { return image }
-        let context = CIContext()
-        
-        if let cgimg = context.createCGImage(currentCIImage, from: currentCIImage.extent) {
-            return UIImage(cgImage: cgimg)
-        }
         return image
     }
 }
