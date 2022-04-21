@@ -22,16 +22,13 @@ class TextView: UITextView {
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     
     func commonInit() {
-        textContainerInset = .zero
         textContainer.lineFragmentPadding = XApp.TextView.lineFragmentPadding
         showsVerticalScrollIndicator = false
         dataDetectorTypes = []
-        backgroundColor = .clear
-        isScrollEnabled = true
         alwaysBounceVertical = true
         bounces = true
-        textContainer.lineBreakMode = .byClipping
-        layoutManager.allowsNonContiguousLayout = false
+        textContainer.lineBreakMode = .byTruncatingTail
+//        layoutManager.allowsNonContiguousLayout = false
     }
     
 //    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -96,4 +93,13 @@ class TextView: UITextView {
 //            }
 //        }
 //    }
+    
+    func adjustFontSizeIfNeeded() {
+        guard let mutable = attributedText?.mutable else { return }
+        let preferredWidth = UIScreen.main.bounds.size.width - 10 - (textContainer.lineFragmentPadding*2)
+        mutable.adjustFontSize(to: preferredWidth)
+        if mutable != attributedText {
+            self.attributedText = mutable
+        }
+    }
 }

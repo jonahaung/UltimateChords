@@ -16,7 +16,7 @@ struct Pdf {
     static func url(from attributedString: NSAttributedString) -> URL {
         
         let mutable = attributedString.mutable
-        mutable.adjustFontSize(to: XApp.PDF.A4.availiableWidth)
+//        mutable.adjustFontSize(to: XApp.PDF.A4.availiableWidth)
         
         let pdfRenderer = PDFDINA4PrintRenderer(pageSize: XApp.PDF.A4.size, margins: XApp.PDF.A4.margin)
         
@@ -24,7 +24,6 @@ struct Pdf {
         pdfRenderer.addPrintFormatter(printFormatter, startingAtPageAt: 0)
         
         let documentURL = FileManager.default.temporaryDirectory.appendingPathComponent("jonahaung.pdf")
-        
         do {
             try pdfRenderer.renderPDF(to: documentURL)
             return documentURL

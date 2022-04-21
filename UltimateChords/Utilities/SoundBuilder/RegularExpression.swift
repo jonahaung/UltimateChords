@@ -18,7 +18,7 @@ enum RegularExpression {
     }()
     static let chordPattern: NSRegularExpression = {
         do {
-            return try NSRegularExpression(pattern: "\\[(.*?)\\]", options: [])
+            return try NSRegularExpression(pattern:  "\\[([\\w#b\\/]+)\\]?", options: []) // OLD: "\\[(.*?)\\]"
         }catch {
             fatalError()
         }
@@ -51,7 +51,6 @@ enum RegularExpression {
     
     static let defineRegex = try! NSRegularExpression(pattern: "([a-z0-9#b/]+)(.*)", options: .caseInsensitive)
     static let measuresRegex = try! NSRegularExpression(pattern: "([\\[[\\w#b\\/]+\\]\\s]+)[|]*", options: .caseInsensitive)
-    static let chordsRegex = try! NSRegularExpression(pattern: "\\[([\\w#b\\/]+)\\]?", options: .caseInsensitive)
     
     
     
@@ -68,8 +67,7 @@ enum RegularExpression {
 extension NSRegularExpression {
 
     func stringByReplacingMatches(in string: String, withTemplate template: String) -> String {
-        let r = NSRange(string.startIndex..<string.endIndex, in: string)
-        return self.stringByReplacingMatches(in: string, options: [], range: r, withTemplate: template)
+        return self.stringByReplacingMatches(in: string, options: [], range: string.nsRange(), withTemplate: template)
     }
     
 }

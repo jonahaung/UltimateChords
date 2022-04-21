@@ -53,3 +53,10 @@ extension Song {
         self.key = toStr
     }
 }
+
+extension Song {
+    
+    var lyric: Lyric {
+        .init(id: self.id.uuidString, title: self.title.str, artist: self.artist.str, key: self.key.str, text: self.rawText, composer: "", album: self.album.str, year: self.year.str, genre: "", version: 0)
+    }
+}

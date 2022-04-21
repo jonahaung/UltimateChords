@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ImportableViewModel: ObservableObject {
+class LyricImporterViewModel: ObservableObject {
     
     @Published var importMode: Mode?
     private var previousImportMode: Mode?
@@ -26,7 +26,7 @@ class ImportableViewModel: ObservableObject {
     }
 }
 
-extension ImportableViewModel {
+extension LyricImporterViewModel {
     enum Mode: String, CustomStringConvertible, CaseIterable, Identifiable {
         case Document_Scanner, Camera, Photo_Library, ChordPro_File
         var id: String { rawValue }

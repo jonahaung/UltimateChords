@@ -11,33 +11,33 @@ import AVFoundation
 
 final class QuadrilateralView: UIView {
     
-    let quadLayer: CAShapeLayer = {
+    private let quadLayer: CAShapeLayer = {
         $0.fillColor = nil
         $0.lineWidth = 1
         $0.strokeColor = UIColor.tintColor.cgColor
         return $0
     }(CAShapeLayer())
     
-    let quadLineLayer: CAShapeLayer = {
+    private let quadLineLayer: CAShapeLayer = {
         $0.fillColor = nil
         $0.lineWidth = 1
         $0.strokeColor = UIColor.systemYellow.cgColor
         return $0
     }(CAShapeLayer())
     
-    lazy private var topLeftCornerView: EditScanCornerView = {
+    private lazy var topLeftCornerView: EditScanCornerView = {
         return EditScanCornerView(frame: CGRect(origin: .zero, size: cornerViewSize), position: .topLeft)
     }()
     
-    lazy private var topRightCornerView: EditScanCornerView = {
+    private lazy var topRightCornerView: EditScanCornerView = {
         return EditScanCornerView(frame: CGRect(origin: .zero, size: cornerViewSize), position: .topRight)
     }()
     
-    lazy private var bottomRightCornerView: EditScanCornerView = {
+    private lazy var bottomRightCornerView: EditScanCornerView = {
         return EditScanCornerView(frame: CGRect(origin: .zero, size: cornerViewSize), position: .bottomRight)
     }()
     
-    lazy private var bottomLeftCornerView: EditScanCornerView = {
+    private lazy var bottomLeftCornerView: EditScanCornerView = {
         return EditScanCornerView(frame: CGRect(origin: .zero, size: cornerViewSize), position: .bottomLeft)
     }()
     
@@ -54,7 +54,6 @@ final class QuadrilateralView: UIView {
         didSet {
             guard oldValue != isHighlighted else { return }
             quadLayer.lineWidth = isHighlighted ? 0 : 1
-            
         }
     }
     
@@ -77,9 +76,7 @@ final class QuadrilateralView: UIView {
     
     override public func layoutSubviews() {
         super.layoutSubviews()
-        guard quadLayer.frame != bounds else {
-            return
-        }
+        guard quadLayer.frame != bounds else { return }
         let scale = bounds.width / quadLayer.frame.width
         quadLayer.frame = bounds
         quadLineLayer.frame = bounds
@@ -105,7 +102,16 @@ extension QuadrilateralView {
             layoutCornerViews(forQuad: quad)
         }
     }
-    
+    func drawBoxes(quads: [Quadrilateral]) {
+        let path = UIBezierPath()
+        
+        quads.forEach { quad in
+            if quad.isSelected {
+                path.append(quad.path)
+            }
+        }
+        quadLayer.path = path.cgPath
+    }
     private func draw(_ quad: Quadrilateral, animated: Bool) {
         let path = quad.path
         quadLineLayer.path = path.cgPath

@@ -42,8 +42,10 @@
 		4734A9D1280920F800EA706D /* guitar.json in Resources */ = {isa = PBXBuildFile; fileRef = 4734A9CF280920F800EA706D /* guitar.json */; };
 		4734A9D2280920F800EA706D /* ukulele.json in Resources */ = {isa = PBXBuildFile; fileRef = 4734A9D0280920F800EA706D /* ukulele.json */; };
 		4734A9D42809210000EA706D /* Instrument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4734A9D32809210000EA706D /* Instrument.swift */; };
-		4751BCDB2803CEC70000ACF7 /* ImportableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4751BCDA2803CEC70000ACF7 /* ImportableView.swift */; };
-		4751BCDD2803CEDA0000ACF7 /* ImportableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4751BCDC2803CEDA0000ACF7 /* ImportableViewModel.swift */; };
+		474F148A2810B7FA007FE877 /* LyricCreaterSaveForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 474F14892810B7FA007FE877 /* LyricCreaterSaveForm.swift */; };
+		474F148C2810B870007FE877 /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = 474F148B2810B870007FE877 /* Genre.swift */; };
+		4751BCDB2803CEC70000ACF7 /* LyricImporterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4751BCDA2803CEC70000ACF7 /* LyricImporterView.swift */; };
+		4751BCDD2803CEDA0000ACF7 /* LyricImporterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4751BCDC2803CEDA0000ACF7 /* LyricImporterViewModel.swift */; };
 		4751BCDF2803ECCC0000ACF7 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4751BCDE2803ECCC0000ACF7 /* ImagePicker.swift */; };
 		4751BCE12805B5990000ACF7 /* QuadrilateralImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4751BCE02805B5990000ACF7 /* QuadrilateralImageView.swift */; };
 		4761E7F727ED7A4300BBA301 /* PickerNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4761E7F627ED7A4300BBA301 /* PickerNavigationView.swift */; };
@@ -97,7 +99,8 @@
 		47970F0C280E21E6004B91CF /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47970F09280E21E5004B91CF /* Note.swift */; };
 		47970F11280E6467004B91CF /* PickedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47970F10280E6467004B91CF /* PickedItem.swift */; };
 		47970F15280EB385004B91CF /* syllables.txt in Resources */ = {isa = PBXBuildFile; fileRef = 47970F14280EB385004B91CF /* syllables.txt */; };
-		47970F17280EB3AF004B91CF /* Syllables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47970F16280EB3AF004B91CF /* Syllables.swift */; };
+		47970F17280EB3AF004B91CF /* SpellCorrector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47970F16280EB3AF004B91CF /* SpellCorrector.swift */; };
+		47970F1A280EDD8C004B91CF /* Resegment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47970F19280EDD8C004B91CF /* Resegment.swift */; };
 		47A1E3762806C148002F75A0 /* LyricCreaterForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47A1E3752806C148002F75A0 /* LyricCreaterForm.swift */; };
 		47A1E3792806C181002F75A0 /* LyricCreaterFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47A1E3782806C181002F75A0 /* LyricCreaterFormViewModel.swift */; };
 		47A3E5D827E4DE3300412B89 /* LyricsViewerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47A3E5D727E4DE3300412B89 /* LyricsViewerView.swift */; };
@@ -155,8 +158,10 @@
 		4734A9CF280920F800EA706D /* guitar.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = guitar.json; sourceTree = "<group>"; };
 		4734A9D0280920F800EA706D /* ukulele.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ukulele.json; sourceTree = "<group>"; };
 		4734A9D32809210000EA706D /* Instrument.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Instrument.swift; sourceTree = "<group>"; };
-		4751BCDA2803CEC70000ACF7 /* ImportableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportableView.swift; sourceTree = "<group>"; };
-		4751BCDC2803CEDA0000ACF7 /* ImportableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportableViewModel.swift; sourceTree = "<group>"; };
+		474F14892810B7FA007FE877 /* LyricCreaterSaveForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricCreaterSaveForm.swift; sourceTree = "<group>"; };
+		474F148B2810B870007FE877 /* Genre.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Genre.swift; sourceTree = "<group>"; };
+		4751BCDA2803CEC70000ACF7 /* LyricImporterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricImporterView.swift; sourceTree = "<group>"; };
+		4751BCDC2803CEDA0000ACF7 /* LyricImporterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricImporterViewModel.swift; sourceTree = "<group>"; };
 		4751BCDE2803ECCC0000ACF7 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		4751BCE02805B5990000ACF7 /* QuadrilateralImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuadrilateralImageView.swift; sourceTree = "<group>"; };
 		4761E7F627ED7A4300BBA301 /* PickerNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerNavigationView.swift; sourceTree = "<group>"; };
@@ -211,7 +216,8 @@
 		47970F09280E21E5004B91CF /* Note.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		47970F10280E6467004B91CF /* PickedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickedItem.swift; sourceTree = "<group>"; };
 		47970F14280EB385004B91CF /* syllables.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = syllables.txt; sourceTree = "<group>"; };
-		47970F16280EB3AF004B91CF /* Syllables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Syllables.swift; sourceTree = "<group>"; };
+		47970F16280EB3AF004B91CF /* SpellCorrector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpellCorrector.swift; sourceTree = "<group>"; };
+		47970F19280EDD8C004B91CF /* Resegment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Resegment.swift; sourceTree = "<group>"; };
 		47A1E3752806C148002F75A0 /* LyricCreaterForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricCreaterForm.swift; sourceTree = "<group>"; };
 		47A1E3782806C181002F75A0 /* LyricCreaterFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricCreaterFormViewModel.swift; sourceTree = "<group>"; };
 		47A3E5D727E4DE3300412B89 /* LyricsViewerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsViewerView.swift; sourceTree = "<group>"; };
@@ -301,15 +307,12 @@
 		4726966127FF204F009FE548 /* OcrImage */ = {
 			isa = PBXGroup;
 			children = (
-				47970F14280EB385004B91CF /* syllables.txt */,
-				47970F16280EB3AF004B91CF /* Syllables.swift */,
 				476B431A27FC0FBF00C30BF3 /* OcrImageView.swift */,
 				4726963227FE98DF009FE548 /* OCRImageViewModel.swift */,
-				476D4A212807D5D5007A45DB /* EditableQuadImageView */,
-				476D4A202807D281007A45DB /* Extensions */,
-				4726965B27FF123D009FE548 /* Quadrilateral.swift */,
 				47970F01280DD79F004B91CF /* TextRecognizer.swift */,
 				476D4A1E2807D25C007A45DB /* ImageFilterer.swift */,
+				47970F18280EDD76004B91CF /* NLP */,
+				476D4A212807D5D5007A45DB /* EditableQuadImageView */,
 			);
 			path = OcrImage;
 			sourceTree = "<group>";
@@ -352,11 +355,18 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		474F148828103851007FE877 /* Import */ = {
+			isa = PBXGroup;
+			children = (
+				4751BCDA2803CEC70000ACF7 /* LyricImporterView.swift */,
+				4751BCDC2803CEDA0000ACF7 /* LyricImporterViewModel.swift */,
+			);
+			path = Import;
+			sourceTree = "<group>";
+		};
 		4751BCD92803CEB10000ACF7 /* Importer */ = {
 			isa = PBXGroup;
 			children = (
-				4751BCDA2803CEC70000ACF7 /* ImportableView.swift */,
-				4751BCDC2803CEDA0000ACF7 /* ImportableViewModel.swift */,
 				4726963427FE9C29009FE548 /* OCR */,
 				476B430527FC0F9900C30BF3 /* Camera */,
 			);
@@ -424,8 +434,8 @@
 			isa = PBXGroup;
 			children = (
 				4751BCE02805B5990000ACF7 /* QuadrilateralImageView.swift */,
-				476D4A232807D5EA007A45DB /* QuadrilateralView.swift */,
-				476D4A222807D5EA007A45DB /* EditScanCornerView.swift */,
+				476D4A202807D281007A45DB /* Extensions */,
+				47970F1B280EDDB3004B91CF /* Quadrilateral */,
 			);
 			path = EditableQuadImageView;
 			sourceTree = "<group>";
@@ -510,7 +520,9 @@
 			children = (
 				4782A49727E8E82F00FA0FC9 /* LyricsCreaterView.swift */,
 				476B429127FAFD9600C30BF3 /* LyricCreaterControls.swift */,
+				474F14892810B7FA007FE877 /* LyricCreaterSaveForm.swift */,
 				4782A49B27E8EA5600FA0FC9 /* LyricsCreaterViewModel.swift */,
+				474F148828103851007FE877 /* Import */,
 				47970EF7280B2141004B91CF /* TextView */,
 				47A1E3772806C164002F75A0 /* Form */,
 			);
@@ -534,6 +546,26 @@
 				47970F06280E21D5004B91CF /* Key.swift */,
 			);
 			name = Transporter;
+			sourceTree = "<group>";
+		};
+		47970F18280EDD76004B91CF /* NLP */ = {
+			isa = PBXGroup;
+			children = (
+				47970F14280EB385004B91CF /* syllables.txt */,
+				47970F16280EB3AF004B91CF /* SpellCorrector.swift */,
+				47970F19280EDD8C004B91CF /* Resegment.swift */,
+			);
+			path = NLP;
+			sourceTree = "<group>";
+		};
+		47970F1B280EDDB3004B91CF /* Quadrilateral */ = {
+			isa = PBXGroup;
+			children = (
+				476D4A232807D5EA007A45DB /* QuadrilateralView.swift */,
+				476D4A222807D5EA007A45DB /* EditScanCornerView.swift */,
+				4726965B27FF123D009FE548 /* Quadrilateral.swift */,
+			);
+			path = Quadrilateral;
 			sourceTree = "<group>";
 		};
 		479BAC8927E242AB00CA5D14 /* App */ = {
@@ -631,6 +663,7 @@
 				476B428D27F9E90F00C30BF3 /* Lyric.swift */,
 				472BE8DB27EAB3A500A41D54 /* XTag.swift */,
 				47970F10280E6467004B91CF /* PickedItem.swift */,
+				474F148B2810B870007FE877 /* Genre.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -752,6 +785,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				476B431527FC0F9900C30BF3 /* Photo.swift in Sources */,
+				474F148A2810B7FA007FE877 /* LyricCreaterSaveForm.swift in Sources */,
 				47A3E5D827E4DE3300412B89 /* LyricsViewerView.swift in Sources */,
 				4708C46927ED2F6E00481172 /* DocumentPicker.swift in Sources */,
 				4782A49C27E8EA5600FA0FC9 /* LyricsCreaterViewModel.swift in Sources */,
@@ -762,9 +796,9 @@
 				4708C47C27ED37B400481172 /* Chord.swift in Sources */,
 				476D4A292808767C007A45DB /* ToolbarInputAccessory.swift in Sources */,
 				47A3E5DB27E4DEC900412B89 /* LyricsViewerTextView.swift in Sources */,
-				4751BCDB2803CEC70000ACF7 /* ImportableView.swift in Sources */,
+				4751BCDB2803CEC70000ACF7 /* LyricImporterView.swift in Sources */,
 				47A3E5DE27E4DF3100412B89 /* LyricsViewerViewModel.swift in Sources */,
-				4751BCDD2803CEDA0000ACF7 /* ImportableViewModel.swift in Sources */,
+				4751BCDD2803CEDA0000ACF7 /* LyricImporterViewModel.swift in Sources */,
 				47970F07280E21D5004B91CF /* Key.swift in Sources */,
 				47BB283327F0CFDC00852C1D /* EditableTextView.swift in Sources */,
 				4726965627FF11ED009FE548 /* UIImage+Utils.swift in Sources */,
@@ -798,6 +832,7 @@
 				4734A9CC28090DC400EA706D /* Extensions.swift in Sources */,
 				476B431127FC0F9900C30BF3 /* CameraViewModel.swift in Sources */,
 				476B431027FC0F9900C30BF3 /* CameraService+Extensions.swift in Sources */,
+				474F148C2810B870007FE877 /* Genre.swift in Sources */,
 				476B42FE27FBDA0F00C30BF3 /* ActivityView.swift in Sources */,
 				47873D5227E3659E00417F89 /* +View.swift in Sources */,
 				4708C46727ED020100481172 /* XApp.swift in Sources */,
@@ -805,10 +840,11 @@
 				4726965827FF11ED009FE548 /* CGAffineTransform+Utils.swift in Sources */,
 				476D4A2B28088573007A45DB /* ChordsInputView.swift in Sources */,
 				477DA77E27E0E88800C143C4 /* TapToPresentStyle.swift in Sources */,
+				47970F1A280EDD8C004B91CF /* Resegment.swift in Sources */,
 				477DA77F27E0E88800C143C4 /* TapToPushStyle.swift in Sources */,
 				47A1E3762806C148002F75A0 /* LyricCreaterForm.swift in Sources */,
 				476B430127FBDA4300C30BF3 /* ActivityItem.swift in Sources */,
-				47970F17280EB3AF004B91CF /* Syllables.swift in Sources */,
+				47970F17280EB3AF004B91CF /* SpellCorrector.swift in Sources */,
 				476B431327FC0F9900C30BF3 /* CameraService+Enums.swift in Sources */,
 				4708C47927ED37B400481172 /* Song.swift in Sources */,
 				4782A49E27E8EA6A00FA0FC9 /* LyricsCreaterTextView.swift in Sources */,

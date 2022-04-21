@@ -127,7 +127,7 @@ extension AttributedString {
     
     static func getChordTags(for rawText: String) -> [XTag] {
         var items = [XTag]()
-        RegularExpression.chordPattern.matches(in: rawText, range: rawText.range()).forEach { match in
+        RegularExpression.chordPattern.matches(in: rawText, range: rawText.nsRange()).forEach { match in
             let nsString = rawText as NSString
             let tagRange = match.range // (location: 20, length: 3]
             let subString = nsString.substring(with: tagRange) // [G]

@@ -14,6 +14,7 @@ struct LyricsCreaterTextView: UIViewRepresentable {
     func makeUIView(context: Context) -> EditableTextView {
         let uiView = EditableTextView()
         uiView.configureToolbar()
+        uiView.delegate = viewModel
         viewModel.textView = uiView
         return uiView
     }

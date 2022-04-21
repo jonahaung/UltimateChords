@@ -11,8 +11,9 @@ import SwiftyTesseract
 final class TextRecognizer {
 
     private let tesseract: Tesseract
-    private let queue = DispatchQueue(label: "com.jonahaung.TextRecognizer", qos: .userInitiated)
+    private let queue = DispatchQueue(label: "com.jonahaung.TextRecognizer", qos: .userInteractive)
     private var onGetText: ((String?) -> Void)?
+    
     init() {
         tesseract = .init(languages: [.burmese, .english])
         tesseract.configure {

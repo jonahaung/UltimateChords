@@ -21,7 +21,7 @@ struct OcrImageView: View {
     var body: some View {
         PickerNavigationView {
             ZStack {
-                Color.black.edgesIgnoringSafeArea(.all)
+                Color.gray.edgesIgnoringSafeArea(.all)
                 VStack(spacing: 0) {
                     Spacer()
                     QuadrilateralImageView(viewModel: viewModel)
@@ -35,12 +35,10 @@ struct OcrImageView: View {
                 viewModel.task()
             }
             .onChange(of: viewModel.text) { newValue in
-                DispatchQueue.main.async {
-                    if let text = newValue {
-                        onDismiss(.Success(text: text))
-                    } else {
-                        onDismiss(.Cancel)
-                    }
+                if let text = newValue {
+                    onDismiss(.OCR(text: SongParser.format(text)))
+                } else {
+                    onDismiss(.Cancel)
                 }
             }
         }
@@ -73,14 +71,14 @@ struct OcrImageView: View {
                 viewModel.detextTexts()
             }
             .buttonStyle(.bordered)
-            .disabled(viewModel.recognizingText)
+            .disabled(viewModel.isRecognizingText)
         }
         .padding(.horizontal)
-        
     }
+    
     private func loadingView() -> some View {
         Group {
-            if viewModel.recognizingText {
+            if viewModel.isRecognizingText {
                 ProgressView()
             }
         }
@@ -90,7 +88,7 @@ struct OcrImageView: View {
 extension OcrImageView {
     
     enum ResultType {
-        case Success(text: String)
+        case OCR(text: String)
         case Redo
         case Cancel
     }

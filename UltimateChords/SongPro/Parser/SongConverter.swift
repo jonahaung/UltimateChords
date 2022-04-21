@@ -34,7 +34,7 @@ class SongConverter {
         var key: String?
         var value: String?
         
-        if let match = RegularExpression.directivePattern.firstMatch(in: text, range: text.range()) {
+        if let match = RegularExpression.directivePattern.firstMatch(in: text, range: text.nsRange()) {
             
             if let keyRange = Range(match.range(at: 1), in: text) {
                 key = text[keyRange].trimmingCharacters(in: .newlines)
@@ -86,7 +86,7 @@ class SongConverter {
         
         
         /// Second, stuff without a value
-        if let match = RegularExpression.directiveEmptyRegex.firstMatch(in: text, range: text.range()) {
+        if let match = RegularExpression.directiveEmptyRegex.firstMatch(in: text, range: text.nsRange()) {
             
             if let keyRange = Range(match.range(at: 1), in: text) {
                 key = text[keyRange].trimmingCharacters(in: .newlines)
@@ -158,9 +158,9 @@ class SongConverter {
             }
         }
         let chord = Chord.chord(for: key)
-        if let index = song.chords.firstIndex(where: { $0.name == chord?.key.rawValue }) {
-            song.chords[index].define = value
-        }
+//        if let index = song.chords.firstIndex(where: { $0.name == chord?.key.rawValue }) {
+//            song.chords[index].define = value
+//        }
     }
     
     // MARK: - func: processComments
@@ -186,7 +186,7 @@ class SongConverter {
             if currentSection.type == nil {
                 currentSection.type = "grid"
             }
-            if let measureMatches = measuresRegex?.matches(in: text, range: text.range()) {
+            if let measureMatches = measuresRegex?.matches(in: text, range: text.nsRange()) {
                 var measures = [Song.Measure]()
                 
                 for match in measureMatches {
@@ -234,7 +234,7 @@ class SongConverter {
             var wordLine = String()
             
             
-            lyricsRegex!.matches(in: string, range: string.range()).forEach { match in
+            lyricsRegex!.matches(in: string, range: string.nsRange()).forEach { match in
                 var chord = ""
                 var word = ""
                 
@@ -290,7 +290,7 @@ class SongConverter {
                 
                 var chordLine = String()
                 
-                while let match = RegularExpression.chordPattern.firstMatch(in: textLine, options: [], range: textLine.range()) {
+                while let match = RegularExpression.chordPattern.firstMatch(in: textLine, options: [], range: textLine.nsRange()) {
                     
                     let nsString = textLine as NSString
                     let subRange = match.range

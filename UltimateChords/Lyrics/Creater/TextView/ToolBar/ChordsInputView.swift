@@ -57,7 +57,7 @@ extension ChordsInputView {
             let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitem: item, count: rows)
             
             let section = NSCollectionLayoutSection(group: group)
-            section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
+            section.orthogonalScrollingBehavior = .groupPaging
             section.contentInsets = Constants.sectionInsets
             
             return section
@@ -89,6 +89,7 @@ extension ChordsInputView {
             }
         }
         dataSource.apply(snapshot, animatingDifferences: true)
+        sizeToFit()
     }
 }
 
@@ -212,22 +213,22 @@ extension ChordsInputView {
         var widthDimention: NSCollectionLayoutDimension {
             switch self {
             case .key:
-                return .estimated(40)
+                return .fractionalWidth(0.15)
             case .suffix:
                 return .estimated(60)
             case .control:
-                return .estimated((UIScreen.main.bounds.width / CGFloat(ControlKind.allCases.count)) - Constants.sectionInsets.leading + Constants.itemInsets.leading)
+                return .fractionalWidth(0.23)
             }
         }
         
         var heightDimention: NSCollectionLayoutDimension {
             switch self {
             case .key:
-                return .estimated(40)
+                return .fractionalHeight(0.15)
             case .suffix:
-                return .fractionalWidth(0.4)
+                return .fractionalHeight(0.6)
             case .control:
-                return .estimated(40)
+                return .fractionalHeight(0.15)
             }
         }
         

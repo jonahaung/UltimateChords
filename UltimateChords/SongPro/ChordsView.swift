@@ -16,7 +16,7 @@ struct ChordsView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack {
                 ForEach(song.chords.sorted { $0.name < $1.name }) { chord in
-                    if let chordPosition = ChordsView.chordsDatabase.filter { $0.key == chord.key && $0.suffix == chord.suffix && $0.baseFret == chord.basefret}, let layer = chordPosition.first?.shapeLayer(rect: ChordsView.frame, showFingers: true, showChordName: true), let image = layer.image()?.withRenderingMode(.alwaysTemplate) {
+                    if let chordPosition = ChordsView.chordsDatabase.filter { $0.key == chord.key && $0.suffix == chord.suffix}, let layer = chordPosition.first?.shapeLayer(rect: ChordsView.frame, showFingers: true, showChordName: true), let image = layer.image()?.withRenderingMode(.alwaysTemplate) {
                         Image(uiImage: image)
                             .resizable()
                             .scaledToFit()

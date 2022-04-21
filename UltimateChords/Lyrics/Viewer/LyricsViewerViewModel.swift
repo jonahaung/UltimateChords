@@ -11,7 +11,6 @@ import SwiftUI
 class LyricsViewerViewModel: ObservableObject {
     
     @Published var song: Song?
-    @Published var showControls = false
     @Published var activityItem: ActivityItem?
     
     var attributedText: NSAttributedString {
@@ -20,16 +19,16 @@ class LyricsViewerViewModel: ObservableObject {
     
     var isDinamicFontSizeEnabled: Bool {
         get { UserDefault.LyricViewer.isDinamicFontSizeEnabled }
-        set { UserDefault.LyricViewer.isDinamicFontSizeEnabled = newValue; hideControlsIfNeeded() }
+        set { UserDefault.LyricViewer.isDinamicFontSizeEnabled = newValue }
     }
     
     var showChords: Bool {
         get { UserDefault.LyricViewer.showChords }
-        set { UserDefault.LyricViewer.showChords = newValue; objectWillChange.send(); hideControlsIfNeeded() }
+        set { UserDefault.LyricViewer.showChords = newValue; objectWillChange.send() }
     }
     var displayMode: UserDefault.LyricViewer.DisplayMode {
         get { UserDefault.LyricViewer.displayMode }
-        set { UserDefault.LyricViewer.displayMode = newValue; objectWillChange.send(); hideControlsIfNeeded() }
+        set { UserDefault.LyricViewer.displayMode = newValue; objectWillChange.send() }
     }
     deinit{
         print("deinit")
@@ -47,14 +46,6 @@ extension LyricsViewerViewModel {
             song.artist = lyric.artist
         }
         self.song = song
-    }
-    
-    func hideControlsIfNeeded() {
-        if showControls {
-            withAnimation(.interactiveSpring()) {
-                showControls = false
-            }
-        }
     }
 }
 

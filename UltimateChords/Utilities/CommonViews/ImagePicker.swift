@@ -23,15 +23,15 @@ struct ImagePicker: UIViewControllerRepresentable {
     }
     
     func makeCoordinator() -> ImagePicker.Coordinator {
-        return ImagePicker.Coordinator(parent1: self)
+        return ImagePicker.Coordinator(parent: self)
     }
     
     class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
         
         var parent: ImagePicker
         
-        init(parent1: ImagePicker){
-            parent = parent1
+        init(parent: ImagePicker){
+            self.parent = parent
         }
         
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -57,7 +57,7 @@ import SwiftUI
 
 public struct ImagePickerMultiple: UIViewControllerRepresentable {
     
-    public typealias Completion = (_ selectedImage: [Photo]) -> Void
+    public typealias Completion = (_ photos: [Photo]) -> Void
     
     private var maxLimit: Int
     private var completion: Completion?
@@ -92,37 +92,27 @@ public struct ImagePickerMultiple: UIViewControllerRepresentable {
         
         public func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
             let group = DispatchGroup()
-            var images = [Photo]()
+            var photos = [Photo]()
             for result in results {
                 group.enter()
-                load(result) { image in
-                    if let image = image {
-
-                        images.append(image)
+                result.itemProvider.loadDataRepresentation(forTypeIdentifier: UTType.image.identifier) { (data, error) in
+                    if let error = error {
+                        print(error)
+                        group.leave()
+                        return
                     }
+                    guard let data = data else {
+                        print("unable to unwrap image as UIImage")
+                        group.leave()
+                        return
+                    }
+                    let photo = Photo(id: result.assetIdentifier ?? UUID().uuidString, originalData: data)
+                    photos.append(photo)
                     group.leave()
                 }
             }
             group.notify(queue: .main) {
-                self.parent.completion?(images)
-            }
-        }
-        
-        private func load(_ image: PHPickerResult, completion: @escaping (Photo?) -> Void ) {
-            image.itemProvider.loadDataRepresentation(forTypeIdentifier: UTType.image.identifier) { (data, error) in
-                if let error = error {
-                    print(error.localizedDescription)
-                    completion(nil)
-                    return
-                }
-                
-                guard let data = data else {
-                    print("unable to unwrap image as UIImage")
-                    completion(nil)
-                    return
-                }
-                let photo = Photo(id: image.assetIdentifier ?? UUID().uuidString, originalData: data)
-                completion(photo)
+                self.parent.completion?(photos)
             }
         }
     }

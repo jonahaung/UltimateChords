@@ -13,7 +13,7 @@ struct LyricsCreaterView: View {
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
-        ImportableView {
+        LyricImporterView {
             LyricsCreaterTextView(viewModel: viewModel)
         }
         .navigationBarItems(trailing: navTrailing())
@@ -21,15 +21,17 @@ struct LyricsCreaterView: View {
     }
     
     private func navTrailing() -> some View {
-        HStack(spacing: 0) {
-            XIcon(.music_note)
-                .tapToPresent(PickerNavigationView { LyricCreaterControls() })
-            Button {
-                viewModel.save()
-               dismiss()
-            } label: {
-                Text("Save")
-            }.disabled(viewModel.lyric.text.isWhitespace)
+        HStack {
+            XIcon(.music_note_list)
+                .tapToPresent(LyricCreaterControls(onSaved: onSaved))
+            Text("Continue")
+                .disabled(viewModel.lyric.text.isEmpty)
+                .tapToPresent(LyricCreaterControls(onSaved: onSaved))
         }
+    }
+    
+    private func onSaved() {
+        viewModel.save()
+        dismiss()
     }
 }

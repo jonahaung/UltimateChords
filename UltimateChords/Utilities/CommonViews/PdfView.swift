@@ -12,7 +12,7 @@ struct PdfView: UIViewRepresentable {
     
     typealias UIViewType = PDFView
     
-    let attributedText: NSAttributedString?
+    @State var attributedText: NSAttributedString
     
     func makeUIView(context _: UIViewRepresentableContext<PdfView>) -> UIViewType {
         let pdfView = PDFView()
@@ -23,8 +23,6 @@ struct PdfView: UIViewRepresentable {
     }
 
     func updateUIView(_ pdfView: UIViewType, context _: UIViewRepresentableContext<PdfView>) {
-        if let attributedText = attributedText {
-            pdfView.document = Pdf.document(from: attributedText)
-        }
+        pdfView.document = Pdf.document(from: attributedText)
     }
 }

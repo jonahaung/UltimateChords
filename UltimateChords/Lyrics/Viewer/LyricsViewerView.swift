@@ -39,7 +39,6 @@ struct LyricsViewerView: View {
                 }
             }
         }
-        .overlay(controlsOverlay(), alignment: .bottom)
         .overlay(bottomMenu(), alignment: .bottomTrailing)
         .activitySheet($viewModel.activityItem)
         .environmentObject(viewModel)
@@ -48,15 +47,7 @@ struct LyricsViewerView: View {
         }
     }
     
-    private func controlsOverlay() -> some View {
-        Group {
-            if viewModel.showControls {
-                LyricViewerControls(isShowing: $viewModel.showControls)
-                    .frame(height: UIScreen.main.bounds.height/2)
-                    .transition(.move(edge: .bottom))
-            }
-        }
-    }
+
     private func titleView() -> some View {
         Text(lyric.title.whiteSpace)
             .font(XFont.title(for: lyric.title).font)
@@ -67,15 +58,10 @@ struct LyricsViewerView: View {
     }
     
     private func bottomMenu() -> some View {
-        Button {
-            withAnimation(.interactiveSpring()) {
-                viewModel.showControls.toggle()
-            }
-        } label: {
-            XIcon(viewModel.showControls ? .xmark : .music_note_list)
-                .font(.title)
-                .padding()
-        }
+        XIcon(.music_note_list)
+            .font(.title)
+            .padding()
+            .tapToPresent(LyricViewerControls())
     }
     
     private func shareButton() -> some View {

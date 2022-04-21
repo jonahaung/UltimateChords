@@ -37,6 +37,8 @@ class ChordInputCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         isSelected = false
+        imageView.image = nil
+        label.text = nil
     }
     override func layoutSubviews() {
         super.layoutSubviews()

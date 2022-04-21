@@ -11,12 +11,13 @@ struct SongParser {
     
     private static func isChordLine(for line: String) -> Bool {
         if line.words().count == 1 { return true }
-        return RegularExpression.chordsRegexForPlainText.matches(in: line, range: line.range()).isEmpty == false
+        return RegularExpression.chordsRegexForPlainText.matches(in: line, range: line.nsRange()).count > 0
     }
     
     private static func nextLine(from index: Int, lines: [String]) -> String? {
-        guard index+1 < lines.count else { return nil }
-        return lines[index+1]
+        let nextLineIndex = index + 1
+        guard nextLineIndex < lines.count else { return nil }
+        return lines[nextLineIndex]
     }
     
     private static func getWordsRanges(from string: String) -> [NSRange] {
@@ -30,9 +31,8 @@ struct SongParser {
     }
     
     private static func concentrate(chordLine: inout String, lyricLine: inout String) -> String {
-        
         func firstMatch(of string: String) -> XTag? {
-            if let match = RegularExpression.chordsRegexForPlainText.firstMatch(in: string, range: string.range()) {
+            if let match = RegularExpression.chordsRegexForPlainText.firstMatch(in: string, range: string.nsRange()) {
                 let subRange = match.range
                 let subStr = (string as NSString).substring(with: subRange)
                 return XTag(string: String(subStr), range: subRange)
@@ -52,8 +52,7 @@ struct SongParser {
         
         while let tag = firstMatch(of: String(mutableChordLine)) {
             let chord = tag.string.bracked
-            
-            mutableChordLine.replaceCharacters(in: tag.range, with: makeEmptyString(for: chord.utf16.count))
+            mutableChordLine.replaceCharacters(in: tag.range, with: String.makeEmptyString(for: chord.utf16.count))
             var location = tag.range.location
             let wordRanges = getWordsRanges(from: String(mutableLyricLine))
             wordRanges.forEach { range in
@@ -66,24 +65,18 @@ struct SongParser {
         return String(mutableLyricLine)
     }
     
-    private static func makeEmptyString(for i: Int, with item: String = " ") -> String {
-        var str = String()
-        (0..<i).forEach { _ in
-            str += item
-
-        }
-        return str
-    }
-    
-    static func convert(_ text: String) -> String {
-        let text = resegment(text)
-        let textLines = text.components(separatedBy: "\n")
-        var newLines = [String]()
+    static func format(_ text: String) -> String {
+        let text = correctSpellings(text)
+        let textLines = text.lines()
         
+        var newLines = [String]()
         var canSkip = false
         
         for (i, var line) in textLines.enumerated() {
-            guard !canSkip else { canSkip = false; continue }
+            guard !canSkip else {
+                canSkip = false
+                continue
+            }
             
             guard isChordLine(for: line) else {
                 newLines.append(line)
@@ -95,8 +88,10 @@ struct SongParser {
                 continue
             }
             
-            guard isChordLine(for: nextLine) == false else {
-                newLines.append(line)
+            guard !isChordLine(for: nextLine) else {
+                let bracked = RegularExpression.chordsRegexForPlainText.stringByReplacingMatches(in: line, withTemplate: "[$1]")
+                print(bracked)
+                newLines.append(bracked)
                 continue
             }
             let concenerated = concentrate(chordLine: &line, lyricLine: &nextLine)
@@ -107,26 +102,19 @@ struct SongParser {
         return newLines.joined(separator: "\n")
     }
     
-    static func resegment(_ text: String) -> String {
+    static func correctSpellings(_ text: String) -> String {
+        let isMyanmar = text.isMyanar
+        
         var lines = [String]()
-        text.lines().forEach { line in
-            if line.isMyanar {
-                let filtered = Resegment.myanmar(line)
-                lines.append(filtered)
-            } else if isChordLine(for: line) {
-                var clean = makeEmptyString(for: line.count)
-                line.wordTags().forEach { element in
-                    let text = element.string
-                    let range = element.range
-                    if let strRange = line.range(from: range) {
-                        if Syllables.guitarChords.contains(text) {
-                            clean = clean.replacingCharacters(in: strRange, with: text)
-                        } else {
-                            clean = clean.replacingCharacters(in: strRange, with: makeEmptyString(for: text.count))
-                        }
-                    }
-                }
-                lines.append(clean)
+        text.components(separatedBy: .newlines).forEach { line in
+            if isChordLine(for: line) {
+                lines.append(SpellCorrector.correctedChordLine(line))
+            } else if isMyanmar && line.isMyanar {
+                lines.append(SpellCorrector.correctedMyanmarText(line))
+            } else if !isMyanmar {
+                lines.append(SpellCorrector.correctEnglishText(line))
+            } else if line.isWhitespace {
+                lines.append(line)
             }
         }
         return lines.joined(separator: "\n")

@@ -9,8 +9,10 @@ import SwiftUI
 
 struct XFont {
 
-    enum MyanmarFont: String {
-        case MyanmarSansPro, MyanmarAngoun, MyanmarSquare, MasterpieceSpringRev, NotoSansMyanmar
+    enum MyanmarFont: String, CustomStringConvertible {
+        var description: String { rawValue.replacingOccurrences(of: "_", with: "-")}
+        
+        case MyanmarSansPro, MyanmarAngoun, MyanmarSquare, MasterpieceSpringRev, NotoSansMyanmar_Regular
     }
     enum Style {
         case title, headline, body, subheadline, footnote
@@ -47,7 +49,7 @@ struct XFont {
     }
     
     static func body(for text: String) -> UIFont {
-        let fontName = text.isMyanar ? MyanmarFont.MyanmarAngoun.rawValue : "NotoSansMonoExtraCondensed-Medium"
+        let fontName = text.isMyanar ? MyanmarFont.MyanmarAngoun.description : "NotoSansMonoExtraCondensed-Medium"
         return UIFont(name: fontName, size: UIFont.labelFontSize)!
     }
     
@@ -63,13 +65,6 @@ struct XFont {
     static func universal(for style: UIFont.TextStyle) -> UIFont {
         .init(name: MyanmarFont.MyanmarSansPro.rawValue, size: UIFont.preferredFont(forTextStyle: style).pointSize) ?? UIFont.preferredFont(forTextStyle: style)
     }
-}
-
-extension String {
-    
-    var language: String { NSLinguisticTagger.dominantLanguage(for: self) ?? ""}
-    
-    var isMyanar: Bool { language == "my" }
 }
 
 extension UIFont {

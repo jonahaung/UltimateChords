@@ -19,7 +19,7 @@ struct Chord: Identifiable, Equatable {
         var key: Chords.Key?
         var suffix: Chords.Suffix = .major
         
-        if let match = RegularExpression.chordPattern3.firstMatch(in: chordString, options: [], range: chordString.range()) {
+        if let match = RegularExpression.chordPattern3.firstMatch(in: chordString, options: [], range: chordString.nsRange()) {
             if let keyRange = Range(match.range(at: 1), in: chordString) {
                 var valueKey = chordString[keyRange]
                 /// Dirty, some chords in the database are only in the flat version....

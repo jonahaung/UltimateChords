@@ -6,11 +6,10 @@
 //
 
 import UIKit
-import SwiftyChords
 
-final class LyricsCreaterViewModel: ObservableObject {
+final class LyricsCreaterViewModel: NSObject, ObservableObject {
     
-    @Published var lyric = Lyric(id: nil, title: "", artist: "", text: "")
+    @Published var lyric = Lyric.empty
     weak var textView: EditableTextView?
     
     var isEditable: Bool {
@@ -25,43 +24,36 @@ final class LyricsCreaterViewModel: ObservableObject {
                 var song = SongConverter.parse(rawText: textView?.text ?? "")
                 song.title = lyric.title
                 song.artist = lyric.artist
-                textView?.attributedText = AttributedString.displayText(for: song, with: .Default, showTitle: true)
+                let mutable = AttributedString.displayText(for: song, with: .Default, showTitle: true).mutable
+                mutable.adjustFontSize(to: UIScreen.main.bounds.width - 15)
+                textView?.attributedText = mutable
             } else {
                 textView?.text = lyric.text
-                textView?.updateFont()
+                textView?.reset()
+                textView?.detectChords()
             }
             objectWillChange.send()
         }
     }
     
     func save() {
-        CLyric.create(lyric: lyric)
-    }
-    
-    func fillDemoData() {
-        textView?.text = nil
-        lyric.title = "Hotel California"
-        lyric.artist = "Eagles"
-        insertText(SongParser.convert(hotelCalifornia))
-    }
-
-    func task() {
+        _ = CLyric.create(lyric: lyric)
         
     }
     
+    func fillDemoData() {
+        lyric.title = "ကမ္ဘာမကျေ"
+        lyric.artist = "များလူခပ်သိမ်း"
+        textView?.text = withChords
+        textView?.detectChords()
+        lyric.text = withChords
+    }
+
     func insertText(_ string: String) {
-        guard let textView = textView else {
-            return
-        }
-        textView.insert(text: string)
+        guard let textView = textView else { return }
         let song = SongConverter.parse(rawText: string)
-        if let title = song.title {
-            lyric.title = title
-        }
-        if let artist = song.artist {
-            lyric.artist = artist
-        }
-        lyric.text = string
+        lyric = song.lyric
+        textView.insert(text: string)
     }
     
     deinit {
@@ -70,13 +62,13 @@ final class LyricsCreaterViewModel: ObservableObject {
 }
 
 
-let instructionText = """
-{t: Song Title}
-{st: Singer}
+extension LyricsCreaterViewModel: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        self.textView?.detectChords()
+        lyric.text = textView.text
+    }
+}
 
-
-
-"""
 let withoutChords = """
  တရားမျှတ [G]လွတ်လပ်ခြင်းနဲ့မသွေ၊[Am]
  တို့ပြည်၊ [Am]တို့မြေ၊

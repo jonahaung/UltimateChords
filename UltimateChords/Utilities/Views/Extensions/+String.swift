@@ -6,6 +6,7 @@
 //
 
 import UIKit
+
 extension String: Identifiable {
     public var id: String { self }
 }
@@ -16,36 +17,66 @@ extension Optional where Wrapped: Collection {
 }
 extension Optional where Wrapped == String {
     var str: String {
-        return self ?? "nil"
+        return self ?? ""
     }
 }
 
 extension CharacterSet {
-    
-    static let removingCharacters = CharacterSet(charactersIn: "|+*#%;:&^$@!~.,'`|_ၤ”“")
-    
+
     static let myanmarAlphabets = CharacterSet(charactersIn: "ကခဂဃငစဆဇဈညတဒဍဓဎထဋဌနဏပဖဗဘမယရလ၀သဟဠအ").union(.whitespacesAndNewlines)
-    static let myanmarCharacters2 = CharacterSet(charactersIn: "ါာိီုူေဲဳဴဵံ့း္်ျြွှ")
     static var englishAlphabets = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ")
     static var lineEnding = CharacterSet(charactersIn: ".?!;:။…\t")
+    static let guitarKeys = CharacterSet(charactersIn: "ABCDEFGm#baugsus567")
 }
 extension String {
+    
+    enum PercentageResult {
+        case All, MoreThanHalf, LessThanHalf, Zero
+    }
+    func percentage(_ characterSet: CharacterSet) -> PercentageResult {
+        let trimmed = self.replacingOccurrences(of: " ", with: "")
+        var validCount = 0
+        var invalidCount = 0
+
+        for char in trimmed.unicodeScalars {
+            if CharacterSet.guitarKeys.contains(char) {
+                validCount += 1
+            }
+            else {
+                invalidCount += 1
+            }
+        }
+        if validCount == trimmed.unicodeScalars.count {
+            return .All
+        }
+        if validCount == 0 {
+            return .Zero
+        }
+        if validCount > invalidCount {
+            return .MoreThanHalf
+        }
+        return .LessThanHalf
+    }
+    
     func nsRange(from range: Range<String.Index>) -> NSRange {
         NSRange(range, in: self)
     }
+    
+    static func makeEmptyString(for i: Int, with item: String = " ") -> String {
+        var str = String()
+        (0..<i).forEach { _ in
+            str += item
+
+        }
+        return str
+    }
+    
+    var language: String { NSLinguisticTagger.dominantLanguage(for: self) ?? ""}
+    var isMyanar: Bool { language == "my" }
+    var isEnglish: Bool { language == "eng" }
 }
 
-extension String {
-    func range(from nsRange: NSRange) -> Range<String.Index>? {
-        guard
-            let from16 = utf16.index(utf16.startIndex, offsetBy: nsRange.location, limitedBy: utf16.endIndex),
-            let to16 = utf16.index(utf16.startIndex, offsetBy: nsRange.location + nsRange.length, limitedBy: utf16.endIndex),
-            let from = from16.samePosition(in: self),
-            let to = to16.samePosition(in: self)
-            else { return nil }
-        return from ..< to
-    }
-}
+
 extension String {
     
     var urlDecoded: String {
@@ -57,14 +88,14 @@ extension String {
     }
     
     var isWhitespace: Bool {
-        return trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
     
     var whiteSpace: String {
         self.appending(" ")
     }
-    func prepending(_ s: String) -> String {
-        s + self
+    func prepending(_ string: String) -> String {
+        string + self
     }
     var newLine: String {
         self.appending("\r")
@@ -85,9 +116,7 @@ extension String {
         return String(String.UnicodeScalarView(filtered))
     }
     
-    
-    
-    public func contains(_ string: String, caseSensitive: Bool = true) -> Bool {
+    func contains(_ string: String, caseSensitive: Bool = true) -> Bool {
         if !caseSensitive {
             return range(of: string, options: .caseInsensitive) != nil
         }
@@ -110,6 +139,7 @@ extension String {
         let comps = components(separatedBy: CharacterSet.whitespacesAndNewlines)
         return comps.filter { !$0.isWhitespace }
     }
+    
     func wordTags() -> [(string: String, range: NSRange)] {
         var ranges = [(String, NSRange)]()
         self.enumerateSubstrings(in: self.startIndex..<self.endIndex, options: [.byWords]) {
@@ -126,7 +156,7 @@ extension String {
         trimmingCharacters(in: .whitespacesAndNewlines)
     }
     
-    func range() -> NSRange {
+    func nsRange() -> NSRange {
         NSRange.init(self.startIndex..<self.endIndex, in: self)
     }
 }

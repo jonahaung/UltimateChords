@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PickerNavigationView<Content: View>: View {
     
-    @Environment(\.presentationMode) private var presentationMode
+    @Environment(\.dismiss) private var dismiss
     
     private let content: () -> Content
     init(@ViewBuilder content: @escaping () -> Content) {
@@ -21,12 +21,13 @@ struct PickerNavigationView<Content: View>: View {
             content()
                 .navigationBarItems(leading: Leading())
                 .navigationBarTitleDisplayMode(.inline)
-        }.navigationViewStyle(.stack)
+        }
+        .navigationViewStyle(.stack)
     }
     
     private func Leading() -> some View {
         Button {
-            presentationMode.wrappedValue.dismiss()
+            dismiss()
         } label: {
             Text("Cancel")
         }
