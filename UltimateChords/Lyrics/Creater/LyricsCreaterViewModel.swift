@@ -14,29 +14,11 @@ final class LyricsCreaterViewModel: NSObject, ObservableObject {
     
     var isEditable: Bool {
         get { textView?.isEditable == true }
-        set { textView?.isEditable = newValue; isPreviewMode = !newValue }
-    }
-    
-    var isPreviewMode: Bool = false {
-        didSet {
-            if oldValue == false {
-                lyric.text = textView?.text ?? ""
-                var song = SongConverter.parse(rawText: textView?.text ?? "")
-                song.title = lyric.title
-                song.artist = lyric.artist
-                let mutable = AttributedString.displayText(for: song, with: .Default, showTitle: true).mutable
-                mutable.adjustFontSize(to: UIScreen.main.bounds.width - 15)
-                textView?.attributedText = mutable
-            } else {
-                textView?.text = lyric.text
-                textView?.reset()
-                textView?.detectChords()
-            }
-            objectWillChange.send()
-        }
+        set { textView?.isEditable = newValue }
     }
     
     func save() {
+        lyric.text = textView?.text ?? ""
         _ = CLyric.create(lyric: lyric)
         
     }

@@ -11,7 +11,9 @@ class LyricImporterViewModel: ObservableObject {
     
     @Published var importMode: Mode?
     private var previousImportMode: Mode?
-    @Published var importingImage: UIImage?
+    var pickedItem: PickedItem?
+    @Published var pickedImage: UIImage?
+    var ocrResult: OcrImageView.ResultType?
     
     deinit {
         print("DEINIT: ImportableViewModel")

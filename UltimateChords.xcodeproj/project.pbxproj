@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		188A8C846E87C00A5A00F767 /* Pods_UltimateChords.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93B0B55C15D1E1E3E0D52636 /* Pods_UltimateChords.framework */; };
 		4708C45E27ECB36F00481172 /* AttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4708C45D27ECB36F00481172 /* AttributedString.swift */; };
 		4708C46727ED020100481172 /* XApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4708C46627ED020100481172 /* XApp.swift */; };
 		4708C46927ED2F6E00481172 /* DocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4708C46827ED2F6E00481172 /* DocumentPicker.swift */; };
@@ -22,8 +23,6 @@
 		4726962927FC7B7A009FE548 /* LyricViewerControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726962827FC7B7A009FE548 /* LyricViewerControls.swift */; };
 		4726962D27FE4B38009FE548 /* SongKeyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726962C27FE4B38009FE548 /* SongKeyView.swift */; };
 		4726963327FE98DF009FE548 /* OCRImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726963227FE98DF009FE548 /* OCRImageViewModel.swift */; };
-		4726963C27FE9C9D009FE548 /* SwiftyTesseract in Frameworks */ = {isa = PBXBuildFile; productRef = 4726963B27FE9C9D009FE548 /* SwiftyTesseract */; };
-		4726964127FE9EE7009FE548 /* tessdata in Resources */ = {isa = PBXBuildFile; fileRef = 4726964027FE9EE7009FE548 /* tessdata */; };
 		4726965027FF0AFA009FE548 /* DocumentScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726964F27FF0AFA009FE548 /* DocumentScannerView.swift */; };
 		4726965627FF11ED009FE548 /* UIImage+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726965127FF11EC009FE548 /* UIImage+Utils.swift */; };
 		4726965827FF11ED009FE548 /* CGAffineTransform+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726965327FF11EC009FE548 /* CGAffineTransform+Utils.swift */; };
@@ -42,12 +41,13 @@
 		4734A9D1280920F800EA706D /* guitar.json in Resources */ = {isa = PBXBuildFile; fileRef = 4734A9CF280920F800EA706D /* guitar.json */; };
 		4734A9D2280920F800EA706D /* ukulele.json in Resources */ = {isa = PBXBuildFile; fileRef = 4734A9D0280920F800EA706D /* ukulele.json */; };
 		4734A9D42809210000EA706D /* Instrument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4734A9D32809210000EA706D /* Instrument.swift */; };
-		474F148A2810B7FA007FE877 /* LyricCreaterSaveForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 474F14892810B7FA007FE877 /* LyricCreaterSaveForm.swift */; };
 		474F148C2810B870007FE877 /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = 474F148B2810B870007FE877 /* Genre.swift */; };
+		474F14B62810F4D7007FE877 /* MySpellCorrect in Frameworks */ = {isa = PBXBuildFile; productRef = 474F14B52810F4D7007FE877 /* MySpellCorrect */; };
 		4751BCDB2803CEC70000ACF7 /* LyricImporterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4751BCDA2803CEC70000ACF7 /* LyricImporterView.swift */; };
 		4751BCDD2803CEDA0000ACF7 /* LyricImporterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4751BCDC2803CEDA0000ACF7 /* LyricImporterViewModel.swift */; };
 		4751BCDF2803ECCC0000ACF7 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4751BCDE2803ECCC0000ACF7 /* ImagePicker.swift */; };
 		4751BCE12805B5990000ACF7 /* QuadrilateralImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4751BCE02805B5990000ACF7 /* QuadrilateralImageView.swift */; };
+		475DF51D2814DB3400CCC2C5 /* tessdata in Resources */ = {isa = PBXBuildFile; fileRef = 4726964027FE9EE7009FE548 /* tessdata */; };
 		4761E7F727ED7A4300BBA301 /* PickerNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4761E7F627ED7A4300BBA301 /* PickerNavigationView.swift */; };
 		4761E7FC27EF789700BBA301 /* TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4761E7FB27EF789700BBA301 /* TextView.swift */; };
 		4761E7FE27EF7D7900BBA301 /* Html.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4761E7FD27EF7D7900BBA301 /* Html.swift */; };
@@ -98,9 +98,7 @@
 		47970F07280E21D5004B91CF /* Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47970F06280E21D5004B91CF /* Key.swift */; };
 		47970F0C280E21E6004B91CF /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47970F09280E21E5004B91CF /* Note.swift */; };
 		47970F11280E6467004B91CF /* PickedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47970F10280E6467004B91CF /* PickedItem.swift */; };
-		47970F15280EB385004B91CF /* syllables.txt in Resources */ = {isa = PBXBuildFile; fileRef = 47970F14280EB385004B91CF /* syllables.txt */; };
-		47970F17280EB3AF004B91CF /* SpellCorrector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47970F16280EB3AF004B91CF /* SpellCorrector.swift */; };
-		47970F1A280EDD8C004B91CF /* Resegment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47970F19280EDD8C004B91CF /* Resegment.swift */; };
+		47970F17280EB3AF004B91CF /* GuitarChordCorrector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47970F16280EB3AF004B91CF /* GuitarChordCorrector.swift */; };
 		47A1E3762806C148002F75A0 /* LyricCreaterForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47A1E3752806C148002F75A0 /* LyricCreaterForm.swift */; };
 		47A1E3792806C181002F75A0 /* LyricCreaterFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47A1E3782806C181002F75A0 /* LyricCreaterFormViewModel.swift */; };
 		47A3E5D827E4DE3300412B89 /* LyricsViewerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47A3E5D727E4DE3300412B89 /* LyricsViewerView.swift */; };
@@ -158,7 +156,6 @@
 		4734A9CF280920F800EA706D /* guitar.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = guitar.json; sourceTree = "<group>"; };
 		4734A9D0280920F800EA706D /* ukulele.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ukulele.json; sourceTree = "<group>"; };
 		4734A9D32809210000EA706D /* Instrument.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Instrument.swift; sourceTree = "<group>"; };
-		474F14892810B7FA007FE877 /* LyricCreaterSaveForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricCreaterSaveForm.swift; sourceTree = "<group>"; };
 		474F148B2810B870007FE877 /* Genre.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Genre.swift; sourceTree = "<group>"; };
 		4751BCDA2803CEC70000ACF7 /* LyricImporterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricImporterView.swift; sourceTree = "<group>"; };
 		4751BCDC2803CEDA0000ACF7 /* LyricImporterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricImporterViewModel.swift; sourceTree = "<group>"; };
@@ -215,9 +212,7 @@
 		47970F06280E21D5004B91CF /* Key.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Key.swift; sourceTree = "<group>"; };
 		47970F09280E21E5004B91CF /* Note.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		47970F10280E6467004B91CF /* PickedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickedItem.swift; sourceTree = "<group>"; };
-		47970F14280EB385004B91CF /* syllables.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = syllables.txt; sourceTree = "<group>"; };
-		47970F16280EB3AF004B91CF /* SpellCorrector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpellCorrector.swift; sourceTree = "<group>"; };
-		47970F19280EDD8C004B91CF /* Resegment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Resegment.swift; sourceTree = "<group>"; };
+		47970F16280EB3AF004B91CF /* GuitarChordCorrector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuitarChordCorrector.swift; sourceTree = "<group>"; };
 		47A1E3752806C148002F75A0 /* LyricCreaterForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricCreaterForm.swift; sourceTree = "<group>"; };
 		47A1E3782806C181002F75A0 /* LyricCreaterFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricCreaterFormViewModel.swift; sourceTree = "<group>"; };
 		47A3E5D727E4DE3300412B89 /* LyricsViewerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsViewerView.swift; sourceTree = "<group>"; };
@@ -240,6 +235,9 @@
 		47FB8A4327E2AC3F006799FC /* NotoSansMono_ExtraCondensed-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansMono_ExtraCondensed-Medium.ttf"; sourceTree = "<group>"; };
 		47FB8A4427E2AC3F006799FC /* NotoSansMono_ExtraCondensed-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansMono_ExtraCondensed-Regular.ttf"; sourceTree = "<group>"; };
 		47FB8A4927E2F3A4006799FC /* HtmlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HtmlView.swift; sourceTree = "<group>"; };
+		63EAF9E412BDC78352F5CB76 /* Pods-UltimateChords.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UltimateChords.release.xcconfig"; path = "Target Support Files/Pods-UltimateChords/Pods-UltimateChords.release.xcconfig"; sourceTree = "<group>"; };
+		93B0B55C15D1E1E3E0D52636 /* Pods_UltimateChords.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UltimateChords.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EFE9928436777649EC73A812 /* Pods-UltimateChords.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UltimateChords.debug.xcconfig"; path = "Target Support Files/Pods-UltimateChords/Pods-UltimateChords.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -247,8 +245,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4726963C27FE9C9D009FE548 /* SwiftyTesseract in Frameworks */,
+				474F14B62810F4D7007FE877 /* MySpellCorrect in Frameworks */,
 				4708C46C27ED378A00481172 /* SwiftyChords in Frameworks */,
+				188A8C846E87C00A5A00F767 /* Pods_UltimateChords.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -298,7 +297,6 @@
 		4726963427FE9C29009FE548 /* OCR */ = {
 			isa = PBXGroup;
 			children = (
-				4726964027FE9EE7009FE548 /* tessdata */,
 				4726966127FF204F009FE548 /* OcrImage */,
 			);
 			path = OCR;
@@ -445,6 +443,8 @@
 			children = (
 				477DA76327E0E7C800C143C4 /* UltimateChords */,
 				477DA76227E0E7C800C143C4 /* Products */,
+				ADD273D336409617E32E73FB /* Pods */,
+				E7170056A75F30AE28832A78 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -459,6 +459,7 @@
 		477DA76327E0E7C800C143C4 /* UltimateChords */ = {
 			isa = PBXGroup;
 			children = (
+				4726964027FE9EE7009FE548 /* tessdata */,
 				479BAC8927E242AB00CA5D14 /* App */,
 				4751BCD92803CEB10000ACF7 /* Importer */,
 				4708C45C27ECA94F00481172 /* SongPro */,
@@ -520,7 +521,6 @@
 			children = (
 				4782A49727E8E82F00FA0FC9 /* LyricsCreaterView.swift */,
 				476B429127FAFD9600C30BF3 /* LyricCreaterControls.swift */,
-				474F14892810B7FA007FE877 /* LyricCreaterSaveForm.swift */,
 				4782A49B27E8EA5600FA0FC9 /* LyricsCreaterViewModel.swift */,
 				474F148828103851007FE877 /* Import */,
 				47970EF7280B2141004B91CF /* TextView */,
@@ -551,9 +551,7 @@
 		47970F18280EDD76004B91CF /* NLP */ = {
 			isa = PBXGroup;
 			children = (
-				47970F14280EB385004B91CF /* syllables.txt */,
-				47970F16280EB3AF004B91CF /* SpellCorrector.swift */,
-				47970F19280EDD8C004B91CF /* Resegment.swift */,
+				47970F16280EB3AF004B91CF /* GuitarChordCorrector.swift */,
 			);
 			path = NLP;
 			sourceTree = "<group>";
@@ -688,6 +686,23 @@
 			path = NotoSansMono;
 			sourceTree = "<group>";
 		};
+		ADD273D336409617E32E73FB /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				EFE9928436777649EC73A812 /* Pods-UltimateChords.debug.xcconfig */,
+				63EAF9E412BDC78352F5CB76 /* Pods-UltimateChords.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		E7170056A75F30AE28832A78 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				93B0B55C15D1E1E3E0D52636 /* Pods_UltimateChords.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -695,9 +710,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 477DA77427E0E7C900C143C4 /* Build configuration list for PBXNativeTarget "UltimateChords" */;
 			buildPhases = (
+				FD45C8B585B81B224FBAFA67 /* [CP] Check Pods Manifest.lock */,
 				477DA75D27E0E7C800C143C4 /* Sources */,
 				477DA75E27E0E7C800C143C4 /* Frameworks */,
 				477DA75F27E0E7C800C143C4 /* Resources */,
+				D20862F0A3661CE5C34446A1 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -706,7 +723,7 @@
 			name = UltimateChords;
 			packageProductDependencies = (
 				4708C46B27ED378A00481172 /* SwiftyChords */,
-				4726963B27FE9C9D009FE548 /* SwiftyTesseract */,
+				474F14B52810F4D7007FE877 /* MySpellCorrect */,
 			);
 			productName = UltimateChords;
 			productReference = 477DA76127E0E7C800C143C4 /* UltimateChords.app */;
@@ -738,7 +755,7 @@
 			mainGroup = 477DA75827E0E7C800C143C4;
 			packageReferences = (
 				4708C46A27ED378A00481172 /* XCRemoteSwiftPackageReference "SwiftyGuitarChords" */,
-				4726963A27FE9C9D009FE548 /* XCRemoteSwiftPackageReference "SwiftyTesseract" */,
+				474F14B42810F4D6007FE877 /* XCRemoteSwiftPackageReference "MySpellCorrect" */,
 			);
 			productRefGroup = 477DA76227E0E7C800C143C4 /* Products */;
 			projectDirPath = "";
@@ -763,11 +780,10 @@
 				47A3E5F227E4F42800412B89 /* NotoSansMono_ExtraCondensed-ExtraBold.ttf in Resources */,
 				472BE8C227E97F4400A41D54 /* MyanmarSansPro.ttf in Resources */,
 				472BE8C427E980AF00A41D54 /* MyanmarAngoun.ttf in Resources */,
-				4726964127FE9EE7009FE548 /* tessdata in Resources */,
-				47970F15280EB385004B91CF /* syllables.txt in Resources */,
 				4734A9D2280920F800EA706D /* ukulele.json in Resources */,
 				477DA76927E0E7C900C143C4 /* Assets.xcassets in Resources */,
 				47FB8A4627E2AC3F006799FC /* NotoSansMono_ExtraCondensed-Regular.ttf in Resources */,
+				475DF51D2814DB3400CCC2C5 /* tessdata in Resources */,
 				47A3E5F127E4F42800412B89 /* NotoSansMono_ExtraCondensed-SemiBold.ttf in Resources */,
 				4734A9D1280920F800EA706D /* guitar.json in Resources */,
 				47FB8A4527E2AC3F006799FC /* NotoSansMono_ExtraCondensed-Medium.ttf in Resources */,
@@ -779,13 +795,54 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		D20862F0A3661CE5C34446A1 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-UltimateChords/Pods-UltimateChords-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-UltimateChords/Pods-UltimateChords-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-UltimateChords/Pods-UltimateChords-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FD45C8B585B81B224FBAFA67 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-UltimateChords-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		477DA75D27E0E7C800C143C4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				476B431527FC0F9900C30BF3 /* Photo.swift in Sources */,
-				474F148A2810B7FA007FE877 /* LyricCreaterSaveForm.swift in Sources */,
 				47A3E5D827E4DE3300412B89 /* LyricsViewerView.swift in Sources */,
 				4708C46927ED2F6E00481172 /* DocumentPicker.swift in Sources */,
 				4782A49C27E8EA5600FA0FC9 /* LyricsCreaterViewModel.swift in Sources */,
@@ -840,11 +897,10 @@
 				4726965827FF11ED009FE548 /* CGAffineTransform+Utils.swift in Sources */,
 				476D4A2B28088573007A45DB /* ChordsInputView.swift in Sources */,
 				477DA77E27E0E88800C143C4 /* TapToPresentStyle.swift in Sources */,
-				47970F1A280EDD8C004B91CF /* Resegment.swift in Sources */,
 				477DA77F27E0E88800C143C4 /* TapToPushStyle.swift in Sources */,
 				47A1E3762806C148002F75A0 /* LyricCreaterForm.swift in Sources */,
 				476B430127FBDA4300C30BF3 /* ActivityItem.swift in Sources */,
-				47970F17280EB3AF004B91CF /* SpellCorrector.swift in Sources */,
+				47970F17280EB3AF004B91CF /* GuitarChordCorrector.swift in Sources */,
 				476B431327FC0F9900C30BF3 /* CameraService+Enums.swift in Sources */,
 				4708C47927ED37B400481172 /* Song.swift in Sources */,
 				4782A49E27E8EA6A00FA0FC9 /* LyricsCreaterTextView.swift in Sources */,
@@ -1003,6 +1059,7 @@
 		};
 		477DA77527E0E7C900C143C4 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EFE9928436777649EC73A812 /* Pods-UltimateChords.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1035,6 +1092,7 @@
 		};
 		477DA77627E0E7C900C143C4 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 63EAF9E412BDC78352F5CB76 /* Pods-UltimateChords.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1097,12 +1155,12 @@
 				kind = branch;
 			};
 		};
-		4726963A27FE9C9D009FE548 /* XCRemoteSwiftPackageReference "SwiftyTesseract" */ = {
+		474F14B42810F4D6007FE877 /* XCRemoteSwiftPackageReference "MySpellCorrect" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SwiftyTesseract/SwiftyTesseract.git";
+			repositoryURL = "https://github.com/jonahaung/MySpellCorrect";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.0;
+				branch = main;
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -1113,10 +1171,10 @@
 			package = 4708C46A27ED378A00481172 /* XCRemoteSwiftPackageReference "SwiftyGuitarChords" */;
 			productName = SwiftyChords;
 		};
-		4726963B27FE9C9D009FE548 /* SwiftyTesseract */ = {
+		474F14B52810F4D7007FE877 /* MySpellCorrect */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4726963A27FE9C9D009FE548 /* XCRemoteSwiftPackageReference "SwiftyTesseract" */;
-			productName = SwiftyTesseract;
+			package = 474F14B42810F4D6007FE877 /* XCRemoteSwiftPackageReference "MySpellCorrect" */;
+			productName = MySpellCorrect;
 		};
 /* End XCSwiftPackageProductDependency section */
 

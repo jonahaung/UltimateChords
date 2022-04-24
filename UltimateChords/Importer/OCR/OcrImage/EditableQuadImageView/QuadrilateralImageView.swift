@@ -102,7 +102,8 @@ extension QuadImageView {
     }
     
     private func displayBoxes() {
-        let viewQuads = currentQuadrilaterals.map{ $0.applying(imageViewTransform)}
+        let region = quadView.getQuadFrame()
+        let viewQuads = currentQuadrilaterals.map{ $0.applying(imageViewTransform)}.filter{ region.contains($0.regionRect) }
         quadView.drawBoxes(quads: viewQuads)
         let rect = viewQuads.map{$0.regionRect}.reduce(CGRect.null, { $0.union($1) })
         let quad = Quadrilateral(rect: rect)
@@ -152,6 +153,7 @@ extension QuadImageView {
             previousPanPosition = nil
             closestCorner = nil
             quadView.resetHighlightedCornerViews()
+            displayBoxes()
         default:
             break
         }

@@ -11,7 +11,8 @@ import PDFKit
 
 struct DocumentPicker: UIViewControllerRepresentable {
     
-    var onPick: (PickedItem) -> Void
+    @Environment(\.dismiss) private var dismiss
+    @Binding var item: PickedItem?
     
     func makeCoordinator() -> DocumentPicker.Coordinator {
         return DocumentPicker.Coordinator(parent1: self)
@@ -47,13 +48,13 @@ struct DocumentPicker: UIViewControllerRepresentable {
             do {
                 let data = try Data(contentsOf: url)
                 if let image = UIImage(data: data) {
-                    self.parent.onPick(.Image(image))
+                    self.parent.item = .Image(image)
                 } else if let pdf = PDFDocument(url: url) {
                     if let text = pdf.string {
-                        self.parent.onPick(.Text(text))
+                        self.parent.item = .Text(text)
                     }
                 } else if let text = try? String(contentsOf: url, encoding: .utf8) {
-                    self.parent.onPick(.Text(text))
+                    self.parent.item = .Text(text)
                 }
             } catch {
                 print(error)

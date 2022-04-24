@@ -158,9 +158,9 @@ class SongConverter {
             }
         }
         let chord = Chord.chord(for: key)
-//        if let index = song.chords.firstIndex(where: { $0.name == chord?.key.rawValue }) {
-//            song.chords[index].define = value
-//        }
+        if let index = song.chords.firstIndex(where: { $0.name == chord?.key.rawValue }) {
+            song.chords[index].define = value
+        }
     }
     
     // MARK: - func: processComments

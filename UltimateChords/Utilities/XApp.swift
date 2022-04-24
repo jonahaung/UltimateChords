@@ -22,6 +22,6 @@ struct XApp {
     }
     
     struct Image {
-        static let resizeWidth:CGFloat = 1000
+        static let resizeWidth:CGFloat = 500
     }
 }

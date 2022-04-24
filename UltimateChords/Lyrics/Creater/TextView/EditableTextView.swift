@@ -52,6 +52,16 @@ extension EditableTextView {
                 }
             }
         }
+        RegularExpression.chordsRegexForPlainText.enumerateMatches(in: text, range: text.nsRange()) { result, _, _ in
+            if let result = result {
+                let range = result.range
+                let str = (text as NSString).substring(with: range)
+                let tag = XTag(string: String(str), range: range, foregroundColor: .systemBlue)
+                if !self.tags.contains(tag) {
+                    newTags.append(tag)
+                }
+            }
+        }
         if newTags.isEmpty == false {
             newTags.forEach {
                 textStorage.addAttributes($0.attributes, range: $0.range)

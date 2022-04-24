@@ -23,7 +23,7 @@ public struct Photo: Identifiable, Equatable {
 }
 extension Photo {
     public var compressedData: Data? {
-        ImageResizer(targetWidth: XApp.Image.resizeWidth).resize(data: originalData)?.jpegData(compressionQuality: 0.8)
+        UIImage(data: originalData)?.jpegData(compressionQuality: 0.6)
     }
     public var thumbnailData: Data? {
         ImageResizer(targetWidth: 100).resize(data: originalData)?.jpegData(compressionQuality: 0.5)

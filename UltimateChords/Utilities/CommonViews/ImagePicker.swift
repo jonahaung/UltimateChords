@@ -91,6 +91,7 @@ public struct ImagePickerMultiple: UIViewControllerRepresentable {
         }
         
         public func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+            
             let group = DispatchGroup()
             var photos = [Photo]()
             for result in results {
@@ -113,6 +114,67 @@ public struct ImagePickerMultiple: UIViewControllerRepresentable {
             }
             group.notify(queue: .main) {
                 self.parent.completion?(photos)
+            }
+        }
+    }
+}
+
+struct SystemImagePicker: UIViewControllerRepresentable {
+    
+    @Environment(\.dismiss) private var dismiss
+    @Binding var item: PickedItem?
+    
+    func makeUIViewController(context: Context) -> PHPickerViewController {
+        var configuration = PHPickerConfiguration()
+        configuration.selectionLimit = 1
+        configuration.filter = .images
+        let picker = PHPickerViewController(configuration: configuration)
+        picker.delegate = context.coordinator
+        return picker
+    }
+    
+    func updateUIViewController(_ uiViewController: PHPickerViewController, context: Context) {
+        
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        return Coordinator(parent: self)
+    }
+    
+    class Coordinator: NSObject, UINavigationControllerDelegate, PHPickerViewControllerDelegate {
+        let parent: SystemImagePicker
+        
+        init(parent: SystemImagePicker) {
+            self.parent = parent
+        }
+        func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+            guard let img = results.first, img.itemProvider.canLoadObject(ofClass: UIImage.self) else {
+                DispatchQueue.main.async {
+                    self.parent.dismiss()
+                }
+                return
+            }
+            
+            img.itemProvider.loadObject(ofClass: UIImage.self) { image, error in
+                if let error = error {
+                    print(error)
+                    DispatchQueue.main.async {
+                        self.parent.dismiss()
+                    }
+                    return
+                }
+                
+                guard let image = image as? UIImage, let filtered = ImageFilterer.adjustColor(image) else {
+                    DispatchQueue.main.async {
+                        self.parent.dismiss()
+                    }
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    self.parent.item = .Image(filtered)
+                    self.parent.dismiss()
+                }
             }
         }
     }

@@ -31,8 +31,7 @@ final class EditScanCornerView: UIView {
     }
     
     private let circleLayer: CAShapeLayer = {
-        $0.lineWidth = 0
-        $0.opacity = 1
+        $0.lineWidth = 1
         return $0
     }(CAShapeLayer())
     
@@ -40,6 +39,7 @@ final class EditScanCornerView: UIView {
         self.position = position
         super.init(frame: frame)
         circleLayer.fillColor = fillColor
+        circleLayer.strokeColor = fillColor
         
         clipsToBounds = true
         layer.addSublayer(circleLayer)

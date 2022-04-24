@@ -11,11 +11,9 @@ import VisionKit
 import Vision
 
 struct DocumentScannerView: UIViewControllerRepresentable {
-    private let completionHandler: ([UIImage]?) -> Void
-     
-    init(completion: @escaping ([UIImage]?) -> Void) {
-        self.completionHandler = completion
-    }
+    
+    @Environment(\.dismiss) private var dismiss
+    @Binding var item: PickedItem?
      
     typealias UIViewControllerType = VNDocumentCameraViewController
      
@@ -28,34 +26,31 @@ struct DocumentScannerView: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: VNDocumentCameraViewController, context: UIViewControllerRepresentableContext<DocumentScannerView>) {}
      
     func makeCoordinator() -> Coordinator {
-        return Coordinator(completion: completionHandler)
+        return Coordinator(parent: self)
     }
      
     final class Coordinator: NSObject, VNDocumentCameraViewControllerDelegate {
         
-        private let completionHandler: ([UIImage]?) -> Void
-         
-        init(completion: @escaping ([UIImage]?) -> Void) {
-            self.completionHandler = completion
+        private let parent: DocumentScannerView
+        
+        init(parent: DocumentScannerView) {
+            self.parent = parent
         }
          
         func documentCameraViewController(_ controller: VNDocumentCameraViewController, didFinishWith scan: VNDocumentCameraScan) {
             DispatchQueue.main.async {
-                print("Document camera view controller did finish with ", scan)
-                let images = (0..<scan.pageCount).compactMap({ scan.imageOfPage(at: $0) })
-                self.completionHandler(images)
+                let image = scan.imageOfPage(at: scan.pageCount - 1)
+                self.parent.item = .Image(image)
+                self.parent.dismiss()
             }
         }
          
         func documentCameraViewControllerDidCancel(_ controller: VNDocumentCameraViewController) {
-            controller.dismiss(animated: true)
-            completionHandler(nil)
+            parent.dismiss()
         }
          
         func documentCameraViewController(_ controller: VNDocumentCameraViewController, didFailWithError error: Error) {
-            print("Document camera view controller did finish with error ", error)
-            controller.dismiss(animated: true)
-            completionHandler(nil)
+            parent.dismiss()
         }
     }
 }

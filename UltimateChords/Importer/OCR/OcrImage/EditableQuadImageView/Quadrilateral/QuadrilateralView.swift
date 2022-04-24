@@ -11,6 +11,12 @@ import AVFoundation
 
 final class QuadrilateralView: UIView {
     
+    struct Constants {
+        static let quadLineFillColor = UIColor(white: 0.8, alpha: 0.7).cgColor
+        static let highlightedCornerViewSize = CGSize(width: 120, height: 120)
+        static let cornerViewSize = CGSize(width: 15, height: 15)
+    }
+    
     private let quadLayer: CAShapeLayer = {
         $0.fillColor = nil
         $0.lineWidth = 1
@@ -19,58 +25,52 @@ final class QuadrilateralView: UIView {
     }(CAShapeLayer())
     
     private let quadLineLayer: CAShapeLayer = {
-        $0.fillColor = nil
+        $0.fillColor = Constants.quadLineFillColor
+        $0.fillRule = .evenOdd
         $0.lineWidth = 1
         $0.strokeColor = UIColor.systemYellow.cgColor
         return $0
     }(CAShapeLayer())
     
     private lazy var topLeftCornerView: EditScanCornerView = {
-        return EditScanCornerView(frame: CGRect(origin: .zero, size: cornerViewSize), position: .topLeft)
+        return EditScanCornerView(frame: CGRect(origin: .zero, size: Constants.cornerViewSize), position: .topLeft)
     }()
     
     private lazy var topRightCornerView: EditScanCornerView = {
-        return EditScanCornerView(frame: CGRect(origin: .zero, size: cornerViewSize), position: .topRight)
+        return EditScanCornerView(frame: CGRect(origin: .zero, size: Constants.cornerViewSize), position: .topRight)
     }()
     
     private lazy var bottomRightCornerView: EditScanCornerView = {
-        return EditScanCornerView(frame: CGRect(origin: .zero, size: cornerViewSize), position: .bottomRight)
+        return EditScanCornerView(frame: CGRect(origin: .zero, size: Constants.cornerViewSize), position: .bottomRight)
     }()
     
     private lazy var bottomLeftCornerView: EditScanCornerView = {
-        return EditScanCornerView(frame: CGRect(origin: .zero, size: cornerViewSize), position: .bottomLeft)
+        return EditScanCornerView(frame: CGRect(origin: .zero, size: Constants.cornerViewSize), position: .bottomLeft)
     }()
     
     private(set) var viewQuad: Quadrilateral?
-    
-    public var editable = true {
-        didSet {
-            guard oldValue != editable else { return }
-            cornerViews(hidden: !editable)
-        }
-    }
-    
+    var isSquare = true
     private var isHighlighted = false {
         didSet {
             guard oldValue != isHighlighted else { return }
             quadLayer.lineWidth = isHighlighted ? 0 : 1
+            quadLineLayer.fillColor = isHighlighted ? UIColor.clear.cgColor : Constants.quadLineFillColor
         }
     }
     
-    private let highlightedCornerViewSize = CGSize(width: 120, height: 120)
-    private let cornerViewSize = CGSize(width: 15, height: 15)
+    
     
     // MARK: - Life Cycle
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        layer.addSublayer(quadLayer)
+        layer.addSublayer(quadLineLayer)
+        
         addSubview(topLeftCornerView)
         addSubview(topRightCornerView)
         addSubview(bottomRightCornerView)
         addSubview(bottomLeftCornerView)
-        
-        layer.addSublayer(quadLayer)
-        layer.addSublayer(quadLineLayer)
     }
     required public init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented")}
     
@@ -88,6 +88,7 @@ final class QuadrilateralView: UIView {
 // Input
 
 extension QuadrilateralView {
+    
     func drawQuadrilateral(quad: Quadrilateral?) {
         self.viewQuad = quad
         guard let quad = quad else {
@@ -96,12 +97,11 @@ extension QuadrilateralView {
             return
         }
         
-        draw(quad, animated: !isHighlighted)
-        if editable {
-            cornerViews(hidden: !editable)
-            layoutCornerViews(forQuad: quad)
-        }
+        draw(quad, animated: false)
+        cornerViews(hidden: false)
+        layoutCornerViews(forQuad: quad)
     }
+    
     func drawBoxes(quads: [Quadrilateral]) {
         let path = UIBezierPath()
         
@@ -112,15 +112,15 @@ extension QuadrilateralView {
         }
         quadLayer.path = path.cgPath
     }
+    
     private func draw(_ quad: Quadrilateral, animated: Bool) {
         let path = quad.path
-        quadLineLayer.path = path.cgPath
-        if editable {
-            let rectPath = UIBezierPath(rect: bounds)
-            rectPath.usesEvenOddFillRule = true
-            path.append(rectPath)
-        }
         
+        let rectPath = UIBezierPath(rect: bounds)
+        rectPath.usesEvenOddFillRule = true
+        path.append(rectPath)
+        
+        quadLineLayer.path = path.cgPath
         if animated == true {
             let pathAnimation = CABasicAnimation(keyPath: "path")
             pathAnimation.duration = 0.2
@@ -128,7 +128,12 @@ extension QuadrilateralView {
         }
         
     }
-    
+    func getQuadFrame() -> CGRect {
+        if let viewQuad = viewQuad {
+            return viewQuad.regionRect
+        }
+        return bounds
+    }
 }
 // Gesture
 
@@ -156,7 +161,7 @@ extension QuadrilateralView {
     }
     
     func highlightCornerAtPosition(position: CornerPosition, with image: UIImage) {
-        guard editable else { return }
+        
         isHighlighted = true
         
         let cornerView = cornerViewForCornerPosition(position: position)
@@ -165,9 +170,9 @@ extension QuadrilateralView {
             return
         }
         
-        let origin = CGPoint(x: cornerView.frame.origin.x - (highlightedCornerViewSize.width - cornerViewSize.width) / 2.0,
-                             y: cornerView.frame.origin.y - (highlightedCornerViewSize.height - cornerViewSize.height) / 2.0)
-        cornerView.frame = CGRect(origin: origin, size: highlightedCornerViewSize)
+        let origin = CGPoint(x: cornerView.frame.origin.x - (Constants.highlightedCornerViewSize.width - Constants.cornerViewSize.width) / 2.0,
+                             y: cornerView.frame.origin.y - (Constants.highlightedCornerViewSize.height - Constants.cornerViewSize.height) / 2.0)
+        cornerView.frame = CGRect(origin: origin, size: Constants.highlightedCornerViewSize)
         cornerView.highlightWithImage(image)
     }
     
@@ -184,9 +189,9 @@ extension QuadrilateralView {
     
     private func resetHightlightedCornerView(cornerView: EditScanCornerView) {
         cornerView.reset()
-        let origin = CGPoint(x: cornerView.frame.origin.x + (cornerView.frame.size.width - cornerViewSize.width) / 2.0,
-                             y: cornerView.frame.origin.y + (cornerView.frame.size.height - cornerViewSize.width) / 2.0)
-        cornerView.frame = CGRect(origin: origin, size: cornerViewSize)
+        let origin = CGPoint(x: cornerView.frame.origin.x + (cornerView.frame.size.width - Constants.cornerViewSize.width) / 2.0,
+                             y: cornerView.frame.origin.y + (cornerView.frame.size.height - Constants.cornerViewSize.width) / 2.0)
+        cornerView.frame = CGRect(origin: origin, size: Constants.cornerViewSize)
         cornerView.setNeedsDisplay()
     }
     
@@ -229,15 +234,36 @@ extension QuadrilateralView {
     private func update(_ quad: Quadrilateral, withPosition position: CGPoint, forCorner corner: CornerPosition) -> Quadrilateral {
         var quad = quad
         
-        switch corner {
-        case .topLeft:
-            quad.topLeft = position
-        case .topRight:
-            quad.topRight = position
-        case .bottomRight:
-            quad.bottomRight = position
-        case .bottomLeft:
-            quad.bottomLeft = position
+        if isSquare {
+            switch corner {
+            case .topLeft:
+                quad.topLeft = position
+                quad.topRight.y = position.y
+                quad.bottomLeft.x = position.x
+            case .topRight:
+                quad.topRight = position
+                quad.topLeft.y = position.y
+                quad.bottomRight.x = position.x
+            case .bottomRight:
+                quad.bottomRight = position
+                quad.topRight.x = position.x
+                quad.bottomLeft.y = position.y
+            case .bottomLeft:
+                quad.bottomLeft = position
+                quad.bottomRight.y = position.y
+                quad.topLeft.x = position.x
+            }
+        } else {
+            switch corner {
+            case .topLeft:
+                quad.topLeft = position
+            case .topRight:
+                quad.topRight = position
+            case .bottomRight:
+                quad.bottomRight = position
+            case .bottomLeft:
+                quad.bottomLeft = position
+            }
         }
         
         return quad

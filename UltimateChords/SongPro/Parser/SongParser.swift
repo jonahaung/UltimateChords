@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import MySpellCorrect
 
 struct SongParser {
     
@@ -108,7 +109,7 @@ struct SongParser {
         var lines = [String]()
         text.components(separatedBy: .newlines).forEach { line in
             if isChordLine(for: line) {
-                lines.append(SpellCorrector.correctedChordLine(line))
+                lines.append(GuitarChordCorrector.correctedChordLine(line))
             } else if isMyanmar && line.isMyanar {
                 lines.append(SpellCorrector.correctedMyanmarText(line))
             } else if !isMyanmar {

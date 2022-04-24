@@ -45,12 +45,16 @@ extension OCRImageViewModel {
         
         if let uiImage = cropedImage() {
             self.isRecognizingText = true
-            textRecognizer.detectTexts(from: ImageResizer(targetWidth: UIScreen.main.bounds.width).resize(image: uiImage)) { [weak self] string in
+            DispatchQueue.global().async { [weak self] in
                 guard let self = self else { return }
-                DispatchQueue.main.async {
-                    self.text = string.str
+                self.textRecognizer.detectTexts(from: ImageResizer(targetWidth: 200).resize(image: uiImage)) { [weak self] string in
+                    guard let self = self else { return }
+                    DispatchQueue.main.async {
+                        self.text = string.str
+                    }
                 }
             }
+            
         }
     }
     

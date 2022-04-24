@@ -9,19 +9,14 @@ import SwiftUI
 
 struct OcrImageView: View {
     
-    @StateObject private var viewModel: OCRImageViewModel
-    
-    private var onDismiss: ((ResultType) -> Void)
-    
-    init(image: UIImage, onDismiss: @escaping (ResultType) -> Void) {
-        _viewModel = .init(wrappedValue: .init(image: image))
-        self.onDismiss = onDismiss
-    }
+    @StateObject var viewModel: OCRImageViewModel
+    @Binding var result: ResultType?
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         PickerNavigationView {
             ZStack {
-                Color.gray.edgesIgnoringSafeArea(.all)
+                Color.black.edgesIgnoringSafeArea(.all)
                 VStack(spacing: 0) {
                     Spacer()
                     QuadrilateralImageView(viewModel: viewModel)
@@ -35,10 +30,13 @@ struct OcrImageView: View {
                 viewModel.task()
             }
             .onChange(of: viewModel.text) { newValue in
-                if let text = newValue {
-                    onDismiss(.OCR(text: SongParser.format(text)))
-                } else {
-                    onDismiss(.Cancel)
+                DispatchQueue.main.async {
+                    if let text = newValue {
+                        result = .OCR(text: SongParser.format(text))
+                    } else {
+                        result = .Cancel
+                    }
+                    dismiss()
                 }
             }
         }
@@ -47,7 +45,8 @@ struct OcrImageView: View {
     
     private func retakeButton() -> some View {
         Button("Retake") {
-            onDismiss(.Redo)
+            result = .Redo
+            dismiss()
         }
     }
     private func bottomBar() -> some View {
@@ -80,6 +79,9 @@ struct OcrImageView: View {
         Group {
             if viewModel.isRecognizingText {
                 ProgressView()
+                    .padding()
+                    .background(Color(uiColor: .systemBackground))
+                    .clipShape(Circle())
             }
         }
     }

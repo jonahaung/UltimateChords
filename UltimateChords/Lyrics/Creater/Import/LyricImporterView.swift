@@ -12,7 +12,6 @@ struct LyricImporterView<Content: View>: View {
     private let content: () -> Content
     @StateObject private var viewModel = LyricImporterViewModel()
     @EnvironmentObject private var creater: LyricsCreaterViewModel
-    @State private var pickedItem = PickedItem.None
     
     init(@ViewBuilder content: @escaping () -> Content) {
         self.content = content
@@ -22,78 +21,51 @@ struct LyricImporterView<Content: View>: View {
         content()
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: shareButton())
-            .fullScreenCover(item: $viewModel.importMode) {
-                fullScreenCover(for: $0)
-            }
-            .fullScreenCover(item: $viewModel.importingImage) {
-                OcrImageView(image: $0) { result in
-                    DispatchQueue.main.async {
-                        viewModel.importingImage = nil
-                        DispatchQueue.main.async {
-                            switch result {
-                            case .OCR(let text):
-                                creater.insertText(text)
-                            case .Redo:
-                                viewModel.redoImportMode()
-                            case .Cancel:
-                                break
-                            }
+            .fullScreenCover(item: $viewModel.importMode, onDismiss: {
+                DispatchQueue.main.async {
+                    if let item = viewModel.pickedItem {
+                        switch item {
+                        case .Text(let string):
+                            creater.insertText(string)
+                        case .Image(let uIImage):
+                            viewModel.pickedImage = uIImage
+                        case .None:
+                            break
                         }
                     }
                 }
-            }
-    }
-    
-    private func fullScreenCover(for mode: LyricImporterViewModel.Mode) -> some View {
-        Group {
-            switch mode {
-            case .Camera:
-                CameraView { image in
-                    DispatchQueue.main.async {
-                        viewModel.importMode = nil
-                        DispatchQueue.main.async {
-                            viewModel.importingImage = image
+            }, content: { mode in
+                switch mode {
+                case .Camera:
+                    CameraView(item: $viewModel.pickedItem)
+                case .Document_Scanner:
+                    DocumentScannerView(item: $viewModel.pickedItem)
+                        .edgesIgnoringSafeArea(.all)
+                case .Photo_Library:
+                    SystemImagePicker(item: $viewModel.pickedItem)
+                        .edgesIgnoringSafeArea(.all)
+                case .ChordPro_File:
+                    DocumentPicker(item: $viewModel.pickedItem)
+                        .edgesIgnoringSafeArea(.all)
+                }
+            })
+            .fullScreenCover(item: $viewModel.pickedImage, onDismiss: {
+                DispatchQueue.main.async {
+                    if let result = viewModel.ocrResult {
+                        switch result {
+                        case .OCR(let text):
+                            creater.insertText(text)
+                        case .Redo:
+                            viewModel.redoImportMode()
+                        case .Cancel:
+                            break
                         }
                     }
                 }
-            case .Document_Scanner:
-                DocumentScannerView { images in
-                    DispatchQueue.main.async {
-                        viewModel.importMode = nil
-                        DispatchQueue.main.async {
-                            viewModel.importingImage = images?.last
-                        }
-                    }
-                }
-                .edgesIgnoringSafeArea(.all)
-            case .Photo_Library:
-                ImagePickerMultiple(maxLimit: 1) { photos in
-                    DispatchQueue.main.async {
-                        viewModel.importMode = nil
-                        DispatchQueue.main.async {
-                            viewModel.importingImage = photos.last?.image
-                        }
-                    }
-                }
-                .edgesIgnoringSafeArea(.all)
-            case .ChordPro_File:
-                DocumentPicker { item in
-                    DispatchQueue.main.async {
-                        viewModel.importMode = nil
-                        DispatchQueue.main.async {
-                            switch item {
-                            case .Text(let string):
-                                creater.insertText(string)
-                            case .Image(let uIImage):
-                                viewModel.importingImage = uIImage
-                            case .None:
-                                break
-                            }
-                        }
-                    }
-                }
-            }
-        }
+            }, content: {
+                OcrImageView(viewModel: .init(image: $0), result: $viewModel.ocrResult)
+            })
+            
     }
     
     private func shareButton() -> some View {

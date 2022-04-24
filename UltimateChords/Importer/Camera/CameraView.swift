@@ -12,11 +12,8 @@ struct CameraView: View {
     
     @StateObject private var model = CameraViewModel()
     
-    @Environment(\.presentationMode) private var presentationMode
-    private let completionHandler: (UIImage?) -> Void
-    init(completion: @escaping (UIImage?) -> Void) {
-        self.completionHandler = completion
-    }
+    @Environment(\.dismiss) private var dismiss
+    @Binding var item: PickedItem?
     
     @State private var currentZoomFactor: CGFloat = 1.0
     
@@ -54,7 +51,7 @@ struct CameraView: View {
                 VStack {
                     HStack{
                         Button("Cancel") {
-                            presentationMode.wrappedValue.dismiss()
+                            dismiss()
                         }
                         Spacer()
                         Button(action: {
@@ -114,9 +111,13 @@ struct CameraView: View {
                     .padding(.horizontal, 20)
                 }
             }.onChange(of: model.photo) { newValue in
-                DispatchQueue.main.async {
-                    completionHandler(newValue?.image)
+                if let image = newValue?.image {
+                    DispatchQueue.main.async {
+                        self.item = .Image(image)
+                        self.dismiss()
+                    }
                 }
+                
             }
             .accentColor(.white)
         }
