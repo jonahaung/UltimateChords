@@ -18,6 +18,7 @@ struct LyricsCreaterView: View {
                 LyricCreaterForm()
                     .navigationBarItems(leading: navLeading())
                     .navigationBarTitleDisplayMode(.inline)
+                    .navigationTitle("Create Song")
             }
             .navigationViewStyle(.stack)
             .onChange(of: viewModel.isSaved) { newValue in
