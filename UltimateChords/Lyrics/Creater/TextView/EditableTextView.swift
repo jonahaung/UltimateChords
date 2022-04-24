@@ -24,21 +24,15 @@ class EditableTextView: TextView {
 
 extension EditableTextView {
     
-    func reset() {
-        tags.removeAll()
-    }
-    
     func detectChords() {
-        var newTags = [XTag]()
+        self.tags.removeAll()
         text.enumerateSubstrings(in: text.startIndex..<text.endIndex, options: .byLines) {
             (substring, substringRange, _, _) in
             if let substring = substring {
                 let nsRange = NSRange(substringRange, in: self.text)
                 let string = String(substring)
-                let tag = XTag.init(string: string, range: nsRange, font: XFont.body(for: string))
-                if !self.tags.contains(tag) {
-                    newTags.append(tag)
-                }
+                let tag = XTag.init(string: string, range: nsRange, font: XFont.body(for: string).withSize(UIFont.systemFontSize))
+                self.tags.append(tag)
             }
         }
         
@@ -46,27 +40,20 @@ extension EditableTextView {
             if let result = result {
                 let range = result.range
                 let str = (text as NSString).substring(with: range)
-                let tag = XTag(string: String(str), range: range, foregroundColor: .systemBlue)
-                if !self.tags.contains(tag) {
-                    newTags.append(tag)
-                }
+                let tag = XTag(string: String(str), range: range, font: XFont.chord().withSize(UIFont.systemFontSize), foregroundColor: .systemCyan)
+                self.tags.append(tag)
             }
         }
         RegularExpression.chordsRegexForPlainText.enumerateMatches(in: text, range: text.nsRange()) { result, _, _ in
             if let result = result {
                 let range = result.range
                 let str = (text as NSString).substring(with: range)
-                let tag = XTag(string: String(str), range: range, foregroundColor: .systemBlue)
-                if !self.tags.contains(tag) {
-                    newTags.append(tag)
-                }
+                let tag = XTag(string: String(str), range: range, font: XFont.chord().withSize(UIFont.systemFontSize), foregroundColor: .systemCyan)
+                self.tags.append(tag)
             }
         }
-        if newTags.isEmpty == false {
-            newTags.forEach {
-                textStorage.addAttributes($0.attributes, range: $0.range)
-            }
-            self.tags += newTags
+        self.tags.forEach {
+            textStorage.addAttributes($0.attributes, range: $0.range)
         }
     }
 }

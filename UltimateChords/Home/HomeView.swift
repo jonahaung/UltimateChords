@@ -14,10 +14,13 @@ struct HomeView: View {
     
     var body: some View {
         List {
-            ForEach(viewModel.lyrics) {
-                HomeCell(lyric: $0)
+           
+            Section(footer: singerTagViews()) {
+                ForEach(viewModel.lyrics) {
+                    HomeCell(lyric: $0)
+                }
+                .onDelete(perform: self.deleteItems)
             }
-            .onDelete(perform: self.deleteItems)
         }
         .task {
             viewModel.task()
@@ -30,10 +33,16 @@ struct HomeView: View {
         .navigationTitle("Home")
         .navigationBarItems(trailing: navTrailing())
     }
-    
+    private func singerTagViews() -> some View {
+        AutoWrap(Singers.allSingers, id: \.self, vSpacing: 5, hSpacing: 5) { singer in
+            Tag(singer, bgcolor: XColor.Tag.random())
+        }
+    }
     private func navTrailing() -> some View {
-        XIcon(.square_and_pencil)
-            .tapToPush(LyricsCreaterView())
+        HStack {
+            XIcon(.square_and_pencil)
+                .tapToPresent( LyricsCreaterView() , .FullScreen)
+        }
     }
     
    

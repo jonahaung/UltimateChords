@@ -9,15 +9,21 @@ import SwiftUI
 
 struct LyricsCreaterTextView: UIViewRepresentable {
     
-    let viewModel: LyricsCreaterViewModel
+    @EnvironmentObject private var viewModel: LyricsCreaterViewModel
     
     func makeUIView(context: Context) -> EditableTextView {
-        let uiView = EditableTextView()
-        uiView.configureToolbar()
-        uiView.delegate = viewModel
-        viewModel.textView = uiView
-        return uiView
+        let textView = EditableTextView()
+        textView.configureToolbar()
+        textView.bounces = true
+        textView.alwaysBounceVertical = true
+        textView.text = viewModel.lyric.text
+        textView.delegate = viewModel
+        viewModel.textView = textView
+        textView.detectChords()
+        return textView
     }
     
-    func updateUIView(_ uiView: EditableTextView, context: Context) {}
+    func updateUIView(_ uiView: EditableTextView, context: Context) {
+        uiView.detectChords()
+    }
 }

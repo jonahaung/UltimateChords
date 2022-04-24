@@ -16,11 +16,13 @@ struct Lyric: Identifiable {
     var composer: String
     var album: String
     var year: String
+    var tempo: String
     var text: String
     var version: Int
     var genre: String
+    var mediaLink: String
     
-    init(id: String?, title: String, artist: String, key: String = "", text: String, composer: String = "", album: String = "", year: String = "", genre: String = "", version: Int = 0) {
+    init(id: String?, title: String, artist: String, key: String = "", text: String, composer: String = "", album: String = "", year: String = "", genre: String = "", version: Int = 0, tempo: String = "", mediaLink: String = "") {
         self.id = id ?? UUID().uuidString
         self.title = title
         self.artist = artist
@@ -31,13 +33,19 @@ struct Lyric: Identifiable {
         self.year = year
         self.album = album
         self.genre = genre
+        self.tempo = tempo
+        self.mediaLink = mediaLink
     }
     
     var canSave: Bool {
-        !title.isEmpty && !artist.isEmpty && !text.isEmpty
+        hasFilledForm && !text.isWhitespace
     }
     
     static let empty = Lyric(id: UUID().uuidString, title: "", artist: "", text: "")
+    
+    var hasFilledForm: Bool {
+        !title.isWhitespace && !artist.isWhitespace
+    }
 }
 
 

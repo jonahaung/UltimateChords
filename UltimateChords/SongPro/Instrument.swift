@@ -75,7 +75,7 @@ extension Instrument {
             var key: String?
             var suffix: String?
             
-            if let match = RegularExpression.chordPattern3.firstMatch(in: chordString, options: [], range: chordString.nsRange()) {
+            if let match = RegularExpression.chordPatternBeginning.firstMatch(in: chordString, options: [], range: chordString.nsRange()) {
                 if let keyRange = Range(match.range(at: 1), in: chordString) {
                     var valueKey = chordString[keyRange]
                     /// Dirty, some chords in the database are only in the flat version....

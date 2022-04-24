@@ -11,13 +11,13 @@ enum RegularExpression {
     
     static let chordPattern: NSRegularExpression = {
         do {
-            return try NSRegularExpression(pattern:  "\\[([\\w#b\\/]+)\\]?", options: []) // OLD: "\\[(.*?)\\]"
+            return try NSRegularExpression(pattern:  "\\[(.*?)\\]", options: []) //"\\[([\\w#b\\/]+)\\]?"
         }catch {
             fatalError()
         }
     }()
 
-    static let chordPattern3: NSRegularExpression = {
+    static let chordPatternBeginning: NSRegularExpression = {
         do {
             return try NSRegularExpression(pattern: "([CDEFGABb#]+)(.*)", options: .caseInsensitive)
         }catch {

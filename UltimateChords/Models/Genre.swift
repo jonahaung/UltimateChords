@@ -7,10 +7,8 @@
 
 import Foundation
 
-enum Genre: String, Identifiable, CaseIterable, CustomStringConvertible {
+enum Genre: String, CaseIterable {
     
     case Pop, Hip_Hop, Rock, Rythm_and_blues, Soul, Reggae, Country, Funk, Folk, Middle_Eastern, Jazz, Disco, Classical, Electronic, Blues, Latin_America, Music_for_children, New_age, Vocal, Africa, Christian, Asia, Ska, Traditional, Independent, Other
-    
-    var description: String { rawValue.replacingOccurrences(of: "_", with: " ")}
-    var id: String { rawValue }
+
 }

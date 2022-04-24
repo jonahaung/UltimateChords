@@ -25,10 +25,8 @@ class TextView: UITextView {
         textContainer.lineFragmentPadding = XApp.TextView.lineFragmentPadding
         showsVerticalScrollIndicator = false
         dataDetectorTypes = []
-        alwaysBounceVertical = true
-        bounces = true
-        textContainer.lineBreakMode = .byTruncatingTail
-//        layoutManager.allowsNonContiguousLayout = false
+        textContainer.lineBreakMode = .byClipping
+        layoutManager.allowsNonContiguousLayout = false
     }
     
 //    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {

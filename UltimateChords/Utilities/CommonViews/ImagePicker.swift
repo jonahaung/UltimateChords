@@ -147,6 +147,7 @@ struct SystemImagePicker: UIViewControllerRepresentable {
         init(parent: SystemImagePicker) {
             self.parent = parent
         }
+    
         func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
             guard let img = results.first, img.itemProvider.canLoadObject(ofClass: UIImage.self) else {
                 DispatchQueue.main.async {

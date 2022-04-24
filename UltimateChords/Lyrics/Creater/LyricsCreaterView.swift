@@ -14,24 +14,26 @@ struct LyricsCreaterView: View {
     
     var body: some View {
         LyricImporterView {
-            LyricsCreaterTextView(viewModel: viewModel)
+            NavigationView {
+                LyricCreaterForm()
+                    .navigationBarItems(leading: navLeading())
+                    .navigationBarTitleDisplayMode(.inline)
+            }
+            .navigationViewStyle(.stack)
+            .onChange(of: viewModel.isSaved) { newValue in
+                if newValue {
+                    dismiss()
+                }
+            }
         }
-        .navigationBarItems(trailing: navTrailing())
         .environmentObject(viewModel)
+        
     }
     
-    private func navTrailing() -> some View {
-        HStack {
-            XIcon(.music_note_list)
-                .tapToPresent(LyricCreaterControls(onSaved: onSaved))
-            Text("Continue")
-                .disabled(viewModel.lyric.text.isEmpty)
-                .tapToPresent(LyricCreaterControls(onSaved: onSaved))
+    
+    private func navLeading() -> some View {
+        Button("Cancel") {
+            dismiss()
         }
-    }
-    
-    private func onSaved() {
-        viewModel.save()
-        dismiss()
     }
 }

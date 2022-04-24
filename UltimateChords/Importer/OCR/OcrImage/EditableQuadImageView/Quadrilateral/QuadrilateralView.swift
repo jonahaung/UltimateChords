@@ -74,15 +74,15 @@ final class QuadrilateralView: UIView {
     }
     required public init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented")}
     
-    override public func layoutSubviews() {
-        super.layoutSubviews()
-        guard quadLayer.frame != bounds else { return }
-        let scale = bounds.width / quadLayer.frame.width
-        quadLayer.frame = bounds
-        quadLineLayer.frame = bounds
-        let newQuad = viewQuad?.applying(CGAffineTransform(scaleX: scale, y: scale))
-        drawQuadrilateral(quad: newQuad)
-    }
+//    override public func layoutSubviews() {
+//        super.layoutSubviews()
+//        guard quadLayer.frame != bounds else { return }
+//        let scale = bounds.width / quadLayer.frame.width
+//        quadLayer.frame = bounds
+//        quadLineLayer.frame = bounds
+//        let newQuad = viewQuad?.applying(CGAffineTransform(scaleX: scale, y: scale))
+//        drawQuadrilateral(quad: newQuad)
+//    }
 }
 
 // Input
@@ -106,9 +106,7 @@ extension QuadrilateralView {
         let path = UIBezierPath()
         
         quads.forEach { quad in
-            if quad.isSelected {
-                path.append(quad.path)
-            }
+            path.append(quad.path)
         }
         quadLayer.path = path.cgPath
     }

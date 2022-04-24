@@ -15,11 +15,11 @@ struct DocumentPicker: UIViewControllerRepresentable {
     @Binding var item: PickedItem?
     
     func makeCoordinator() -> DocumentPicker.Coordinator {
-        return DocumentPicker.Coordinator(parent1: self)
+        return Coordinator(parent1: self)
     }
     
     func makeUIViewController(context: UIViewControllerRepresentableContext<DocumentPicker>) -> UIDocumentPickerViewController {
-        let picker = UIDocumentPickerViewController(forOpeningContentTypes: [.item, .image, .pdf, .text])
+        let picker = UIDocumentPickerViewController(forOpeningContentTypes: [.item, .image, .pdf, .plainText])
         picker.allowsMultipleSelection = false
         picker.delegate = context.coordinator
         return picker
@@ -35,12 +35,15 @@ struct DocumentPicker: UIViewControllerRepresentable {
         init(parent1: DocumentPicker){
             parent = parent1
         }
+        func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+            parent.dismiss()
+        }
         func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
             let url = urls[0]
-           
+            
             guard url.startAccessingSecurityScopedResource() else {
-                    print("can't access")
-                    return
+                print("can't access")
+                return
             }
             defer {
                 url.stopAccessingSecurityScopedResource()
@@ -59,38 +62,10 @@ struct DocumentPicker: UIViewControllerRepresentable {
             } catch {
                 print(error)
             }
+            DispatchQueue.main.async {
+                self.parent.dismiss()
+            }
             
         }
     }
 }
-/*
-final class TextRecognizer {
-    let cameraScan: VNDocumentCameraScan
-     
-    init(cameraScan: VNDocumentCameraScan) {
-        self.cameraScan = cameraScan
-    }
-     
-    private let queue = DispatchQueue(label: "com.augmentedcode.scan", qos: .default, attributes: [], autoreleaseFrequency: .workItem)
-     
-    func recognizeText(withCompletionHandler completionHandler: @escaping ([String]) -> Void) {
-        queue.async {
-            let images = (0..<self.cameraScan.pageCount).compactMap({ self.cameraScan.imageOfPage(at: $0).cgImage })
-            let imagesAndRequests = images.map({ (image: $0, request: VNRecognizeTextRequest()) })
-            let textPerPage = imagesAndRequests.map { image, request -> String in
-                let handler = VNImageRequestHandler(cgImage: image, options: [:])
-                do {
-                    try handler.perform([request])
-                    guard let observations = request.results else { return "" }
-                    return observations.compactMap({ $0.topCandidates(1).first?.string }).joined(separator: "\n")
-                }
-                catch {
-                    print(error)
-                    return ""
-                }
-            }
-            completionHandler(textPerPage)
-        }
-    }
-}
-*/

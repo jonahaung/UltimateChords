@@ -7,10 +7,39 @@
 
 import UIKit
 
-final class LyricsCreaterViewModel: NSObject, ObservableObject {
+class LyricImporterViewModel: NSObject, ObservableObject {
+    
+    @Published var importMode: Mode?
+    private var previousImportMode: Mode?
+    @Published var pickedImage: UIImage?
+    var pickedItem: PickedItem?
+    var ocrResult: OcrImageView.ResultType?
+    
+    func setImportMode(mode: Mode?) {
+        importMode = mode
+        previousImportMode = mode
+    }
+    func redoImportMode() {
+        setImportMode(mode: previousImportMode)
+    }
+}
+
+extension LyricImporterViewModel {
+    enum Mode: String, CustomStringConvertible, CaseIterable, Identifiable {
+        case Document_Scanner, Camera, Photo_Library, ChordPro_File
+        var id: String { rawValue }
+        var description: String {
+            rawValue.replacingOccurrences(of: "_", with: " ")
+        }
+    }
+}
+
+
+final class LyricsCreaterViewModel: LyricImporterViewModel {
     
     @Published var lyric = Lyric.empty
     weak var textView: EditableTextView?
+    @Published var isSaved = false
     
     var isEditable: Bool {
         get { textView?.isEditable == true }
@@ -20,22 +49,22 @@ final class LyricsCreaterViewModel: NSObject, ObservableObject {
     func save() {
         lyric.text = textView?.text ?? ""
         _ = CLyric.create(lyric: lyric)
-        
+        self.isSaved = true
     }
     
-    func fillDemoData() {
-        lyric.title = "ကမ္ဘာမကျေ"
-        lyric.artist = "များလူခပ်သိမ်း"
-        textView?.text = withChords
-        textView?.detectChords()
-        lyric.text = withChords
-    }
-
     func insertText(_ string: String) {
-        guard let textView = textView else { return }
         let song = SongConverter.parse(rawText: string)
-        lyric = song.lyric
-        textView.insert(text: string)
+        lyric.text = song.rawText
+        if let title = song.title {
+            lyric.title = title
+        }
+        if let artist = song.artist {
+            lyric.artist = artist
+        }
+        if let key = song.key {
+            lyric.key = key
+        }
+        textView?.insert(text: song.rawText)
     }
     
     deinit {
@@ -46,28 +75,12 @@ final class LyricsCreaterViewModel: NSObject, ObservableObject {
 
 extension LyricsCreaterViewModel: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
-        self.textView?.detectChords()
         lyric.text = textView.text
     }
 }
 
-let withoutChords = """
- တရားမျှတ [G]လွတ်လပ်ခြင်းနဲ့မသွေ၊[Am]
- တို့ပြည်၊ [Am]တို့မြေ၊
-  [G]များလူခပ်သိမ်း၊ [Am]ငြိမ်းချမ်းစေဖို့၊[Am]
-  [F]ခွင့်တူညီမျှ၊ [C]ဝါဒဖြူစင်တဲ့ပြည်၊[Am]
-  [Am]တို့ပြည်၊ တို့မြေ၊
-  [Am]ပြည်ထောင်စုအမွေ၊ အမြဲတည်တံ့စေ၊
- အဓိဋ္ဌာန်ပြုပေ၊ [Am]ထိန်းသိမ်းစို့လေ[Am][Am]
-  [Am]နေကောင်းလားဆရာ
-  [Am][Am]ကမ္ဘာမကျေ၊ မြန်မာပြည်၊[Am]
- တို့ဘိုးဘွား [Am][Am]အမွေစစ်မို့ [Am]ချစ်မြတ်နိုးပေ။[Am]
- ပြည်ထောင်စုကို [Am]အသက်ပေးလို့ တို့ကာကွယ်မလေ၊[Am]
-  [Am]ဒါတို့ပြည် [Am]ဒါတို့မြေ [Am]တို့ပိုင်နက်မြေ။[Am]
-  [Am]တို့ပြည် [Am]တို့မြေ [Am]အကျိုးကို ညီညာစွာတို့တစ်တွေ[Am]
-  [Am]ထမ်းဆောင်ပါစို့လေ တို့တာဝန်ပေ အဖိုးတန်မြေ။[Am]
- [Am][Am][Am]
 
+let withoutChords = """
  တရားမျှတ လွတ်လပ်ခြင်းနဲ့မသွေ၊
  တို့ပြည်၊ တို့မြေ၊
  များလူခပ်သိမ်း၊ ငြိမ်းချမ်းစေဖို့၊
@@ -211,6 +224,4 @@ But you can never leave"
  
 [Outro]
 Am E7 G D7 F C Dm E7  x5
-
-
 """
